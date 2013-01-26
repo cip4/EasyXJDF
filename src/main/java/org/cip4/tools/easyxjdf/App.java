@@ -1,10 +1,20 @@
+/**
+ * All rights reserved by
+ * 
+ * flyeralarm GmbH
+ * Alfred-Nobel-Straße 18
+ * 97080 Würzburg
+ *
+ * Email: info@flyeralarm.com
+ * Website: http://www.flyeralarm.com
+ */
 package org.cip4.tools.easyxjdf;
 
-import org.cip4.tools.easyxjdf.gui.MainForm;
 
 /**
- * Hello world!
- * 
+ * Application start class.
+ * @author stefan.meissner
+ * @date 25.01.2013
  */
 public class App {
 
@@ -13,12 +23,10 @@ public class App {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		try {
-			MainForm window = new MainForm();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		// Start application.
+		XJdfController xJdfController = new XJdfController();
+		xJdfController.showView();
 	}
 
 }
