@@ -10,11 +10,14 @@
  */
 package org.cip4.tools.easyxjdf.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.cip4.lib.xjdf.XJdfNodeFactory;
 import org.cip4.lib.xjdf.builder.ProductBuilder;
 import org.cip4.lib.xjdf.builder.XJdfBuilder;
@@ -23,6 +26,7 @@ import org.cip4.lib.xjdf.schema.XJDF;
 import org.cip4.lib.xprinttalk.PrintTalkNodeFactory;
 import org.cip4.lib.xprinttalk.builder.PrintTalkBuilder;
 import org.cip4.lib.xprinttalk.schema.PrintTalk;
+import org.cip4.lib.xprinttalk.xml.PrintTalkPackager;
 import org.cip4.lib.xprinttalk.xml.PrintTalkParser;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 
@@ -58,15 +62,32 @@ public class XJdfService {
 		// create PrintTalk Document
 		PrintTalk ptk = createPrintTalk(xJdfModel);
 
-		// save to target location
-		saveAs(ptk, targetLocation);
+		// parse print talk
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		PrintTalkParser parser = new PrintTalkParser();
+		parser.parsePrintTalk(ptk, bos);
+		bos.close();
 
-		// check extension for zip
+		byte[] bytes = bos.toByteArray();
+
+		// save to target location
+		File file = new File(targetLocation);
+		OutputStream os = new FileOutputStream(file);
+
 		if ("zip".equalsIgnoreCase(FilenameUtils.getExtension(targetLocation))) {
+
+			// save as ZIP
+			String docName = xJdfModel.getJobId() + ".xjdf";
+			PrintTalkPackager packager = new PrintTalkPackager(bytes);
+			packager.packageXJdf(os, docName);
 
 		} else {
 
+			// save as XJDF
+			IOUtils.copy(new ByteArrayInputStream(bytes), os);
 		}
+
+		os.close();
 	}
 
 	/**
@@ -93,21 +114,4 @@ public class XJdfService {
 		return ptk;
 	}
 
-	/**
-	 * Save PrintTalk to target location.
-	 * @param ptk The PrintTalk object.
-	 * @param targetLocation URL of the target location.
-	 * @throws Exception
-	 */
-	private void saveAs(PrintTalk ptk, String targetLocation) throws Exception {
-
-		File file = new File(targetLocation);
-		OutputStream os = new FileOutputStream(file);
-
-		PrintTalkParser parser = new PrintTalkParser();
-		parser.parsePrintTalk(ptk, os, true); // TODO reactivate validateion
-
-		os.close();
-
-	}
 }
