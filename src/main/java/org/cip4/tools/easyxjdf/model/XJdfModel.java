@@ -19,7 +19,15 @@ public class XJdfModel {
 
 	private String jobId;
 
-	private String contentData;
+	private String jobName;
+
+	private String runList;
+
+	private String catalogId;
+
+	private String customerId;
+
+	private String mediaQuality;
 
 	private int amount;
 
@@ -46,19 +54,83 @@ public class XJdfModel {
 	}
 
 	/**
+	 * Getter for jobName attribute.
+	 * @return the jobName
+	 */
+	public String getJobName() {
+		return jobName;
+	}
+
+	/**
+	 * Setter for jobName attribute.
+	 * @param jobName the jobName to set
+	 */
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	/**
 	 * Getter for contentData attribute.
 	 * @return the contentData
 	 */
-	public String getContentData() {
-		return contentData;
+	public String getRunList() {
+		return runList;
 	}
 
 	/**
 	 * Setter for contentData attribute.
 	 * @param contentData the contentData to set
 	 */
-	public void setContentData(String contentData) {
-		this.contentData = contentData;
+	public void setRunList(String runList) {
+		this.runList = runList;
+	}
+
+	/**
+	 * Getter for catalogId attribute.
+	 * @return the catalogId
+	 */
+	public String getCatalogId() {
+		return catalogId;
+	}
+
+	/**
+	 * Setter for catalogId attribute.
+	 * @param catalogId the catalogId to set
+	 */
+	public void setCatalogId(String catalogId) {
+		this.catalogId = catalogId;
+	}
+
+	/**
+	 * Getter for customerId attribute.
+	 * @return the customerId
+	 */
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	/**
+	 * Setter for customerId attribute.
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	/**
+	 * Getter for mediaQuality attribute.
+	 * @return the mediaQuality
+	 */
+	public String getMediaQuality() {
+		return mediaQuality;
+	}
+
+	/**
+	 * Setter for mediaQuality attribute.
+	 * @param mediaQuality the mediaQuality to set
+	 */
+	public void setMediaQuality(String mediaQuality) {
+		this.mediaQuality = mediaQuality;
 	}
 
 	/**

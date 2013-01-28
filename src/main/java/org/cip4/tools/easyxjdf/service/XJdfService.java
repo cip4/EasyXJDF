@@ -18,6 +18,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.cip4.lib.xjdf.XJdfNodeFactory;
 import org.cip4.lib.xjdf.builder.ProductBuilder;
 import org.cip4.lib.xjdf.builder.XJdfBuilder;
@@ -99,11 +100,22 @@ public class XJdfService {
 
 		// create print talk
 		ProductBuilder productBuilder = new ProductBuilder(xJdfModel.getAmount());
+
+		if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
+			productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
+
 		Product product = productBuilder.build();
 
-		XJdfBuilder xJdfBuilder = new XJdfBuilder(xJdfModel.getJobId());
+		XJdfBuilder xJdfBuilder = new XJdfBuilder(xJdfModel.getJobId(), "Web2Print", xJdfModel.getJobName());
 		xJdfBuilder.addProduct(product);
-		xJdfBuilder.addParameter(nf.createRunList(xJdfModel.getContentData()));
+		xJdfBuilder.addParameter(nf.createRunList(xJdfModel.getRunList()));
+
+		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // CatalogID
+			xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
+
+		if (!StringUtils.isEmpty(xJdfModel.getCustomerId())) // CustomerID
+			xJdfBuilder.addParameter(nf.createCustomerInfo(xJdfModel.getCustomerId()));
+
 		XJDF xjdf = xJdfBuilder.build();
 
 		PrintTalkBuilder ptkBuilder = new PrintTalkBuilder();

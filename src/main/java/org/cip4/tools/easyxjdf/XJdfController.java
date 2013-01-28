@@ -10,8 +10,12 @@
  */
 package org.cip4.tools.easyxjdf;
 
+import javax.xml.bind.JAXBException;
+
+import org.cip4.lib.xprinttalk.PrintTalkFactory;
 import org.cip4.tools.easyxjdf.event.SaveAsEvent;
 import org.cip4.tools.easyxjdf.event.SaveAsEventListener;
+import org.cip4.tools.easyxjdf.event.util.ExceptionUtil;
 import org.cip4.tools.easyxjdf.service.XJdfService;
 
 /**
@@ -25,6 +29,7 @@ public class XJdfController {
 
 	/**
 	 * Default constructor.
+	 * @throws JAXBException
 	 */
 	public XJdfController() {
 
@@ -34,6 +39,9 @@ public class XJdfController {
 		// registrate listener
 		xJdfView.addSaveAsListener(new SaveAsListener());
 		xJdfView.addSendListener(new SendListener());
+
+		// init XJDF Librariy
+		PrintTalkFactory.init(true);
 	}
 
 	/**
@@ -56,13 +64,16 @@ public class XJdfController {
 		 * @throws Exception
 		 * @see org.cip4.tools.easyxjdf.event.SaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.SaveAsEvent)
 		 */
+		@Override
 		public void notify(SaveAsEvent xJdfEvent) {
 
 			XJdfService service = new XJdfService();
 			try {
 				service.saveAs(xJdfEvent.getxJdfModel(), xJdfEvent.getTargetLocation());
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+
+				// process exception
+				ExceptionUtil.processException(xJdfView.getShell(), e);
 			}
 		}
 
@@ -78,6 +89,7 @@ public class XJdfController {
 		/**
 		 * @see org.cip4.tools.easyxjdf.event.SaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.SaveAsEvent)
 		 */
+		@Override
 		public void notify(SaveAsEvent xJdfEvent) {
 			// TODO Auto-generated method stub
 
