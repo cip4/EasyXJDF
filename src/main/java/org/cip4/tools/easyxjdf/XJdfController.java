@@ -15,7 +15,6 @@ import javax.xml.bind.JAXBException;
 import org.cip4.lib.xprinttalk.PrintTalkFactory;
 import org.cip4.tools.easyxjdf.event.SaveAsEvent;
 import org.cip4.tools.easyxjdf.event.SaveAsEventListener;
-import org.cip4.tools.easyxjdf.event.util.ExceptionUtil;
 import org.cip4.tools.easyxjdf.service.XJdfService;
 
 /**
@@ -73,7 +72,7 @@ public class XJdfController {
 			} catch (Exception e) {
 
 				// process exception
-				ExceptionUtil.processException(xJdfView.getShell(), e);
+				ErrorController.processException(xJdfView.getShell(), e);
 			}
 		}
 

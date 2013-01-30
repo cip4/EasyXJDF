@@ -2,14 +2,15 @@
  * All rights reserved by
  * 
  * flyeralarm GmbH
- * Alfred-Nobel-Straße 18
- * 97080 Würzburg
+ * Alfred-Nobel-Straï¿½e 18
+ * 97080 Wï¿½rzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
  */
 package org.cip4.tools.easyxjdf;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.cip4.tools.easyxjdf.model.ErrorModel;
 import org.eclipse.swt.widgets.Shell;
 
@@ -30,6 +31,27 @@ public class ErrorController {
 		// initialize instance variables
 		this.errorView = new ErrorView(parent, errorModel);
 
+	}
+
+	/**
+	 * Processes an Exception.
+	 * @param e Exception to process.
+	 */
+	public static void processException(Shell shell, Exception e) {
+
+		// analyze excpetion
+		String stackTace = ExceptionUtils.getFullStackTrace(e);
+		String message = ExceptionUtils.getMessage(e);
+
+		// new model object
+		ErrorModel errorModel = new ErrorModel();
+		errorModel.setStackTrace(stackTace);
+		errorModel.setMessage(message);
+		errorModel.setLocalizedMessage(e.getLocalizedMessage());
+
+		// show error dialog
+		ErrorController errorController = new ErrorController(shell, errorModel);
+		errorController.showView();
 	}
 
 	/**

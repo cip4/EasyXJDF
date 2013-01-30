@@ -14,9 +14,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.cip4.tools.easyxjdf.event.SaveAsEvent;
 import org.cip4.tools.easyxjdf.event.SaveAsEventListener;
-import org.cip4.tools.easyxjdf.event.util.ExceptionUtil;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -25,6 +26,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
@@ -47,6 +49,8 @@ public class XJdfView {
 
 	private final List<SaveAsEventListener> sendListener;
 
+	private String oldJobName = "";
+
 	protected Shell shell;
 	private Text txtAmount;
 	private Text txtRunList;
@@ -64,6 +68,7 @@ public class XJdfView {
 		// init instance variables
 		saveAsListener = new ArrayList<SaveAsEventListener>();
 		sendListener = new ArrayList<SaveAsEventListener>();
+
 	}
 
 	/**
@@ -96,12 +101,14 @@ public class XJdfView {
 	protected void createContents() {
 
 		shell = new Shell(SWT.TITLE | SWT.CLOSE | SWT.BORDER | SWT.TRANSPARENT);
-		shell.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		shell.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		shell.setSize(514, 422);
 		shell.setText("CIP4 EasyXJDF");
 
 		Image imgXJdf = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/xjdf-logo.png"));
 		Image imgInfo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/info.png"));
+		Image imgTitleBg = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/title-bg.png"));
+		Image imgCip4 = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/cip4-logo.png"));
 
 		txtAmount = new Text(shell, SWT.BORDER);
 		txtAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -109,7 +116,7 @@ public class XJdfView {
 
 		Label lblAmount = new Label(shell, SWT.NONE);
 		lblAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblAmount.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblAmount.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblAmount.setBounds(12, 167, 56, 21);
 		lblAmount.setText("Amount");
 
@@ -137,19 +144,28 @@ public class XJdfView {
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblNewLabel.setBounds(348, 10, 150, 87);
+		lblNewLabel.setBounds(412, 22, 86, 50);
 		lblNewLabel.setImage(imgXJdf);
 
 		Label lblRunList = new Label(shell, SWT.NONE);
 		lblRunList.setText("ContentData");
 		lblRunList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblRunList.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblRunList.setBounds(12, 285, 87, 21);
+		lblRunList.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
+		lblRunList.setBounds(12, 260, 87, 21);
 
 		txtRunList = new Text(shell, SWT.BORDER);
+		txtRunList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+				if (e.keyCode == 8 || e.keyCode == 127) {
+					txtRunList.setText("");
+				}
+			}
+		});
 		txtRunList.setEditable(false);
 		txtRunList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtRunList.setBounds(122, 282, 349, 27);
+		txtRunList.setBounds(124, 257, 349, 27);
 
 		Button btnContentData = new Button(shell, SWT.NONE);
 		btnContentData.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -159,23 +175,37 @@ public class XJdfView {
 				FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 				dialog.setText("Append ContentData...");
 				String path = dialog.open();
+
 				if (path != null) {
 
 					File file = new File(path);
-					if (file.isFile())
+
+					if (file.isFile()) {
 						txtRunList.setText(file.getPath());
-					else
+						txtRunList.setToolTipText(txtRunList.getText());
+
+						String jobName = FilenameUtils.getBaseName(file.getPath());
+						jobName = StringUtils.replace(jobName, "_", " ");
+
+						if (StringUtils.isEmpty(txtJobName.getText()) || txtJobName.getText().equals(oldJobName)) {
+							txtJobName.setText(jobName);
+						}
+
+						oldJobName = jobName;
+
+					} else {
 						txtRunList.setText("");
+					}
 				}
 			}
 		});
-		btnContentData.setBounds(477, 280, 21, 31);
+		btnContentData.setBounds(479, 255, 21, 31);
 		btnContentData.setText("...");
 
 		Label lblJobId = new Label(shell, SWT.NONE);
 		lblJobId.setText("JobID");
 		lblJobId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblJobId.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblJobId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblJobId.setBounds(12, 134, 39, 21);
 
 		txtJobId = new Text(shell, SWT.BORDER);
@@ -183,20 +213,20 @@ public class XJdfView {
 		txtJobId.setBounds(122, 131, 115, 27);
 
 		Label lblTitle = new Label(shell, SWT.NONE);
-		lblTitle.setText("CIP4 EasyXJDF");
-		lblTitle.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
+		lblTitle.setText("EasyXJDF");
+		lblTitle.setFont(SWTResourceManager.getFont("Segoe UI", 21, SWT.BOLD | SWT.ITALIC));
 		lblTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblTitle.setBounds(12, 67, 142, 30);
+		lblTitle.setBounds(144, 32, 125, 38);
 
 		txtJobName = new Text(shell, SWT.BORDER);
 		txtJobName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtJobName.setBounds(122, 247, 376, 27);
+		txtJobName.setBounds(124, 292, 376, 27);
 
 		Label lblJobName = new Label(shell, SWT.NONE);
 		lblJobName.setText("JobName");
 		lblJobName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblJobName.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblJobName.setBounds(12, 250, 66, 21);
+		lblJobName.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
+		lblJobName.setBounds(14, 295, 66, 21);
 
 		txtCatalogId = new Text(shell, SWT.BORDER);
 		txtCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -205,13 +235,13 @@ public class XJdfView {
 		Label lblCatalogId = new Label(shell, SWT.NONE);
 		lblCatalogId.setText("CatalogID");
 		lblCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblCatalogId.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblCatalogId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblCatalogId.setBounds(10, 200, 68, 21);
 
 		Label lblMediaQuality = new Label(shell, SWT.NONE);
 		lblMediaQuality.setText("MediaQuality");
 		lblMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblMediaQuality.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblMediaQuality.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblMediaQuality.setBounds(274, 200, 93, 21);
 
 		txtMediaQuality = new Text(shell, SWT.BORDER);
@@ -225,13 +255,22 @@ public class XJdfView {
 		Label lblCustomerId = new Label(shell, SWT.NONE);
 		lblCustomerId.setText("CustomerID");
 		lblCustomerId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblCustomerId.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblCustomerId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblCustomerId.setBounds(273, 167, 88, 21);
 
 		Label lblInfo = new Label(shell, SWT.NONE);
-		lblInfo.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblInfo.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblInfo.setBounds(10, 361, 24, 24);
 		lblInfo.setImage(imgInfo);
+
+		Label lblCIP4Logo = new Label(shell, SWT.NONE);
+		lblCIP4Logo.setBounds(4, 2, 111, 70);
+		lblCIP4Logo.setImage(imgCip4);
+
+		Label lblTitleBg = new Label(shell, SWT.NONE);
+		lblTitleBg.setBounds(0, 0, shell.getSize().x, 100);
+		lblTitleBg.setImage(new Image(shell.getDisplay(), imgTitleBg.getImageData().scaledTo(shell.getSize().x, 100)));
+
 		shell.setTabList(new Control[] { txtJobId, txtAmount, txtCatalogId, txtCustomerId, txtMediaQuality, txtJobName, btnContentData, btnSaveAs, btnSend, txtRunList });
 
 	}
@@ -285,7 +324,7 @@ public class XJdfView {
 			} catch (Exception ex) {
 
 				// process exception
-				ExceptionUtil.processException(shell, ex);
+				ErrorController.processException(shell, ex);
 			}
 		}
 
