@@ -100,7 +100,7 @@ public class XJdfView {
 	 */
 	protected void createContents() {
 
-		shell = new Shell(SWT.TITLE | SWT.CLOSE | SWT.BORDER | SWT.TRANSPARENT);
+		shell = new Shell(SWT.TITLE | SWT.CLOSE | SWT.MIN | SWT.BORDER | SWT.TRANSPARENT);
 		shell.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		shell.setSize(514, 422);
 		shell.setText("CIP4 EasyXJDF");
@@ -160,6 +160,8 @@ public class XJdfView {
 
 				if (e.keyCode == 8 || e.keyCode == 127) {
 					txtRunList.setText("");
+					txtRunList.setToolTipText("");
+					updateJobName();
 				}
 			}
 		});
@@ -183,15 +185,7 @@ public class XJdfView {
 					if (file.isFile()) {
 						txtRunList.setText(file.getPath());
 						txtRunList.setToolTipText(txtRunList.getText());
-
-						String jobName = FilenameUtils.getBaseName(file.getPath());
-						jobName = StringUtils.replace(jobName, "_", " ");
-
-						if (StringUtils.isEmpty(txtJobName.getText()) || txtJobName.getText().equals(oldJobName)) {
-							txtJobName.setText(jobName);
-						}
-
-						oldJobName = jobName;
+						updateJobName();
 
 					} else {
 						txtRunList.setText("");
@@ -273,6 +267,27 @@ public class XJdfView {
 
 		shell.setTabList(new Control[] { txtJobId, txtAmount, txtCatalogId, txtCustomerId, txtMediaQuality, txtJobName, btnContentData, btnSaveAs, btnSend, txtRunList });
 
+	}
+
+	/**
+	 * Updates the JobNames value base on ContentData file path.
+	 */
+	private void updateJobName() {
+
+		String contentData = txtRunList.getText();
+
+		if (contentData == null) {
+			return;
+		}
+
+		String jobName = FilenameUtils.getBaseName(contentData);
+		jobName = StringUtils.replace(jobName, "_", " ");
+
+		if (StringUtils.isEmpty(txtJobName.getText()) || txtJobName.getText().equals(oldJobName)) {
+			txtJobName.setText(jobName);
+		}
+
+		oldJobName = jobName;
 	}
 
 	/**
