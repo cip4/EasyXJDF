@@ -15,11 +15,11 @@ import java.util.EventObject;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 
 /**
- * SaveAs Event class.
+ * XJDF SaveAs Event class.
  * @author stefan.meissner
  * @date 25.01.2013
  */
-public class SaveAsEvent extends EventObject {
+public class XJdfSaveAsEvent extends EventObject {
 
 	private static final long serialVersionUID = 6772126490771241159L;
 
@@ -32,7 +32,7 @@ public class SaveAsEvent extends EventObject {
 	 * @param xJdfModel XJdfModel object.
 	 * @param targetLocation Target location of XJDF
 	 */
-	public SaveAsEvent(XJdfModel xJdfModel, String targetLocation) {
+	public XJdfSaveAsEvent(XJdfModel xJdfModel, String targetLocation) {
 
 		super(xJdfModel);
 

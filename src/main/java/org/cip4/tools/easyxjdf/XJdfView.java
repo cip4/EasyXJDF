@@ -16,8 +16,10 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.cip4.tools.easyxjdf.event.SaveAsEvent;
-import org.cip4.tools.easyxjdf.event.SaveAsEventListener;
+import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
+import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
+import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
+import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -45,9 +47,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
  */
 public class XJdfView {
 
-	private final List<SaveAsEventListener> saveAsListener;
+	private final List<XJdfSaveAsEventListener> xJdfSaveAsListener;
 
-	private final List<SaveAsEventListener> sendListener;
+	private final List<XJdfSendEventListener> xJdfSendListener;
 
 	private String oldJobName = "";
 
@@ -66,17 +68,8 @@ public class XJdfView {
 	public XJdfView() {
 
 		// init instance variables
-		saveAsListener = new ArrayList<SaveAsEventListener>();
-		sendListener = new ArrayList<SaveAsEventListener>();
-
-	}
-
-	/**
-	 * Getter for shell attribute.
-	 * @return the shell
-	 */
-	public Shell getShell() {
-		return shell;
+		xJdfSaveAsListener = new ArrayList<XJdfSaveAsEventListener>();
+		xJdfSendListener = new ArrayList<XJdfSendEventListener>();
 	}
 
 	/**
@@ -96,6 +89,18 @@ public class XJdfView {
 	}
 
 	/**
+	 * Show an info message in a MessageBox.
+	 * @param message Message to show in a MessageBox.
+	 */
+	public void showInfo(String message) {
+
+		// show message
+		MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage(message);
+		mb.open();
+	}
+
+	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
@@ -112,7 +117,7 @@ public class XJdfView {
 
 		txtAmount = new Text(shell, SWT.BORDER);
 		txtAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtAmount.setBounds(122, 164, 115, 27);
+		txtAmount.setBounds(112, 164, 134, 27);
 
 		Label lblAmount = new Label(shell, SWT.NONE);
 		lblAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -121,6 +126,18 @@ public class XJdfView {
 		lblAmount.setText("Amount");
 
 		Button btnSend = new Button(shell, SWT.NONE);
+		btnSend.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				processSend();
+			}
+		});
+		btnSend.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				processSend();
+			}
+		});
 		btnSend.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		btnSend.setBounds(411, 351, 87, 31);
 		btnSend.setText("Send");
@@ -140,7 +157,7 @@ public class XJdfView {
 			}
 		});
 		btnSaveAs.setText("Save as...");
-		btnSaveAs.setBounds(318, 351, 87, 31);
+		btnSaveAs.setBounds(303, 351, 87, 31);
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -167,7 +184,7 @@ public class XJdfView {
 		});
 		txtRunList.setEditable(false);
 		txtRunList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtRunList.setBounds(124, 257, 349, 27);
+		txtRunList.setBounds(112, 257, 361, 27);
 
 		Button btnContentData = new Button(shell, SWT.NONE);
 		btnContentData.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -204,7 +221,7 @@ public class XJdfView {
 
 		txtJobId = new Text(shell, SWT.BORDER);
 		txtJobId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtJobId.setBounds(122, 131, 115, 27);
+		txtJobId.setBounds(112, 131, 134, 27);
 
 		Label lblTitle = new Label(shell, SWT.NONE);
 		lblTitle.setText("EasyXJDF");
@@ -214,7 +231,7 @@ public class XJdfView {
 
 		txtJobName = new Text(shell, SWT.BORDER);
 		txtJobName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtJobName.setBounds(124, 292, 376, 27);
+		txtJobName.setBounds(112, 292, 388, 27);
 
 		Label lblJobName = new Label(shell, SWT.NONE);
 		lblJobName.setText("JobName");
@@ -224,37 +241,46 @@ public class XJdfView {
 
 		txtCatalogId = new Text(shell, SWT.BORDER);
 		txtCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtCatalogId.setBounds(122, 197, 115, 27);
+		txtCatalogId.setBounds(364, 197, 134, 27);
 
 		Label lblCatalogId = new Label(shell, SWT.NONE);
 		lblCatalogId.setText("CatalogID");
 		lblCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblCatalogId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblCatalogId.setBounds(10, 200, 68, 21);
+		lblCatalogId.setBounds(270, 200, 68, 21);
 
 		Label lblMediaQuality = new Label(shell, SWT.NONE);
 		lblMediaQuality.setText("MediaQuality");
 		lblMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblMediaQuality.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblMediaQuality.setBounds(274, 200, 93, 21);
+		lblMediaQuality.setBounds(12, 200, 93, 21);
 
 		txtMediaQuality = new Text(shell, SWT.BORDER);
 		txtMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtMediaQuality.setBounds(383, 197, 115, 27);
+		txtMediaQuality.setBounds(112, 197, 134, 27);
 
 		txtCustomerId = new Text(shell, SWT.BORDER);
 		txtCustomerId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtCustomerId.setBounds(383, 164, 115, 27);
+		txtCustomerId.setBounds(364, 161, 134, 27);
 
 		Label lblCustomerId = new Label(shell, SWT.NONE);
 		lblCustomerId.setText("CustomerID");
 		lblCustomerId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblCustomerId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblCustomerId.setBounds(273, 167, 88, 21);
+		lblCustomerId.setBounds(270, 167, 88, 21);
 
 		Label lblInfo = new Label(shell, SWT.NONE);
+		lblInfo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+
+				// show info
+				new InfoController(shell).showView();
+			}
+		});
+		lblInfo.setToolTipText("Click for Info about EasyXJDF...");
 		lblInfo.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblInfo.setBounds(10, 361, 24, 24);
+		lblInfo.setBounds(14, 354, 24, 24);
 		lblInfo.setImage(imgInfo);
 
 		Label lblCIP4Logo = new Label(shell, SWT.NONE);
@@ -282,6 +308,8 @@ public class XJdfView {
 
 		String jobName = FilenameUtils.getBaseName(contentData);
 		jobName = StringUtils.replace(jobName, "_", " ");
+		jobName = StringUtils.replace(jobName, "-", " ");
+		jobName = StringUtils.replace(jobName, ".", " ");
 
 		if (StringUtils.isEmpty(txtJobName.getText()) || txtJobName.getText().equals(oldJobName)) {
 			txtJobName.setText(jobName);
@@ -291,8 +319,7 @@ public class XJdfView {
 	}
 
 	/**
-	 * Notify a list of XJdfListners.
-	 * @param xJdfListeners
+	 * Notify a list of SaveAsListners.
 	 */
 	private void processSaveAs() {
 
@@ -318,22 +345,14 @@ public class XJdfView {
 				}
 			}
 
-			// create model object
-			XJdfModel model = new XJdfModel();
-
 			try {
 
-				model.setJobId(txtJobId.getText());
-				model.setAmount(Integer.parseInt(txtAmount.getText()));
-				model.setRunList(txtRunList.getText());
-				model.setCatalogId(txtCatalogId.getText());
-				model.setCustomerId(txtCustomerId.getText());
-				model.setMediaQuality(txtMediaQuality.getText());
-				model.setJobName(txtJobName.getText());
+				// create model object
+				XJdfModel model = createModel();
 
 				// notify all listeners
-				for (SaveAsEventListener l : saveAsListener) {
-					l.notify(new SaveAsEvent(model, path));
+				for (XJdfSaveAsEventListener l : xJdfSaveAsListener) {
+					l.notify(new XJdfSaveAsEvent(model, path));
 				}
 
 			} catch (Exception ex) {
@@ -342,22 +361,65 @@ public class XJdfView {
 				ErrorController.processException(shell, ex);
 			}
 		}
+	}
 
+	/**
+	 * Notify a list of SendListners.
+	 */
+	private void processSend() {
+
+		try {
+
+			// create model object
+			XJdfModel model = createModel();
+
+			// notify all listeners
+			for (XJdfSendEventListener l : xJdfSendListener) {
+				l.notify(new XJdfSendEvent(model));
+			}
+
+		} catch (Exception ex) {
+
+			// process exception
+			ErrorController.processException(shell, ex);
+		}
+	}
+
+	/**
+	 * Create new model object by form content.
+	 * @return Model object which contains form details.
+	 */
+	private XJdfModel createModel() {
+
+		// create model object
+		XJdfModel model = new XJdfModel();
+
+		// fill attributes
+		model.setJobId(txtJobId.getText());
+		model.setAmount(Integer.parseInt(txtAmount.getText()));
+		model.setRunList(txtRunList.getText());
+		model.setCatalogId(txtCatalogId.getText());
+		model.setCustomerId(txtCustomerId.getText());
+		model.setMediaQuality(txtMediaQuality.getText());
+		model.setJobName(txtJobName.getText());
+
+		// return result
+		return model;
 	}
 
 	/**
 	 * Append listener for SaveAs Event.
-	 * @param xJdfListener XJdfListener to append to.
+	 * @param saveAsListener XJdfListener to append to.
 	 */
-	public void addSaveAsListener(SaveAsEventListener xJdfListener) {
-		saveAsListener.add(xJdfListener);
+	public void addXJdfSaveAsListener(XJdfSaveAsEventListener xJdfSaveAsListener) {
+		this.xJdfSaveAsListener.add(xJdfSaveAsListener);
 	}
 
 	/**
 	 * Append listener for Send Event.
-	 * @param xJdfListener XJdfListener to append to.
+	 * @param sendListener XJdfListener to append to.
 	 */
-	public void addSendListener(SaveAsEventListener xJdfListener) {
-		saveAsListener.add(xJdfListener);
+	public void addXJdfSendListener(XJdfSendEventListener xJdfSendListener) {
+		this.xJdfSendListener.add(xJdfSendListener);
 	}
 }

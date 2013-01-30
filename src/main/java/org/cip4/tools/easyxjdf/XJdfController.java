@@ -13,8 +13,11 @@ package org.cip4.tools.easyxjdf;
 import javax.xml.bind.JAXBException;
 
 import org.cip4.lib.xprinttalk.PrintTalkFactory;
-import org.cip4.tools.easyxjdf.event.SaveAsEvent;
-import org.cip4.tools.easyxjdf.event.SaveAsEventListener;
+import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
+import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
+import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
+import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
+import org.cip4.tools.easyxjdf.model.SendModel;
 import org.cip4.tools.easyxjdf.service.XJdfService;
 
 /**
@@ -36,8 +39,8 @@ public class XJdfController {
 		this.xJdfView = new XJdfView();
 
 		// registrate listener
-		xJdfView.addSaveAsListener(new SaveAsListener());
-		xJdfView.addSendListener(new SendListener());
+		xJdfView.addXJdfSaveAsListener(new XJdfSaveAsListener());
+		xJdfView.addXJdfSendListener(new XJdfSendListener());
 
 		// init XJDF Librariy
 		PrintTalkFactory.init(true);
@@ -57,22 +60,27 @@ public class XJdfController {
 	 * @author stefan.meissner
 	 * @date 25.01.2013
 	 */
-	private class SaveAsListener implements SaveAsEventListener {
+	private class XJdfSaveAsListener implements XJdfSaveAsEventListener {
 
 		/**
 		 * @throws Exception
-		 * @see org.cip4.tools.easyxjdf.event.SaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.SaveAsEvent)
+		 * @see org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent)
 		 */
 		@Override
-		public void notify(SaveAsEvent xJdfEvent) {
+		public void notify(XJdfSaveAsEvent saveAsEvent) {
 
-			XJdfService service = new XJdfService();
 			try {
-				service.saveAs(xJdfEvent.getxJdfModel(), xJdfEvent.getTargetLocation());
+				// save XJDF
+				XJdfService service = new XJdfService();
+				service.saveAs(saveAsEvent.getxJdfModel(), saveAsEvent.getTargetLocation());
+
+				// show info
+				xJdfView.showInfo("XJDF successfully was saved.");
+
 			} catch (Exception e) {
 
 				// process exception
-				ErrorController.processException(xJdfView.getShell(), e);
+				ErrorController.processException(xJdfView.shell, e);
 			}
 		}
 
@@ -83,14 +91,35 @@ public class XJdfController {
 	 * @author stefan.meissner
 	 * @date 25.01.2013
 	 */
-	public class SendListener implements SaveAsEventListener {
+	public class XJdfSendListener implements XJdfSendEventListener {
 
 		/**
-		 * @see org.cip4.tools.easyxjdf.event.SaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.SaveAsEvent)
+		 * @see org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent)
 		 */
 		@Override
-		public void notify(SaveAsEvent xJdfEvent) {
-			// TODO Auto-generated method stub
+		public void notify(XJdfSendEvent sendEvent) {
+
+			try {
+
+				// open send dialog
+				SendController sendController = new SendController(xJdfView.shell);
+				sendController.showView();
+
+				// get send model object
+				SendModel sendModel = sendController.getSendModel();
+
+				// send xjdf
+				XJdfService service = new XJdfService();
+				service.send(sendEvent.getxJdfModel(), sendModel.getTargetUrl());
+
+				// show info
+				xJdfView.showInfo(String.format("XJDF successfully has been sent to \"%s\"", sendModel.getTargetUrl()));
+
+			} catch (Exception e) {
+
+				// process exception
+				ErrorController.processException(xJdfView.shell, e);
+			}
 
 		}
 

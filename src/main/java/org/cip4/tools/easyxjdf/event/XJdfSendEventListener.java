@@ -13,12 +13,12 @@ package org.cip4.tools.easyxjdf.event;
 import java.util.EventListener;
 
 /**
- * EventListener class for save as events.
- * @author stefan.meissner
- * @date 25.01.2013
+ * XJDF EventListener class for send events.
+ * @author s.meissner
+ * @date 30.01.2013
  */
-public interface SaveAsEventListener extends EventListener {
+public interface XJdfSendEventListener extends EventListener {
 
-	public void notify(SaveAsEvent xJdfEvent);
+	public void notify(XJdfSendEvent xJdfSendEvent);
 
 }

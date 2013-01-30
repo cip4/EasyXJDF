@@ -15,6 +15,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -50,6 +52,42 @@ public class XJdfService {
 		// init instance variables
 		nf = new XJdfNodeFactory();
 		ptkNf = new PrintTalkNodeFactory();
+	}
+
+	/**
+	 * Generate XJDF Document and send to target URL.
+	 * @param xJdfModel The XJDF details.
+	 * @param url The target URL.
+	 */
+	public void send(XJdfModel xJdfModel, String url) throws Exception {
+
+		// create PrintTalk Document
+		PrintTalk ptk = createPrintTalk(xJdfModel);
+
+		// parse print talk
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		PrintTalkParser parser = new PrintTalkParser();
+		parser.parsePrintTalk(ptk, bos);
+		bos.close();
+
+		byte[] bytes = bos.toByteArray();
+
+		// transfer to target url
+		URL u = new URL(url);
+		HttpURLConnection connection = (HttpURLConnection) u.openConnection();
+		connection.setRequestMethod("PUT");
+		connection.setRequestProperty("CONTENT-TYPE", "application/zip");
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+
+		// write ZIP package to output stream
+		String docName = xJdfModel.getJobId() + ".xjdf";
+		PrintTalkPackager packager = new PrintTalkPackager(bytes);
+		packager.packageXJdf(connection.getOutputStream(), docName);
+
+		// get response code
+		int responseCode = connection.getResponseCode();
 	}
 
 	/**
