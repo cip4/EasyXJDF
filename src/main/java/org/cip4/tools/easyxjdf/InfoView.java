@@ -37,7 +37,7 @@ public class InfoView extends Dialog {
 
 	protected Shell shell;
 
-	private InfoModel infoModel;
+	private final InfoModel infoModel;
 
 	/**
 	 * Create the dialog.
@@ -103,7 +103,7 @@ public class InfoView extends Dialog {
 			}
 		});
 		btnClose.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		btnClose.setBounds(354, 274, 80, 31);
+		btnClose.setBounds(347, 274, 87, 31);
 		btnClose.setText("Close");
 
 		Label lblCIP4Logo = new Label(shell, SWT.NONE);
