@@ -2,7 +2,7 @@
 <EasyXJDF>
 	<Settings>
 		<Connector>
-			<SystemType>Other</SystemType>
+			<SystemType>Heidelberg Prinect</SystemType>
 			<Url>http://localhost:8011</Url>
 			<IsDefault>true</IsDefault>
 		</Connector>
@@ -15,10 +15,12 @@
 			<CustomerIDs>
 				<CustomerID>FA-123</CustomerID>
 				<CustomerID>CU-XXX</CustomerID>
+				<CustomerID>FA-12333</CustomerID>
+				<CustomerID>CU-XXX33</CustomerID>
 			</CustomerIDs>
 			<CatalogIDs>
-				<CustomerID>CAT_FLY_01</CustomerID>
-				<CustomerID>CAT_FOLDER</CustomerID>
+				<CatalogID>CAT_FLY_01</CatalogID>
+				<CatalogID>CAT_FOLDER</CatalogID>
 			</CatalogIDs>
 			<Amounts>
 				<Amount>250</Amount>
