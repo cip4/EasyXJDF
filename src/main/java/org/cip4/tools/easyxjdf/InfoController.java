@@ -2,8 +2,8 @@
  * All rights reserved by
  * 
  * flyeralarm GmbH
- * Alfred-Nobel-Straße 18
- * 97080 Würzburg
+ * Alfred-Nobel-Straï¿½e 18
+ * 97080 Wï¿½rzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
@@ -12,6 +12,8 @@ package org.cip4.tools.easyxjdf;
 
 import javax.xml.bind.JAXBException;
 
+import org.cip4.tools.easyxjdf.model.InfoModel;
+import org.cip4.tools.easyxjdf.service.InfoService;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -29,8 +31,11 @@ public class InfoController {
 	 */
 	public InfoController(Shell parent) {
 
+		// load infos
+		InfoModel infoModel = new InfoService().getInfos();
+
 		// initialize instance variables
-		this.infoView = new InfoView(parent);
+		this.infoView = new InfoView(parent, infoModel);
 
 	}
 
@@ -41,7 +46,6 @@ public class InfoController {
 
 		// show view
 		infoView.open();
-
 	}
 
 }

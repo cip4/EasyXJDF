@@ -9,6 +9,11 @@
 
 	<name>EasyXJDF</name>
 	<url>http://maven.apache.org</url>
+	
+	<properties>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+	</properties>
 
 	<developers>
 		<developer>
@@ -29,6 +34,12 @@
 	
 	<build>
 		<finalName>EasyXJDF</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
