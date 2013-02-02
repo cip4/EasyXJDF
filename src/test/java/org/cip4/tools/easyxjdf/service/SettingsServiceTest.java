@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 
 import junit.framework.Assert;
 
+import org.apache.commons.configuration.XMLConfiguration;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.junit.After;
 import org.junit.Before;
@@ -51,18 +52,37 @@ public class SettingsServiceTest {
 	}
 
 	/**
-	 * Test method for {@link org.cip4.tools.easyxjdf.service.SettingsService#getSettingsModel()}.
+	 * Test method for {@link org.cip4.tools.easyxjdf.service.SettingsService#createSettings()}.
 	 */
 	@Test
-	public void testGetSettingsModel() throws Exception {
+	public void testCreateSettings() throws Exception {
+
+		// arrange
+		SettingsModel settingsModel = new SettingsModel();
+
+		// act
+		Method method = SettingsService.class.getDeclaredMethod("createSettings", SettingsModel.class);
+		method.setAccessible(true);
+		method.invoke(service, settingsModel);
+
+		// assert
+
+	}
+
+	/**
+	 * Test method for {@link org.cip4.tools.easyxjdf.service.SettingsService#loadSettings()}.
+	 */
+	@Test
+	public void testLoadSettings() throws Exception {
 
 		// arrange
 		String fileName = SettingsServiceTest.class.getResource(RES_SETTING).getFile();
+		XMLConfiguration xmlConfig = new XMLConfiguration(fileName);
 
 		// act
-		Method method = SettingsService.class.getDeclaredMethod("loadSettings", String.class);
+		Method method = SettingsService.class.getDeclaredMethod("loadSettings", XMLConfiguration.class);
 		method.setAccessible(true);
-		SettingsModel settingsModel = (SettingsModel) method.invoke(service, fileName);
+		SettingsModel settingsModel = (SettingsModel) method.invoke(service, xmlConfig);
 
 		// assert
 		Assert.assertEquals("SystemType is wrong.", "Heidelberg Prinect", settingsModel.getSystemType());

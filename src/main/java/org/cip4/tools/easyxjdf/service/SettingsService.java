@@ -3,19 +3,23 @@
  * 
  * flyeralarm GmbH
  * Alfred-Nobel-Stra�e 18
- * 97080 W�rzburg
+ * 97080 Würzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
  */
 package org.cip4.tools.easyxjdf.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 
 /**
@@ -24,6 +28,8 @@ import org.cip4.tools.easyxjdf.model.SettingsModel;
  * @date 31.01.2013
  */
 public class SettingsService {
+
+	private static final String RES_DEFAULT_SETTINGS = "/org/cip4/tools/easyxjdf/defaultSettings.xml";
 
 	private static final String KEY_SYSTEM_TYPE = "Settings.Connector.SystemType";
 
@@ -57,34 +63,66 @@ public class SettingsService {
 	}
 
 	/**
+	 * Create a new settings file.
+	 * @throws ConfigurationException
+	 * @throws IOException In case DefaultSettings file cannot be copyied.
+	 */
+	private String createSettings(SettingsModel settings) throws ConfigurationException, IOException {
+
+		String pathDir = FilenameUtils.concat(FileUtils.getUserDirectoryPath(), "EasyXJDF");
+		new File(pathDir).mkdirs();
+
+		String pathFile = FilenameUtils.concat(pathDir, "settings.xml");
+		File file = new File(pathFile);
+
+		if (!file.exists()) {
+
+			// XMLConfiguration
+			// file.createNewFile();
+
+			// InputStream is = SettingsService.class.getResourceAsStream(RES_DEFAULT_SETTINGS);
+			// OutputStream os = new FileOutputStream(pathFile);
+			// IOUtils.copy(is, os);
+			// is.close();
+			// os.close();
+		}
+
+		XMLConfiguration xmlConfig = new XMLConfiguration();
+
+		xmlConfig.setRootElementName("EasyXJDF");
+		xmlConfig.setProperty(KEY_SYSTEM_TYPE, settingsModel.getSystemType());
+
+		xmlConfig.save(pathFile);
+
+		return pathFile;
+	}
+
+	/**
 	 * Load and parse settings file.
 	 * @param is File as InputStream.
 	 * @return SettingsModel containing details from file.
 	 * @throws ConfigurationException
 	 */
-	private SettingsModel loadSettings(String fileName) throws ConfigurationException {
-
-		// read file
-		XMLConfiguration config = new XMLConfiguration(fileName);
+	private SettingsModel loadSettings(XMLConfiguration xmlConfig) throws ConfigurationException {
 
 		// create model
 		SettingsModel settingsModel = new SettingsModel();
 
 		// load and fill
-		settingsModel.setSystemType(config.getString(KEY_SYSTEM_TYPE, "Other"));
-		settingsModel.setUrl(config.getString(KEY_URL, ""));
-		settingsModel.setDefault(config.getBoolean(KEY_IS_DEFAULT, false));
+		settingsModel.setSystemType(xmlConfig.getString(KEY_SYSTEM_TYPE, "Other"));
+		settingsModel.setUrl(xmlConfig.getString(KEY_URL, ""));
+		settingsModel.setDefault(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
 
-		String[] lstMediaQualities = config.getStringArray(KEY_MEDIA_QUALITIES);
+		String[] lstMediaQualities = xmlConfig.getStringArray(KEY_MEDIA_QUALITIES);
 		settingsModel.setMediaQualities(Arrays.asList(lstMediaQualities));
 
-		String[] lstCustomerIDs = config.getStringArray(KEY_CUSTOMER_ID);
+		String[] lstCustomerIDs = xmlConfig.getStringArray(KEY_CUSTOMER_ID);
 		settingsModel.setCustomerIDs(Arrays.asList(lstCustomerIDs));
 
-		String[] lstCatalogIDs = config.getStringArray(KEY_CATALOG_ID);
+		String[] lstCatalogIDs = xmlConfig.getStringArray(KEY_CATALOG_ID);
 		settingsModel.setCatalogIDs(Arrays.asList(lstCatalogIDs));
 
-		List<Object> lstAmountObj = config.getList(KEY_AMOUNTS, new ArrayList<Object>());
+		List<Object> lstAmountObj = xmlConfig.getList(KEY_AMOUNTS, new ArrayList<Object>());
 		settingsModel.setAmount(new ArrayList<Integer>(lstAmountObj.size()));
 
 		for (Object obj : lstAmountObj)
@@ -92,5 +130,12 @@ public class SettingsService {
 
 		// return model
 		return settingsModel;
+	}
+
+	/**
+	 * Update SystemType attribute.
+	 */
+	private void updateSystemType() {
+
 	}
 }
