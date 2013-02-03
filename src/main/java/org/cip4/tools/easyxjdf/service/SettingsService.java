@@ -29,8 +29,6 @@ import org.cip4.tools.easyxjdf.model.SettingsModel;
  */
 public class SettingsService {
 
-	private static final String RES_DEFAULT_SETTINGS = "/org/cip4/tools/easyxjdf/defaultSettings.xml";
-
 	private static final String KEY_SYSTEM_TYPE = "Settings.Connector.SystemType";
 
 	private static final String KEY_URL = "Settings.Connector.Url";
@@ -45,6 +43,8 @@ public class SettingsService {
 
 	private static final String KEY_AMOUNTS = "Settings.Suggestions.Amounts.Amount";
 
+	private final File settingsFile;
+
 	private SettingsModel settingsModel;
 
 	/**
@@ -52,6 +52,12 @@ public class SettingsService {
 	 */
 	public SettingsService() {
 
+		// init settings file
+		String pathDir = FilenameUtils.concat(FileUtils.getUserDirectoryPath(), "EasyXJDF");
+		new File(pathDir).mkdirs();
+
+		String pathFile = FilenameUtils.concat(pathDir, "settings.xml");
+		this.settingsFile = new File(pathFile);
 	}
 
 	/**
@@ -63,38 +69,37 @@ public class SettingsService {
 	}
 
 	/**
-	 * Create a new settings file.
+	 * Save all setting in user profile.
 	 * @throws ConfigurationException
 	 * @throws IOException In case DefaultSettings file cannot be copyied.
 	 */
-	private String createSettings(SettingsModel settings) throws ConfigurationException, IOException {
-
-		String pathDir = FilenameUtils.concat(FileUtils.getUserDirectoryPath(), "EasyXJDF");
-		new File(pathDir).mkdirs();
-
-		String pathFile = FilenameUtils.concat(pathDir, "settings.xml");
-		File file = new File(pathFile);
-
-		if (!file.exists()) {
-
-			// XMLConfiguration
-			// file.createNewFile();
-
-			// InputStream is = SettingsService.class.getResourceAsStream(RES_DEFAULT_SETTINGS);
-			// OutputStream os = new FileOutputStream(pathFile);
-			// IOUtils.copy(is, os);
-			// is.close();
-			// os.close();
-		}
+	public void saveSettings(SettingsModel settings) throws ConfigurationException, IOException {
 
 		XMLConfiguration xmlConfig = new XMLConfiguration();
 
 		xmlConfig.setRootElementName("EasyXJDF");
 		xmlConfig.setProperty(KEY_SYSTEM_TYPE, settingsModel.getSystemType());
+		xmlConfig.setProperty(KEY_URL, settingsModel.getUrl());
+		xmlConfig.setProperty(KEY_IS_DEFAULT, Boolean.toString(settingsModel.isDefault()));
 
-		xmlConfig.save(pathFile);
+		for (String mediaQuality : settingsModel.getMediaQualities()) {
+			xmlConfig.addProperty(KEY_MEDIA_QUALITIES, mediaQuality);
+		}
 
-		return pathFile;
+		for (String catalogId : settingsModel.getCatalogIDs()) {
+			xmlConfig.addProperty(KEY_CATALOG_ID, catalogId);
+		}
+
+		for (String customerId : settingsModel.getCustomerIDs()) {
+			xmlConfig.addProperty(KEY_CUSTOMER_ID, customerId);
+		}
+
+		for (Integer amount : settingsModel.getAmount()) {
+			xmlConfig.addProperty(KEY_AMOUNTS, amount);
+		}
+
+		xmlConfig.save(settingsFile);
+
 	}
 
 	/**
@@ -103,39 +108,77 @@ public class SettingsService {
 	 * @return SettingsModel containing details from file.
 	 * @throws ConfigurationException
 	 */
-	private SettingsModel loadSettings(XMLConfiguration xmlConfig) throws ConfigurationException {
+	public SettingsModel loadSettings() {
 
 		// create model
-		SettingsModel settingsModel = new SettingsModel();
+		SettingsModel settingsModel;
 
-		// load and fill
-		settingsModel.setSystemType(xmlConfig.getString(KEY_SYSTEM_TYPE, "Other"));
-		settingsModel.setUrl(xmlConfig.getString(KEY_URL, ""));
-		settingsModel.setDefault(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
+		if (settingsFile.isFile()) {
 
-		String[] lstMediaQualities = xmlConfig.getStringArray(KEY_MEDIA_QUALITIES);
-		settingsModel.setMediaQualities(Arrays.asList(lstMediaQualities));
+			// load defaults
+			settingsModel = defaultSettings();
 
-		String[] lstCustomerIDs = xmlConfig.getStringArray(KEY_CUSTOMER_ID);
-		settingsModel.setCustomerIDs(Arrays.asList(lstCustomerIDs));
+		} else {
 
-		String[] lstCatalogIDs = xmlConfig.getStringArray(KEY_CATALOG_ID);
-		settingsModel.setCatalogIDs(Arrays.asList(lstCatalogIDs));
+			XMLConfiguration xmlConfig;
 
-		List<Object> lstAmountObj = xmlConfig.getList(KEY_AMOUNTS, new ArrayList<Object>());
-		settingsModel.setAmount(new ArrayList<Integer>(lstAmountObj.size()));
+			try {
+				xmlConfig = new XMLConfiguration(settingsFile);
 
-		for (Object obj : lstAmountObj)
-			settingsModel.getAmount().add(Integer.parseInt(obj.toString()));
+			} catch (ConfigurationException e) {
+
+				// return default settings
+				return defaultSettings();
+			}
+
+			// create model
+			settingsModel = new SettingsModel();
+
+			// load and fill
+			settingsModel.setSystemType(xmlConfig.getString(KEY_SYSTEM_TYPE, "Other"));
+			settingsModel.setUrl(xmlConfig.getString(KEY_URL, ""));
+			settingsModel.setDefault(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
+
+			String[] lstMediaQualities = xmlConfig.getStringArray(KEY_MEDIA_QUALITIES);
+			settingsModel.setMediaQualities(Arrays.asList(lstMediaQualities));
+
+			String[] lstCustomerIDs = xmlConfig.getStringArray(KEY_CUSTOMER_ID);
+			settingsModel.setCustomerIDs(Arrays.asList(lstCustomerIDs));
+
+			String[] lstCatalogIDs = xmlConfig.getStringArray(KEY_CATALOG_ID);
+			settingsModel.setCatalogIDs(Arrays.asList(lstCatalogIDs));
+
+			List<Object> lstAmountObj = xmlConfig.getList(KEY_AMOUNTS, new ArrayList<Object>());
+			settingsModel.setAmount(new ArrayList<Integer>(lstAmountObj.size()));
+
+			for (Object obj : lstAmountObj)
+				settingsModel.getAmount().add(Integer.parseInt(obj.toString()));
+		}
 
 		// return model
 		return settingsModel;
 	}
 
 	/**
-	 * Update SystemType attribute.
+	 * Returns the default settings.
+	 * @return SeetingsModel with default settings.
 	 */
-	private void updateSystemType() {
+	private SettingsModel defaultSettings() {
 
+		// create model
+		SettingsModel settingsModel = new SettingsModel();
+
+		// fill
+		settingsModel.setSystemType("Other");
+		settingsModel.setUrl("");
+		settingsModel.setDefault(false);
+
+		settingsModel.setMediaQualities(new ArrayList<String>());
+		settingsModel.setCustomerIDs(new ArrayList<String>());
+		settingsModel.setCatalogIDs(new ArrayList<String>());
+		settingsModel.setAmount(new ArrayList<Integer>());
+
+		// return model
+		return settingsModel;
 	}
 }

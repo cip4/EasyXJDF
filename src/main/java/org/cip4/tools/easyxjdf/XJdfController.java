@@ -102,7 +102,7 @@ public class XJdfController {
 			try {
 
 				// open send dialog
-				SendController sendController = new SendController(xJdfView.shell);
+				SettingsController sendController = new SettingsController(xJdfView.shell);
 				sendController.showView();
 
 				// get send model object

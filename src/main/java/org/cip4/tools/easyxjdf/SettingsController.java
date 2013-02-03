@@ -2,8 +2,8 @@
  * All rights reserved by
  * 
  * flyeralarm GmbH
- * Alfred-Nobel-Straße 18
- * 97080 Würzburg
+ * Alfred-Nobel-Straï¿½e 18
+ * 97080 Wï¿½rzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
@@ -22,9 +22,9 @@ import org.eclipse.swt.widgets.Shell;
  * @author s.meissner
  * @date 30.01.2013
  */
-public class SendController {
+public class SettingsController {
 
-	private final SendView sendView;
+	private final SettingsView sendView;
 
 	private SendModel sendModel;
 
@@ -32,10 +32,10 @@ public class SendController {
 	 * Default constructor.
 	 * @throws JAXBException
 	 */
-	public SendController(Shell parent) {
+	public SettingsController(Shell parent) {
 
 		// initialize instance variables
-		this.sendView = new SendView(parent);
+		this.sendView = new SettingsView(parent);
 
 		// registrate listener
 		sendView.addSendListener(new SendListener());

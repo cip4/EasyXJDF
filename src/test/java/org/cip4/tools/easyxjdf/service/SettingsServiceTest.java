@@ -10,11 +10,13 @@
  */
 package org.cip4.tools.easyxjdf.service;
 
+import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 import junit.framework.Assert;
 
-import org.apache.commons.configuration.XMLConfiguration;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.junit.After;
 import org.junit.Before;
@@ -77,12 +79,16 @@ public class SettingsServiceTest {
 
 		// arrange
 		String fileName = SettingsServiceTest.class.getResource(RES_SETTING).getFile();
-		XMLConfiguration xmlConfig = new XMLConfiguration(fileName);
+		File mockSettings = new File(fileName);
+
+		Field field = SettingsService.class.getDeclaredField("settingsFile");
+		field.setAccessible(true);
+		field.set(service, mockSettings);
 
 		// act
-		Method method = SettingsService.class.getDeclaredMethod("loadSettings", XMLConfiguration.class);
+		Method method = SettingsService.class.getDeclaredMethod("loadSettings");
 		method.setAccessible(true);
-		SettingsModel settingsModel = (SettingsModel) method.invoke(service, xmlConfig);
+		SettingsModel settingsModel = (SettingsModel) method.invoke(service);
 
 		// assert
 		Assert.assertEquals("SystemType is wrong.", "Heidelberg Prinect", settingsModel.getSystemType());
@@ -100,7 +106,27 @@ public class SettingsServiceTest {
 
 		Assert.assertEquals("Number Amounts is wrong.", 7, settingsModel.getAmount().size());
 		Assert.assertEquals("Amount is wrong.", new Integer(5000), settingsModel.getAmount().get(4));
+	}
 
+	@Test
+	public void testLoadSettingsNoFile() throws Exception {
+
+		// arrange
+		File file = File.createTempFile("EasyXJDF-Test-" + UUID.randomUUID().toString(), "tmp");
+
+		Field field = SettingsService.class.getDeclaredField("settingsFile");
+		field.setAccessible(true);
+		field.set(service, file);
+
+		// act
+		Method method = SettingsService.class.getDeclaredMethod("loadSettings");
+		method.setAccessible(true);
+		SettingsModel settingsModel = (SettingsModel) method.invoke(service);
+
+		// assert
+		Assert.assertEquals("SystemType is wrong.", "Other", settingsModel.getSystemType());
+		Assert.assertEquals("Url is wrong.", "", settingsModel.getUrl());
+		Assert.assertEquals("IsDefault is wrong.", false, settingsModel.isDefault());
 	}
 
 }

@@ -114,6 +114,20 @@ public class XJdfView {
 		Image imgInfo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/info.png"));
 		Image imgTitleBg = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/title-bg.png"));
 		Image imgCip4 = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/cip4-logo.png"));
+		Image imgSettings = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/settings.png"));
+
+		shell.setImage(imgXJdf);
+
+		Label lblSettings = new Label(shell, SWT.NONE);
+		lblSettings.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				new SettingsController(shell).showView();
+			}
+		});
+		lblSettings.setToolTipText("Show EasyXJDF Settings");
+		lblSettings.setBounds(474, 97, 24, 24);
+		lblSettings.setImage(imgSettings);
 
 		txtAmount = new Text(shell, SWT.BORDER);
 		txtAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -161,7 +175,7 @@ public class XJdfView {
 
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblNewLabel.setBounds(412, 22, 86, 50);
+		lblNewLabel.setBounds(414, -3, 86, 70);
 		lblNewLabel.setImage(imgXJdf);
 
 		Label lblRunList = new Label(shell, SWT.NONE);

@@ -19,6 +19,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -39,6 +41,8 @@ public class InfoView extends Dialog {
 
 	private final InfoModel infoModel;
 
+	private final Shell parent;
+
 	/**
 	 * Create the dialog.
 	 * @param parent The parent dialog.
@@ -51,6 +55,7 @@ public class InfoView extends Dialog {
 
 		// init members
 		this.infoModel = infoModel;
+		this.parent = parent;
 	}
 
 	/**
@@ -59,6 +64,13 @@ public class InfoView extends Dialog {
 	 */
 	public Object open() {
 		createContents();
+
+		// Move the dialog to the center of the top level shell.
+		Rectangle shellBounds = parent.getBounds();
+		Point dialogSize = shell.getSize();
+		shell.setLocation(shellBounds.x + (shellBounds.width - dialogSize.x) / 2, shellBounds.y + (shellBounds.height - dialogSize.y) / 2);
+
+		// open
 		shell.open();
 		shell.layout();
 		Display display = getParent().getDisplay();
@@ -81,8 +93,11 @@ public class InfoView extends Dialog {
 		shell.setText(getText());
 
 		Image imgFALogo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/fa-logo.png"));
-		Image imgXJdfLogo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/xjdf-logo.png"));
+		Image imgXJdfLogo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/xjdf-logo-small.png"));
 		Image imgCIP4Logo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/cip4-logo.png"));
+		Image imgInfo = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/info.png"));
+
+		shell.setImage(imgInfo);
 
 		Button btnClose = new Button(shell, SWT.NONE);
 		btnClose.addMouseListener(new MouseAdapter() {
@@ -174,6 +189,11 @@ public class InfoView extends Dialog {
 		lblAuthor.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.ITALIC));
 		lblAuthor.setBounds(16, 143, 55, 15);
 		lblAuthor.setText("Author:");
+
+		Label lblXJDF = new Label(shell, SWT.NONE);
+		lblXJDF.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblXJDF.setBounds(382, 10, 52, 30);
+		lblXJDF.setImage(imgXJdfLogo);
 
 	}
 }
