@@ -10,6 +10,9 @@
  */
 package org.cip4.tools.easyxjdf;
 
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +24,7 @@ import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.service.SettingsService;
 import org.cip4.tools.easyxjdf.service.XJdfService;
+import org.eclipse.swt.SWT;
 
 /**
  * The XJDF Controller Class (MVC Pattern).
@@ -80,7 +84,7 @@ public class XJdfController {
 				service.saveAs(saveAsEvent.getxJdfModel(), saveAsEvent.getTargetLocation());
 
 				// show info
-				xJdfView.showInfo("XJDF successfully was saved.");
+				xJdfView.showMessage("XJDF successfully was saved.", SWT.ICON_INFORMATION | SWT.OK);
 
 				// auto extend
 				SettingsModel settings = settingsService.loadSettings();
@@ -139,7 +143,7 @@ public class XJdfController {
 					xJdfService.send(sendEvent.getxJdfModel(), url);
 
 					// show info
-					xJdfView.showInfo(String.format("XJDF successfully has been sent to \"%s\"", url));
+					xJdfView.showMessage(String.format("XJDF successfully has been sent to \"%s\"", url), SWT.ICON_INFORMATION | SWT.OK);
 				}
 
 				// auto extend
@@ -151,6 +155,18 @@ public class XJdfController {
 					// update settings in view
 					xJdfView.updateSettings(settingsService.loadSettings());
 				}
+
+			} catch (ConnectException e) {
+
+				SettingsModel settings = settingsService.loadSettings();
+				String url = settings.getUrl();
+				xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url), SWT.ICON_ERROR | SWT.OK);
+
+			} catch (UnknownHostException e) {
+
+				SettingsModel settings = settingsService.loadSettings();
+				String url = settings.getUrl();
+				xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url), SWT.ICON_ERROR | SWT.OK);
 
 			} catch (Exception e) {
 

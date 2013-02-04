@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -89,6 +90,10 @@ public class XJdfService {
 
 		// get response code
 		int responseCode = connection.getResponseCode();
+
+		if (responseCode != 200) {
+			throw new ConnectException();
+		}
 	}
 
 	/**

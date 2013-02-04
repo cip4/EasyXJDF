@@ -112,10 +112,10 @@ public class XJdfView {
 	 * Show an info message in a MessageBox.
 	 * @param message Message to show in a MessageBox.
 	 */
-	public void showInfo(String message) {
+	public void showMessage(String message, int style) {
 
 		// show message
-		MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
+		MessageBox mb = new MessageBox(shell, style);
 		mb.setMessage(message);
 		mb.open();
 	}
@@ -342,7 +342,7 @@ public class XJdfView {
 		cmbCatalogID = new Combo(shell, SWT.NONE);
 		cmbCatalogID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		cmbCatalogID.setBounds(364, 200, 134, 29);
-		shell.setTabList(new Control[] { txtJobId, txtJobName, btnContentData, btnSaveAs, btnSend, txtRunList });
+		shell.setTabList(new Control[] { txtJobId, txtRunList, btnContentData, txtJobName, btnSaveAs, btnSend });
 
 	}
 
@@ -401,7 +401,7 @@ public class XJdfView {
 		if (!validateAmount()) {
 
 			// show info
-			showInfo("Amount is not numeric.");
+			showMessage("Amount is not numeric.", SWT.ICON_INFORMATION | SWT.OK);
 
 			// set focus
 			cmbAmount.setFocus();
