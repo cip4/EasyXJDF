@@ -17,7 +17,7 @@ import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
 import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
-import org.cip4.tools.easyxjdf.model.SendModel;
+import org.cip4.tools.easyxjdf.service.SettingsService;
 import org.cip4.tools.easyxjdf.service.XJdfService;
 
 /**
@@ -29,6 +29,8 @@ public class XJdfController {
 
 	private final XJdfView xJdfView;
 
+	private final SettingsService settingsService;
+
 	/**
 	 * Default constructor.
 	 * @throws JAXBException
@@ -36,7 +38,8 @@ public class XJdfController {
 	public XJdfController() {
 
 		// initialize instance variables
-		this.xJdfView = new XJdfView();
+		this.settingsService = new SettingsService();
+		this.xJdfView = new XJdfView(settingsService.loadSettings());
 
 		// registrate listener
 		xJdfView.addXJdfSaveAsListener(new XJdfSaveAsListener());
@@ -105,15 +108,15 @@ public class XJdfController {
 				SettingsController sendController = new SettingsController(xJdfView.shell);
 				sendController.showView();
 
-				// get send model object
-				SendModel sendModel = sendController.getSendModel();
-
-				// send xjdf
-				XJdfService service = new XJdfService();
-				service.send(sendEvent.getxJdfModel(), sendModel.getTargetUrl());
-
-				// show info
-				xJdfView.showInfo(String.format("XJDF successfully has been sent to \"%s\"", sendModel.getTargetUrl()));
+				// // get send model object
+				// SendModel sendModel = sendController.getSendModel();
+				//
+				// // send xjdf
+				// XJdfService service = new XJdfService();
+				// service.send(sendEvent.getxJdfModel(), sendModel.getTargetUrl());
+				//
+				// // show info
+				// xJdfView.showInfo(String.format("XJDF successfully has been sent to \"%s\"", sendModel.getTargetUrl()));
 
 			} catch (Exception e) {
 

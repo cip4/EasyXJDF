@@ -26,6 +26,7 @@ import org.cip4.lib.xjdf.builder.ProductBuilder;
 import org.cip4.lib.xjdf.builder.XJdfBuilder;
 import org.cip4.lib.xjdf.schema.Product;
 import org.cip4.lib.xjdf.schema.XJDF;
+import org.cip4.lib.xjdf.util.IDGeneratorUtil;
 import org.cip4.lib.xprinttalk.PrintTalkNodeFactory;
 import org.cip4.lib.xprinttalk.builder.PrintTalkBuilder;
 import org.cip4.lib.xprinttalk.schema.PrintTalk;
@@ -135,6 +136,11 @@ public class XJdfService {
 	 * @return XJDF Document.
 	 */
 	private PrintTalk createPrintTalk(XJdfModel xJdfModel) {
+
+		// prepare model
+		if (StringUtils.isEmpty(xJdfModel.getJobId())) {
+			xJdfModel.setJobId(IDGeneratorUtil.generateID("ID"));
+		}
 
 		// create print talk
 		ProductBuilder productBuilder = new ProductBuilder(xJdfModel.getAmount());

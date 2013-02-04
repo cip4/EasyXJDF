@@ -12,36 +12,36 @@ package org.cip4.tools.easyxjdf.event;
 
 import java.util.EventObject;
 
-import org.cip4.tools.easyxjdf.model.SendModel;
+import org.cip4.tools.easyxjdf.model.SettingsModel;
 
 /**
- * Send Event class.
+ * Settings Save Event class.
  * @author s.meissner
  * @date 30.01.2013
  */
-public class SendEvent extends EventObject {
+public class SettingsSaveEvent extends EventObject {
 
 	private static final long serialVersionUID = 6772126490771241159L;
 
-	private final SendModel sendModel;
+	private final SettingsModel settingsModel;
 
 	/**
 	 * Custom constructor. Accepting source and model object for initializing.
-	 * @param sendModel SendModel object.
+	 * @param settingsModel The SettingsModel object.
 	 */
-	public SendEvent(SendModel sendModel) {
+	public SettingsSaveEvent(SettingsModel settingsModel) {
 
-		super(sendModel);
+		super(settingsModel);
 
-		this.sendModel = sendModel;
+		this.settingsModel = settingsModel;
 	}
 
 	/**
-	 * Getter for sendModel attribute.
-	 * @return the sendModel
+	 * Getter for settingsModel attribute.
+	 * @return the settingsModel
 	 */
-	public SendModel getSendModel() {
-		return sendModel;
+	public SettingsModel getSettingsModel() {
+		return settingsModel;
 	}
 
 }

@@ -20,8 +20,11 @@ import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
 import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
+import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -31,6 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -51,25 +55,36 @@ public class XJdfView {
 
 	private final List<XJdfSendEventListener> xJdfSendListener;
 
+	private SettingsModel settingsModel;
+
 	private String oldJobName = "";
 
 	protected Shell shell;
-	private Text txtAmount;
+
+	private Combo cmbAmount;
+
+	private Combo cmbMediaQuality;
+
+	private Combo cmbCustomerID;
+
+	private Combo cmbCatalogID;
+
 	private Text txtRunList;
+
 	private Text txtJobId;
+
 	private Text txtJobName;
-	private Text txtCatalogId;
-	private Text txtMediaQuality;
-	private Text txtCustomerId;
 
 	/**
 	 * Default constructor.
 	 */
-	public XJdfView() {
+	public XJdfView(SettingsModel settingsModel) {
 
 		// init instance variables
 		xJdfSaveAsListener = new ArrayList<XJdfSaveAsEventListener>();
 		xJdfSendListener = new ArrayList<XJdfSendEventListener>();
+
+		this.settingsModel = settingsModel;
 	}
 
 	/**
@@ -78,7 +93,12 @@ public class XJdfView {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
+
+		// create content
 		createContents();
+		loadSuggenstions();
+
+		// open dialog
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -122,16 +142,12 @@ public class XJdfView {
 		lblSettings.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				new SettingsController(shell).showView();
+				showSettingsDialog();
 			}
 		});
 		lblSettings.setToolTipText("Show EasyXJDF Settings");
 		lblSettings.setBounds(474, 97, 24, 24);
 		lblSettings.setImage(imgSettings);
-
-		txtAmount = new Text(shell, SWT.BORDER);
-		txtAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtAmount.setBounds(112, 164, 134, 27);
 
 		Label lblAmount = new Label(shell, SWT.NONE);
 		lblAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -253,29 +269,17 @@ public class XJdfView {
 		lblJobName.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
 		lblJobName.setBounds(14, 295, 66, 21);
 
-		txtCatalogId = new Text(shell, SWT.BORDER);
-		txtCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtCatalogId.setBounds(364, 197, 134, 27);
-
 		Label lblCatalogId = new Label(shell, SWT.NONE);
 		lblCatalogId.setText("CatalogID");
 		lblCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblCatalogId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblCatalogId.setBounds(270, 200, 68, 21);
+		lblCatalogId.setBounds(270, 203, 68, 21);
 
 		Label lblMediaQuality = new Label(shell, SWT.NONE);
 		lblMediaQuality.setText("MediaQuality");
 		lblMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblMediaQuality.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblMediaQuality.setBounds(12, 200, 93, 21);
-
-		txtMediaQuality = new Text(shell, SWT.BORDER);
-		txtMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtMediaQuality.setBounds(112, 197, 134, 27);
-
-		txtCustomerId = new Text(shell, SWT.BORDER);
-		txtCustomerId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtCustomerId.setBounds(364, 161, 134, 27);
+		lblMediaQuality.setBounds(12, 203, 93, 21);
 
 		Label lblCustomerId = new Label(shell, SWT.NONE);
 		lblCustomerId.setText("CustomerID");
@@ -305,8 +309,48 @@ public class XJdfView {
 		lblTitleBg.setBounds(0, 0, shell.getSize().x, 100);
 		lblTitleBg.setImage(new Image(shell.getDisplay(), imgTitleBg.getImageData().scaledTo(shell.getSize().x, 100)));
 
-		shell.setTabList(new Control[] { txtJobId, txtAmount, txtCatalogId, txtCustomerId, txtMediaQuality, txtJobName, btnContentData, btnSaveAs, btnSend, txtRunList });
+		cmbAmount = new Combo(shell, SWT.NONE);
+		cmbAmount.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+		});
+		cmbAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbAmount.setBounds(112, 164, 134, 29);
 
+		cmbMediaQuality = new Combo(shell, SWT.NONE);
+		cmbMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbMediaQuality.setBounds(112, 200, 134, 29);
+
+		cmbCustomerID = new Combo(shell, SWT.NONE);
+		cmbCustomerID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbCustomerID.setBounds(364, 164, 134, 29);
+
+		cmbCatalogID = new Combo(shell, SWT.NONE);
+		cmbCatalogID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbCatalogID.setBounds(364, 200, 134, 29);
+		shell.setTabList(new Control[] { txtJobId, txtJobName, btnContentData, btnSaveAs, btnSend, txtRunList });
+
+	}
+
+	/**
+	 * Validate amount.
+	 */
+	private void validateAmount() {
+
+		try {
+			if (!StringUtils.isEmpty(cmbAmount.getText())) {
+				Integer.parseInt(cmbAmount.getText());
+			}
+
+		} catch (NumberFormatException nex) {
+
+			// show info
+			showInfo("Amount is not numeric.");
+
+			// set focus
+			cmbAmount.setFocus();
+		}
 	}
 
 	/**
@@ -410,15 +454,54 @@ public class XJdfView {
 
 		// fill attributes
 		model.setJobId(txtJobId.getText());
-		model.setAmount(Integer.parseInt(txtAmount.getText()));
+		model.setAmount(Integer.parseInt(cmbAmount.getText()));
 		model.setRunList(txtRunList.getText());
-		model.setCatalogId(txtCatalogId.getText());
-		model.setCustomerId(txtCustomerId.getText());
-		model.setMediaQuality(txtMediaQuality.getText());
+		model.setCatalogId(cmbCatalogID.getText());
+		model.setCustomerId(cmbCustomerID.getText());
+		model.setMediaQuality(cmbMediaQuality.getText());
 		model.setJobName(txtJobName.getText());
 
 		// return result
 		return model;
+	}
+
+	/**
+	 * Show settings dialog.
+	 */
+	private void showSettingsDialog() {
+
+		// show settings dialog and update settings
+		settingsModel = new SettingsController(shell).showView();
+
+		// update suggestions
+		loadSuggenstions();
+	}
+
+	/**
+	 * Load field suggestions
+	 */
+	private void loadSuggenstions() {
+
+		// display Amounts
+		Integer[] amounts = settingsModel.getAmounts().toArray(new Integer[settingsModel.getAmounts().size()]);
+		String[] strAmounts = new String[amounts.length];
+
+		for (int i = 0; i < amounts.length; i++)
+			strAmounts[i] = amounts[i].toString();
+
+		cmbAmount.setItems(strAmounts);
+
+		// display MediaQualities
+		String[] mediaQualities = settingsModel.getMediaQualities().toArray(new String[settingsModel.getMediaQualities().size()]);
+		cmbMediaQuality.setItems(mediaQualities);
+
+		// display CustomerIDs
+		String[] customerIDs = settingsModel.getCustomerIDs().toArray(new String[settingsModel.getCustomerIDs().size()]);
+		cmbCustomerID.setItems(customerIDs);
+
+		// display CustomerIDs
+		String[] catalogIDs = settingsModel.getCatalogIDs().toArray(new String[settingsModel.getCatalogIDs().size()]);
+		cmbCatalogID.setItems(catalogIDs);
 	}
 
 	/**

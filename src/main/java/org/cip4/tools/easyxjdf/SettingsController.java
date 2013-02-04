@@ -10,11 +10,10 @@
  */
 package org.cip4.tools.easyxjdf;
 
-import javax.xml.bind.JAXBException;
-
-import org.cip4.tools.easyxjdf.event.SendEvent;
-import org.cip4.tools.easyxjdf.event.SendEventListener;
-import org.cip4.tools.easyxjdf.model.SendModel;
+import org.cip4.tools.easyxjdf.event.SettingsSaveEvent;
+import org.cip4.tools.easyxjdf.event.SettingsSaveEventListener;
+import org.cip4.tools.easyxjdf.model.SettingsModel;
+import org.cip4.tools.easyxjdf.service.SettingsService;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -24,46 +23,45 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class SettingsController {
 
-	private final SettingsView sendView;
+	private final SettingsView settingsView;
 
-	private SendModel sendModel;
+	private SettingsModel settingsModel;
+
+	private SettingsService settingsService;
 
 	/**
-	 * Default constructor.
-	 * @throws JAXBException
+	 * Custom constructor. Accepting a parameter for initializing.
+	 * @param parent The Parent Shell object.
 	 */
 	public SettingsController(Shell parent) {
 
+		// load settings
+		this.settingsService = new SettingsService();
+		this.settingsModel = settingsService.loadSettings();
+
 		// initialize instance variables
-		this.sendView = new SettingsView(parent);
+		this.settingsView = new SettingsView(parent, this.settingsModel);
 
-		// registrate listener
-		sendView.addSendListener(new SendListener());
+		// register listener
+		settingsView.addSettingsSaveEventListener(new SettingsSaveEventListenerImpl());
 	}
 
 	/**
-	 * Getter for sendModel attribute.
-	 * @return the sendModel
+	 * Show the SettingView Form.
+	 * @return The latest setting model.
 	 */
-	public SendModel getSendModel() {
-		return sendModel;
-	}
-
-	/**
-	 * Setter for sendModel attribute.
-	 * @param sendModel the sendModel to set
-	 */
-	public void setSendModel(SendModel sendModel) {
-		this.sendModel = sendModel;
-	}
-
-	/**
-	 * Show the SendView Form.
-	 */
-	public void showView() {
+	public SettingsModel showView() {
 
 		// show view
-		sendView.open();
+		SettingsModel result = settingsView.open();
+
+		// analyze result
+		if (result == null) {
+			result = settingsService.loadSettings();
+		}
+
+		// return result
+		return result;
 
 	}
 
@@ -72,17 +70,24 @@ public class SettingsController {
 	 * @author stefan.meissner
 	 * @date 25.01.2013
 	 */
-	private class SendListener implements SendEventListener {
+	private class SettingsSaveEventListenerImpl implements SettingsSaveEventListener {
 
 		/**
 		 * @throws Exception
 		 * @see org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent)
 		 */
 		@Override
-		public void notify(SendEvent sendEvent) {
+		public void notify(SettingsSaveEvent settingsSaveEvent) {
 
 			// update model
-			sendModel = sendEvent.getSendModel();
+			settingsModel = settingsSaveEvent.getSettingsModel();
+
+			// save settings
+			try {
+				settingsService.saveSettings(settingsModel);
+			} catch (Exception e) {
+				ErrorController.processException(settingsView.shell, e);
+			}
 		}
 
 	}

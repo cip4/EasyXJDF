@@ -45,8 +45,6 @@ public class SettingsService {
 
 	private final File settingsFile;
 
-	private SettingsModel settingsModel;
-
 	/**
 	 * Default constructor.
 	 */
@@ -61,43 +59,38 @@ public class SettingsService {
 	}
 
 	/**
-	 * Getter for settingsModel attribute.
-	 * @return the settingsModel
-	 */
-	public SettingsModel getSettingsModel() {
-		return settingsModel;
-	}
-
-	/**
 	 * Save all setting in user profile.
 	 * @throws ConfigurationException
 	 * @throws IOException In case DefaultSettings file cannot be copyied.
 	 */
 	public void saveSettings(SettingsModel settings) throws ConfigurationException, IOException {
 
+		// new configuration
 		XMLConfiguration xmlConfig = new XMLConfiguration();
 
+		// write settins to config file
 		xmlConfig.setRootElementName("EasyXJDF");
-		xmlConfig.setProperty(KEY_SYSTEM_TYPE, settingsModel.getSystemType());
-		xmlConfig.setProperty(KEY_URL, settingsModel.getUrl());
-		xmlConfig.setProperty(KEY_IS_DEFAULT, Boolean.toString(settingsModel.isDefault()));
+		xmlConfig.setProperty(KEY_SYSTEM_TYPE, settings.getSystemType());
+		xmlConfig.setProperty(KEY_URL, settings.getUrl());
+		xmlConfig.setProperty(KEY_IS_DEFAULT, Boolean.toString(settings.isDefault()));
 
-		for (String mediaQuality : settingsModel.getMediaQualities()) {
+		for (String mediaQuality : settings.getMediaQualities()) {
 			xmlConfig.addProperty(KEY_MEDIA_QUALITIES, mediaQuality);
 		}
 
-		for (String catalogId : settingsModel.getCatalogIDs()) {
+		for (String catalogId : settings.getCatalogIDs()) {
 			xmlConfig.addProperty(KEY_CATALOG_ID, catalogId);
 		}
 
-		for (String customerId : settingsModel.getCustomerIDs()) {
+		for (String customerId : settings.getCustomerIDs()) {
 			xmlConfig.addProperty(KEY_CUSTOMER_ID, customerId);
 		}
 
-		for (Integer amount : settingsModel.getAmount()) {
+		for (Integer amount : settings.getAmounts()) {
 			xmlConfig.addProperty(KEY_AMOUNTS, amount);
 		}
 
+		// save config files
 		xmlConfig.save(settingsFile);
 
 	}
@@ -111,12 +104,12 @@ public class SettingsService {
 	public SettingsModel loadSettings() {
 
 		// create model
-		SettingsModel settingsModel;
+		SettingsModel settings;
 
-		if (settingsFile.isFile()) {
+		if (!settingsFile.isFile()) {
 
 			// load defaults
-			settingsModel = defaultSettings();
+			settings = defaultSettings();
 
 		} else {
 
@@ -132,31 +125,31 @@ public class SettingsService {
 			}
 
 			// create model
-			settingsModel = new SettingsModel();
+			settings = new SettingsModel();
 
 			// load and fill
-			settingsModel.setSystemType(xmlConfig.getString(KEY_SYSTEM_TYPE, "Other"));
-			settingsModel.setUrl(xmlConfig.getString(KEY_URL, ""));
-			settingsModel.setDefault(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
+			settings.setSystemType(xmlConfig.getString(KEY_SYSTEM_TYPE, "Other"));
+			settings.setUrl(xmlConfig.getString(KEY_URL, ""));
+			settings.setDefault(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
 
 			String[] lstMediaQualities = xmlConfig.getStringArray(KEY_MEDIA_QUALITIES);
-			settingsModel.setMediaQualities(Arrays.asList(lstMediaQualities));
+			settings.setMediaQualities(Arrays.asList(lstMediaQualities));
 
 			String[] lstCustomerIDs = xmlConfig.getStringArray(KEY_CUSTOMER_ID);
-			settingsModel.setCustomerIDs(Arrays.asList(lstCustomerIDs));
+			settings.setCustomerIDs(Arrays.asList(lstCustomerIDs));
 
 			String[] lstCatalogIDs = xmlConfig.getStringArray(KEY_CATALOG_ID);
-			settingsModel.setCatalogIDs(Arrays.asList(lstCatalogIDs));
+			settings.setCatalogIDs(Arrays.asList(lstCatalogIDs));
 
 			List<Object> lstAmountObj = xmlConfig.getList(KEY_AMOUNTS, new ArrayList<Object>());
-			settingsModel.setAmount(new ArrayList<Integer>(lstAmountObj.size()));
+			settings.setAmounts(new ArrayList<Integer>(lstAmountObj.size()));
 
 			for (Object obj : lstAmountObj)
-				settingsModel.getAmount().add(Integer.parseInt(obj.toString()));
+				settings.getAmounts().add(Integer.parseInt(obj.toString()));
 		}
 
 		// return model
-		return settingsModel;
+		return settings;
 	}
 
 	/**
@@ -176,7 +169,7 @@ public class SettingsService {
 		settingsModel.setMediaQualities(new ArrayList<String>());
 		settingsModel.setCustomerIDs(new ArrayList<String>());
 		settingsModel.setCatalogIDs(new ArrayList<String>());
-		settingsModel.setAmount(new ArrayList<Integer>());
+		settingsModel.setAmounts(new ArrayList<Integer>());
 
 		// return model
 		return settingsModel;

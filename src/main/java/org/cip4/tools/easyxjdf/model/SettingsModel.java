@@ -2,8 +2,8 @@
  * All rights reserved by
  * 
  * flyeralarm GmbH
- * Alfred-Nobel-Straße 18
- * 97080 Würzburg
+ * Alfred-Nobel-Straï¿½e 18
+ * 97080 Wï¿½rzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
@@ -25,13 +25,13 @@ public class SettingsModel {
 
 	private boolean isDefault;
 
-	private List<String> MediaQualities;
+	private List<String> mediaQualities;
 
-	private List<String> CustomerIDs;
+	private List<String> customerIDs;
 
-	private List<String> CatalogIDs;
+	private List<String> catalogIDs;
 
-	private List<Integer> Amount;
+	private List<Integer> amounts;
 
 	/**
 	 * Getter for systemType attribute.
@@ -86,7 +86,7 @@ public class SettingsModel {
 	 * @return the mediaQualities
 	 */
 	public List<String> getMediaQualities() {
-		return MediaQualities;
+		return mediaQualities;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class SettingsModel {
 	 * @param mediaQualities the mediaQualities to set
 	 */
 	public void setMediaQualities(List<String> mediaQualities) {
-		MediaQualities = mediaQualities;
+		this.mediaQualities = mediaQualities;
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class SettingsModel {
 	 * @return the customerIDs
 	 */
 	public List<String> getCustomerIDs() {
-		return CustomerIDs;
+		return customerIDs;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class SettingsModel {
 	 * @param customerIDs the customerIDs to set
 	 */
 	public void setCustomerIDs(List<String> customerIDs) {
-		CustomerIDs = customerIDs;
+		this.customerIDs = customerIDs;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class SettingsModel {
 	 * @return the catalogIDs
 	 */
 	public List<String> getCatalogIDs() {
-		return CatalogIDs;
+		return catalogIDs;
 	}
 
 	/**
@@ -126,23 +126,23 @@ public class SettingsModel {
 	 * @param catalogIDs the catalogIDs to set
 	 */
 	public void setCatalogIDs(List<String> catalogIDs) {
-		CatalogIDs = catalogIDs;
+		this.catalogIDs = catalogIDs;
 	}
 
 	/**
 	 * Getter for amount attribute.
 	 * @return the amount
 	 */
-	public List<Integer> getAmount() {
-		return Amount;
+	public List<Integer> getAmounts() {
+		return amounts;
 	}
 
 	/**
 	 * Setter for amount attribute.
 	 * @param amount the amount to set
 	 */
-	public void setAmount(List<Integer> amount) {
-		Amount = amount;
+	public void setAmounts(List<Integer> amounts) {
+		this.amounts = amounts;
 	}
 
 }

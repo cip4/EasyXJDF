@@ -12,12 +12,18 @@ package org.cip4.tools.easyxjdf;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.cip4.tools.easyxjdf.event.SendEventListener;
+import org.apache.commons.lang.StringUtils;
+import org.cip4.tools.easyxjdf.event.SettingsSaveEvent;
+import org.cip4.tools.easyxjdf.event.SettingsSaveEventListener;
+import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -33,6 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -46,15 +53,25 @@ import org.eclipse.wb.swt.SWTResourceManager;
  */
 public class SettingsView extends Dialog {
 
-	private final List<SendEventListener> sendListener;
+	private final static String FIELD_AMOUNT = "Amount";
+
+	private final static String FIELD_MEDIA_QUALITY = "MediaQuality";
+
+	private final static String FIELD_CUSTOMER_ID = "CustomerID";
+
+	private final static String FIELD_CATALOG_ID = "CatalogID";
+
+	private final static String NEW_LINE = "\r\n";
+
+	private final List<SettingsSaveEventListener> settingsSaveEventListener;
 
 	private final Shell parent;
 
-	protected Object result;
+	private SettingsModel settingsModel;
+
+	private SettingsModel result;
 
 	protected Shell shell;
-
-	private final String oldUrl = "";
 
 	private final Map<String, String> mapUrls;
 
@@ -68,11 +85,15 @@ public class SettingsView extends Dialog {
 
 	private Text txtValues;
 
+	private Button chkDefault;
+
+	private Combo cmbFields;
+
 	/**
 	 * Create the dialog.
 	 * @param parent The parent view.
 	 */
-	public SettingsView(Shell parent) {
+	public SettingsView(Shell parent, SettingsModel settingsModel) {
 
 		// init dialog
 		super(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
@@ -89,22 +110,39 @@ public class SettingsView extends Dialog {
 		mapLogo.put("Heidelberg Prinect", "/org/cip4/tools/easyxjdf/gui/heidelberg-logo.png");
 		mapLogo.put("FLYERALARM API", "/org/cip4/tools/easyxjdf/gui/fa-logo.png");
 
-		sendListener = new ArrayList<SendEventListener>();
+		settingsSaveEventListener = new ArrayList<SettingsSaveEventListener>();
 
+		this.settingsModel = settingsModel;
 		this.parent = parent;
+		this.result = null;
 	}
 
 	/**
 	 * Open the dialog.
 	 * @return the result
 	 */
-	public Object open() {
+	public SettingsModel open() {
+
+		// create contents
 		createContents();
 
 		// Move the dialog to the center of the top level shell.
 		Rectangle shellBounds = parent.getBounds();
 		Point dialogSize = shell.getSize();
 		shell.setLocation(shellBounds.x + (shellBounds.width - dialogSize.x) / 2, shellBounds.y + (shellBounds.height - dialogSize.y) / 2);
+
+		// show model in view
+		model2View();
+
+		// prepare view
+		updateConnection();
+
+		// further view settings when view opens
+		if (!StringUtils.isEmpty(settingsModel.getUrl())) {
+			txtUrl.setText(settingsModel.getUrl());
+		} else {
+			chkDefault.setSelection(true);
+		}
 
 		// open
 		shell.open();
@@ -115,6 +153,8 @@ public class SettingsView extends Dialog {
 				display.sleep();
 			}
 		}
+
+		// return result settings model
 		return result;
 	}
 
@@ -148,7 +188,7 @@ public class SettingsView extends Dialog {
 		cmbSystemType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				updateUrl(cmbSystemType.getText());
+				updateConnection();
 			}
 		});
 
@@ -183,7 +223,7 @@ public class SettingsView extends Dialog {
 		lblTitleConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblTitleConnection.setBounds(10, 21, 156, 23);
 
-		Button chkDefault = new Button(compConnection, SWT.CHECK);
+		chkDefault = new Button(compConnection, SWT.CHECK);
 		chkDefault.setText("Always use this URL");
 		chkDefault.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		chkDefault.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
@@ -201,7 +241,13 @@ public class SettingsView extends Dialog {
 		lblFieldTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblFieldTitle.setBounds(10, 21, 156, 23);
 
-		Combo cmbFields = new Combo(compFields, SWT.READ_ONLY);
+		cmbFields = new Combo(compFields, SWT.READ_ONLY);
+		cmbFields.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				updateField();
+			}
+		});
 		cmbFields.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		cmbFields.setItems(new String[] { "Amount", "MediaQuality", "CustomerID", "CatalogID" });
 		cmbFields.setBounds(10, 60, 131, 23);
@@ -209,6 +255,12 @@ public class SettingsView extends Dialog {
 		cmbFields.setText("Amount\r\nMediaQuality\r\nCustomerID\r\nCatalogID\r\n");
 
 		txtValues = new Text(compFields, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+		txtValues.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				view2Model();
+			}
+		});
 		txtValues.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		txtValues.setBounds(156, 60, 156, 149);
 
@@ -217,27 +269,29 @@ public class SettingsView extends Dialog {
 		lblInfo.setText("Each line in \r\ntextfield \r\nrepresents a \r\nsingle element.");
 		lblInfo.setBounds(325, 123, 106, 86);
 
-		Button btnOk = new Button(shell, SWT.NONE);
-		btnOk.addKeyListener(new KeyAdapter() {
+		Button btnSave = new Button(shell, SWT.NONE);
+		btnSave.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				processSave();
 			}
 		});
-		btnOk.addMouseListener(new MouseAdapter() {
+		btnSave.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
+				processSave();
 			}
 		});
-		btnOk.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		btnOk.setBounds(375, 330, 84, 31);
-		btnOk.setText("Ok");
+		btnSave.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		btnSave.setBounds(375, 330, 84, 31);
+		btnSave.setText("Save");
 
 		Button btnCancel = new Button(shell, SWT.NONE);
 		btnCancel.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				shell.close();
+				processCancel();
 			}
 		});
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -264,58 +318,133 @@ public class SettingsView extends Dialog {
 	}
 
 	/**
-	 * Append listener for SaveAs Event.
-	 * @param saveAsListener XJdfListener to append to.
+	 * Append listener for SettingsSave Event.
+	 * @param settingsSaveEventListener SettingsSaveEventListener implementation to append to.
 	 */
-	public void addSendListener(SendEventListener sendListener) {
-		this.sendListener.add(sendListener);
+	public void addSettingsSaveEventListener(SettingsSaveEventListener settingsSaveEventListener) {
+		this.settingsSaveEventListener.add(settingsSaveEventListener);
 	}
 
-	// private void processSend() {
-	//
-	// try {
-	//
-	// // create model object
-	// SendModel model = createModel();
-	//
-	// // notify all listeners
-	// for (SendEventListener l : sendListener) {
-	// l.notify(new SendEvent(model));
-	// }
-	//
-	// // close window
-	// shell.close();
-	//
-	// } catch (Exception ex) {
-	//
-	// // process exception
-	// ErrorController.processException(shell, ex);
-	// }
-	//
-	// }
-	//
-	// /**
-	// * Create new model object by form content.
-	// * @return Model object which contains form details.
-	// */
-	// private SendModel createModel() {
-	//
-	// // create model object
-	// SendModel model = new SendModel();
-	//
-	// // fill attributes
-	// model.setSystemType(cmbSystemType.getText());
-	// model.setTargetUrl(txtTargetUrl.getText());
-	// model.setDefault(chkDefault.getSelection());
-	//
-	// // return result
-	// return model;
-	// }
-	//
+	/**
+	 * Show model in view.
+	 */
+	private void model2View() {
+
+		// connection settings
+		cmbSystemType.setText(settingsModel.getSystemType());
+		txtUrl.setText(settingsModel.getUrl());
+		chkDefault.setSelection(settingsModel.isDefault());
+
+		// field settings
+		updateField();
+
+	}
+
+	private void view2Model() {
+
+		// connection settings
+		settingsModel.setSystemType(cmbSystemType.getText());
+		settingsModel.setUrl(txtUrl.getText());
+		settingsModel.setDefault(chkDefault.getSelection());
+
+		// field settings
+		if (FIELD_AMOUNT.equals(cmbFields.getText())) {
+
+			if (!StringUtils.isEmpty(txtValues.getText())) {
+				String[] values = txtValues.getText().split(NEW_LINE);
+				List<Integer> lst = new ArrayList<Integer>(values.length);
+
+				for (String val : values) {
+					lst.add(Integer.parseInt(val));
+				}
+
+				settingsModel.setAmounts(lst);
+			} else {
+				settingsModel.setAmounts(new ArrayList<Integer>());
+			}
+
+		}
+
+		if (FIELD_MEDIA_QUALITY.equals(cmbFields.getText())) {
+
+			if (!StringUtils.isEmpty(txtValues.getText())) {
+				String[] values = txtValues.getText().split(NEW_LINE);
+				settingsModel.setMediaQualities(Arrays.asList(values));
+			} else {
+				settingsModel.setMediaQualities(new ArrayList<String>());
+			}
+		}
+
+		if (FIELD_CATALOG_ID.equals(cmbFields.getText())) {
+
+			if (!StringUtils.isEmpty(txtValues.getText())) {
+				String[] values = txtValues.getText().split(NEW_LINE);
+				settingsModel.setCatalogIDs(Arrays.asList(values));
+			} else {
+				settingsModel.setCatalogIDs(new ArrayList<String>());
+			}
+		}
+
+		if (FIELD_CUSTOMER_ID.equals(cmbFields.getText())) {
+
+			if (!StringUtils.isEmpty(txtValues.getText())) {
+				String[] values = txtValues.getText().split(NEW_LINE);
+				settingsModel.setCustomerIDs(Arrays.asList(values));
+			} else {
+				settingsModel.setCustomerIDs(new ArrayList<String>());
+			}
+		}
+	}
+
+	/**
+	 * Cancel editing settings.
+	 */
+	private void processCancel() {
+
+		// show message
+		MessageBox mb = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK | SWT.CANCEL);
+		mb.setMessage("Cancel editing settings?");
+
+		if (SWT.OK == mb.open()) {
+			shell.close();
+		}
+	}
+
+	/**
+	 * Save all settings.
+	 */
+	private void processSave() {
+
+		try {
+
+			// read new settings
+			view2Model();
+
+			// notify all listeners
+			for (SettingsSaveEventListener l : settingsSaveEventListener) {
+				l.notify(new SettingsSaveEvent(settingsModel));
+			}
+
+			// set result
+			this.result = settingsModel;
+
+			// close window
+			shell.close();
+
+		} catch (Exception ex) {
+
+			// process exception
+			ErrorController.processException(shell, ex);
+		}
+
+	}
+
 	/**
 	 * Update URL Textfield
 	 */
-	private void updateUrl(String systemType) {
+	private void updateConnection() {
+
+		String systemType = cmbSystemType.getText();
 
 		InputStream isLogo = SettingsView.class.getResourceAsStream(mapLogo.get(systemType));
 		Image imgLogo = new Image(shell.getDisplay(), isLogo);
@@ -329,8 +458,51 @@ public class SettingsView extends Dialog {
 
 		lblLogo.setImage(imgLogo);
 
+		// update URL text field
 		String url = mapUrls.get(systemType);
 		txtUrl.setText(url);
+	}
 
+	/**
+	 * Update field values.
+	 */
+	private void updateField() {
+
+		// get field name
+		String fieldName = cmbFields.getText();
+
+		// build string
+		StringBuilder b = new StringBuilder(255);
+
+		if (FIELD_AMOUNT.equals(fieldName)) {
+			for (Integer amount : settingsModel.getAmounts()) {
+				b.append(amount.toString());
+				b.append(NEW_LINE);
+			}
+		}
+
+		if (FIELD_MEDIA_QUALITY.equals(fieldName)) {
+			for (String mediaQuality : settingsModel.getMediaQualities()) {
+				b.append(mediaQuality);
+				b.append(NEW_LINE);
+			}
+		}
+
+		if (FIELD_CATALOG_ID.equals(fieldName)) {
+			for (String catalogId : settingsModel.getCatalogIDs()) {
+				b.append(catalogId);
+				b.append(NEW_LINE);
+			}
+		}
+
+		if (FIELD_CUSTOMER_ID.equals(fieldName)) {
+			for (String customerId : settingsModel.getCustomerIDs()) {
+				b.append(customerId);
+				b.append(NEW_LINE);
+			}
+		}
+
+		// show string
+		txtValues.setText(b.toString());
 	}
 }

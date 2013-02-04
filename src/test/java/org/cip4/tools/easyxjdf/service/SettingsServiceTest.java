@@ -104,8 +104,8 @@ public class SettingsServiceTest {
 		Assert.assertEquals("Number CatalogIDs is wrong.", 2, settingsModel.getCatalogIDs().size());
 		Assert.assertEquals("CatalogID is wrong.", "CAT_FOLDER", settingsModel.getCatalogIDs().get(1));
 
-		Assert.assertEquals("Number Amounts is wrong.", 7, settingsModel.getAmount().size());
-		Assert.assertEquals("Amount is wrong.", new Integer(5000), settingsModel.getAmount().get(4));
+		Assert.assertEquals("Number Amounts is wrong.", 7, settingsModel.getAmounts().size());
+		Assert.assertEquals("Amount is wrong.", new Integer(5000), settingsModel.getAmounts().get(4));
 	}
 
 	@Test

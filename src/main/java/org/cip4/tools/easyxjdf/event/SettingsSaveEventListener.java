@@ -13,12 +13,12 @@ package org.cip4.tools.easyxjdf.event;
 import java.util.EventListener;
 
 /**
- * EventListener class for send events.
+ * EventListener class for save setting events.
  * @author s.meissner
- * @date 30.01.2013
+ * @date 04.02.2013
  */
-public interface SendEventListener extends EventListener {
+public interface SettingsSaveEventListener extends EventListener {
 
-	public void notify(SendEvent sendEvent);
+	public void notify(SettingsSaveEvent settingSaveEvent);
 
 }
