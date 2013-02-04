@@ -20,6 +20,7 @@ import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
 import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
+import org.cip4.tools.easyxjdf.exception.ConnectionException;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 import org.eclipse.swt.SWT;
@@ -476,6 +477,8 @@ public class XJdfView {
 			// reset view
 			resetView();
 
+		} catch (ConnectionException cnEx) {
+
 		} catch (Exception ex) {
 
 			// process exception
@@ -527,6 +530,9 @@ public class XJdfView {
 	 */
 	private void loadSuggenstions() {
 
+		// get old values
+		XJdfModel xJdfModelOld = createModel();
+
 		// display Amounts
 		Integer[] amounts = settingsModel.getAmounts().toArray(new Integer[settingsModel.getAmounts().size()]);
 		String[] strAmounts = new String[amounts.length];
@@ -547,6 +553,13 @@ public class XJdfView {
 		// display CustomerIDs
 		String[] catalogIDs = settingsModel.getCatalogIDs().toArray(new String[settingsModel.getCatalogIDs().size()]);
 		cmbCatalogID.setItems(catalogIDs);
+
+		// set old values
+		if (xJdfModelOld.getAmount() != 0)
+			cmbAmount.setText(Integer.toString(xJdfModelOld.getAmount()));
+		cmbMediaQuality.setText(xJdfModelOld.getMediaQuality());
+		cmbCustomerID.setText(xJdfModelOld.getCustomerId());
+		cmbCatalogID.setText(xJdfModelOld.getCatalogId());
 	}
 
 	/**

@@ -12,6 +12,8 @@ package org.cip4.tools.easyxjdf.event;
 
 import java.util.EventListener;
 
+import org.cip4.tools.easyxjdf.exception.ConnectionException;
+
 /**
  * XJDF EventListener class for send events.
  * @author s.meissner
@@ -19,6 +21,6 @@ import java.util.EventListener;
  */
 public interface XJdfSendEventListener extends EventListener {
 
-	public void notify(XJdfSendEvent xJdfSendEvent);
+	public void notify(XJdfSendEvent xJdfSendEvent) throws ConnectionException;
 
 }

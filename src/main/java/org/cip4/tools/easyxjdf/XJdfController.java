@@ -21,6 +21,7 @@ import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
 import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
+import org.cip4.tools.easyxjdf.exception.ConnectionException;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.service.SettingsService;
 import org.cip4.tools.easyxjdf.service.XJdfService;
@@ -115,10 +116,11 @@ public class XJdfController {
 	public class XJdfSendListener implements XJdfSendEventListener {
 
 		/**
+		 * @throws ConnectionException
 		 * @see org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener#notify(org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent)
 		 */
 		@Override
-		public void notify(XJdfSendEvent sendEvent) {
+		public void notify(XJdfSendEvent sendEvent) throws ConnectionException {
 
 			try {
 
@@ -157,16 +159,12 @@ public class XJdfController {
 				}
 
 			} catch (ConnectException e) {
-
-				SettingsModel settings = settingsService.loadSettings();
-				String url = settings.getUrl();
-				xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url), SWT.ICON_ERROR | SWT.OK);
+				processConnectionException();
+				throw new ConnectionException("Cannot send XJDF.", e);
 
 			} catch (UnknownHostException e) {
-
-				SettingsModel settings = settingsService.loadSettings();
-				String url = settings.getUrl();
-				xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url), SWT.ICON_ERROR | SWT.OK);
+				processConnectionException();
+				throw new ConnectionException("Cannont send XJDF", e);
 
 			} catch (Exception e) {
 
@@ -174,6 +172,29 @@ public class XJdfController {
 				ErrorController.processException(xJdfView.shell, e);
 			}
 
+		}
+
+		/**
+		 * Process Connection exceptions.
+		 * @param url URL which has occured the exception.
+		 */
+		private void processConnectionException() {
+
+			// load url
+			SettingsModel settings = settingsService.loadSettings();
+			String url = settings.getUrl();
+
+			// show message
+			xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url), SWT.ICON_ERROR | SWT.OK);
+
+			// disable url as default
+			try {
+				settingsService.disableDefaultUrl();
+			} catch (Exception ex) {
+				ErrorController.processException(xJdfView.shell, ex);
+			}
+
+			xJdfView.updateSettings(settingsService.loadSettings());
 		}
 
 	}

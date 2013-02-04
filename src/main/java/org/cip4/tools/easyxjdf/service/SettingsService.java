@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
@@ -60,6 +61,23 @@ public class SettingsService {
 
 		String pathFile = FilenameUtils.concat(pathDir, "settings.xml");
 		this.settingsFile = new File(pathFile);
+	}
+
+	/**
+	 * Disables the default URL.
+	 * @throws IOException
+	 * @throws ConfigurationException
+	 */
+	public void disableDefaultUrl() throws ConfigurationException, IOException {
+
+		// load settings
+		SettingsModel settings = loadSettings();
+
+		// disable
+		settings.setDefaultUrl(false);
+
+		// save settings
+		saveSettings(settings);
 	}
 
 	/**
@@ -126,18 +144,22 @@ public class SettingsService {
 		xmlConfig.setProperty(KEY_IS_DEFAULT, Boolean.toString(settings.isDefaultUrl()));
 		xmlConfig.setProperty(KEY_AUTO_EXTEND, Boolean.toString(settings.isAutoExtend()));
 
+		Collections.sort(settings.getMediaQualities());
 		for (String mediaQuality : settings.getMediaQualities()) {
 			xmlConfig.addProperty(KEY_MEDIA_QUALITIES, mediaQuality);
 		}
 
+		Collections.sort(settings.getCatalogIDs());
 		for (String catalogId : settings.getCatalogIDs()) {
 			xmlConfig.addProperty(KEY_CATALOG_ID, catalogId);
 		}
 
+		Collections.sort(settings.getCustomerIDs());
 		for (String customerId : settings.getCustomerIDs()) {
 			xmlConfig.addProperty(KEY_CUSTOMER_ID, customerId);
 		}
 
+		Collections.sort(settings.getAmounts());
 		for (Integer amount : settings.getAmounts()) {
 			xmlConfig.addProperty(KEY_AMOUNTS, amount);
 		}

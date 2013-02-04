@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public class SettingsServiceTest {
 
-	private final static String RES_SETTING = "/org/cip4/tools/easyxjdf/settings.xml";
+	private final static String RES_SETTING = "/org/cip4/tools/easyxjdf/settingsTest.xml";
 
 	private SettingsService service;
 
@@ -51,24 +51,6 @@ public class SettingsServiceTest {
 	public void tearDown() throws Exception {
 
 		service = null;
-	}
-
-	/**
-	 * Test method for {@link org.cip4.tools.easyxjdf.service.SettingsService#createSettings()}.
-	 */
-	@Test
-	public void testCreateSettings() throws Exception {
-
-		// arrange
-		SettingsModel settingsModel = new SettingsModel();
-
-		// act
-		Method method = SettingsService.class.getDeclaredMethod("createSettings", SettingsModel.class);
-		method.setAccessible(true);
-		method.invoke(service, settingsModel);
-
-		// assert
-
 	}
 
 	/**

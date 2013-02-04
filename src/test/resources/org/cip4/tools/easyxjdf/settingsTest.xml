@@ -4,7 +4,7 @@
 		<Connector>
 			<SystemType>Heidelberg Prinect</SystemType>
 			<Url>http://localhost:8011</Url>
-			<IsDefault>true</IsDefault>
+			<IsDefaultUrl>true</IsDefaultUrl>
 		</Connector>
 		<Suggestions>
 			<MediaQualities>
