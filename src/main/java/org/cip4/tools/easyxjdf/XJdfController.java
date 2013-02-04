@@ -12,11 +12,13 @@ package org.cip4.tools.easyxjdf;
 
 import javax.xml.bind.JAXBException;
 
+import org.apache.commons.lang.StringUtils;
 import org.cip4.lib.xprinttalk.PrintTalkFactory;
 import org.cip4.tools.easyxjdf.event.XJdfSaveAsEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSaveAsEventListener;
 import org.cip4.tools.easyxjdf.event.XJdfSendEvent;
 import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
+import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.service.SettingsService;
 import org.cip4.tools.easyxjdf.service.XJdfService;
 
@@ -80,6 +82,18 @@ public class XJdfController {
 				// show info
 				xJdfView.showInfo("XJDF successfully was saved.");
 
+				// auto extend
+				SettingsModel settings = settingsService.loadSettings();
+
+				if (settings.isAutoExtend()) {
+
+					// auto extend
+					settingsService.autoExtend(saveAsEvent.getxJdfModel());
+
+					// update settings in view
+					xJdfView.updateSettings(settingsService.loadSettings());
+				}
+
 			} catch (Exception e) {
 
 				// process exception
@@ -104,19 +118,39 @@ public class XJdfController {
 
 			try {
 
-				// open send dialog
-				SettingsController sendController = new SettingsController(xJdfView.shell);
-				sendController.showView();
+				// manage settings
+				SettingsModel settings = settingsService.loadSettings();
 
-				// // get send model object
-				// SendModel sendModel = sendController.getSendModel();
-				//
-				// // send xjdf
-				// XJdfService service = new XJdfService();
-				// service.send(sendEvent.getxJdfModel(), sendModel.getTargetUrl());
-				//
-				// // show info
-				// xJdfView.showInfo(String.format("XJDF successfully has been sent to \"%s\"", sendModel.getTargetUrl()));
+				if (!settings.isDefaultUrl() || StringUtils.isEmpty(settings.getUrl())) {
+
+					// open send dialog
+					SettingsController settingsController = new SettingsController(xJdfView.shell);
+					settings = settingsController.showView();
+				}
+
+				// send
+				if (settings != null) {
+
+					// get url
+					String url = settings.getUrl();
+
+					// send xjdf
+					XJdfService xJdfService = new XJdfService();
+					xJdfService.send(sendEvent.getxJdfModel(), url);
+
+					// show info
+					xJdfView.showInfo(String.format("XJDF successfully has been sent to \"%s\"", url));
+				}
+
+				// auto extend
+				if (settings.isAutoExtend()) {
+
+					// auto extend
+					settingsService.autoExtend(sendEvent.getxJdfModel());
+
+					// update settings in view
+					xJdfView.updateSettings(settingsService.loadSettings());
+				}
 
 			} catch (Exception e) {
 

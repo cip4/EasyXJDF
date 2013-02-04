@@ -10,6 +10,7 @@
  */
 package org.cip4.tools.easyxjdf.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,9 @@ public class SettingsModel {
 
 	private String url;
 
-	private boolean isDefault;
+	private boolean defaultUrl;
+
+	private boolean autoExtend;
 
 	private List<String> mediaQualities;
 
@@ -69,16 +72,32 @@ public class SettingsModel {
 	 * Getter for isDefault attribute.
 	 * @return the isDefault
 	 */
-	public boolean isDefault() {
-		return isDefault;
+	public boolean isDefaultUrl() {
+		return defaultUrl;
 	}
 
 	/**
 	 * Setter for isDefault attribute.
 	 * @param isDefault the isDefault to set
 	 */
-	public void setDefault(boolean isDefault) {
-		this.isDefault = isDefault;
+	public void setDefaultUrl(boolean isDefaultUrl) {
+		this.defaultUrl = isDefaultUrl;
+	}
+
+	/**
+	 * Getter for autoExtend attribute.
+	 * @return the autoExtend
+	 */
+	public boolean isAutoExtend() {
+		return autoExtend;
+	}
+
+	/**
+	 * Setter for autoExtend attribute.
+	 * @param autoExtend the autoExtend to set
+	 */
+	public void setAutoExtend(boolean autoExtend) {
+		this.autoExtend = autoExtend;
 	}
 
 	/**
@@ -86,6 +105,10 @@ public class SettingsModel {
 	 * @return the mediaQualities
 	 */
 	public List<String> getMediaQualities() {
+		if (mediaQualities == null) {
+			mediaQualities = new ArrayList<String>();
+		}
+
 		return mediaQualities;
 	}
 
@@ -102,6 +125,10 @@ public class SettingsModel {
 	 * @return the customerIDs
 	 */
 	public List<String> getCustomerIDs() {
+		if (customerIDs == null) {
+			customerIDs = new ArrayList<String>();
+		}
+
 		return customerIDs;
 	}
 
@@ -118,6 +145,10 @@ public class SettingsModel {
 	 * @return the catalogIDs
 	 */
 	public List<String> getCatalogIDs() {
+		if (catalogIDs == null) {
+			catalogIDs = new ArrayList<String>();
+		}
+
 		return catalogIDs;
 	}
 
@@ -134,6 +165,10 @@ public class SettingsModel {
 	 * @return the amount
 	 */
 	public List<Integer> getAmounts() {
+		if (amounts == null) {
+			amounts = new ArrayList<Integer>();
+		}
+
 		return amounts;
 	}
 

@@ -121,6 +121,19 @@ public class XJdfView {
 	}
 
 	/**
+	 * Update settings.
+	 * @param settingsModel The new settings model.
+	 */
+	public void updateSettings(SettingsModel settingsModel) {
+
+		// update model
+		this.settingsModel = settingsModel;
+
+		// update suggestions
+		loadSuggenstions();
+	}
+
+	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
@@ -336,21 +349,24 @@ public class XJdfView {
 	/**
 	 * Validate amount.
 	 */
-	private void validateAmount() {
+	private boolean validateAmount() {
+
+		boolean result = false;
 
 		try {
+			// validate
 			if (!StringUtils.isEmpty(cmbAmount.getText())) {
 				Integer.parseInt(cmbAmount.getText());
 			}
 
+			result = true;
+
 		} catch (NumberFormatException nex) {
 
-			// show info
-			showInfo("Amount is not numeric.");
-
-			// set focus
-			cmbAmount.setFocus();
 		}
+
+		// return result
+		return result;
 	}
 
 	/**
@@ -380,6 +396,19 @@ public class XJdfView {
 	 * Notify a list of SaveAsListners.
 	 */
 	private void processSaveAs() {
+
+		// validate amount
+		if (!validateAmount()) {
+
+			// show info
+			showInfo("Amount is not numeric.");
+
+			// set focus
+			cmbAmount.setFocus();
+
+			// return
+			return;
+		}
 
 		// save dialog
 		String[] filterNames = { "XJDF Package (*.xjdf.zip) (recommended)", "XJDF Document (*.xjdf)" };
@@ -413,6 +442,9 @@ public class XJdfView {
 					l.notify(new XJdfSaveAsEvent(model, path));
 				}
 
+				// reset view
+				resetView();
+
 			} catch (Exception ex) {
 
 				// process exception
@@ -426,6 +458,11 @@ public class XJdfView {
 	 */
 	private void processSend() {
 
+		// validate amount
+		if (!validateAmount()) {
+			return;
+		}
+
 		try {
 
 			// create model object
@@ -435,6 +472,9 @@ public class XJdfView {
 			for (XJdfSendEventListener l : xJdfSendListener) {
 				l.notify(new XJdfSendEvent(model));
 			}
+
+			// reset view
+			resetView();
 
 		} catch (Exception ex) {
 
@@ -454,7 +494,8 @@ public class XJdfView {
 
 		// fill attributes
 		model.setJobId(txtJobId.getText());
-		model.setAmount(Integer.parseInt(cmbAmount.getText()));
+		if (!StringUtils.isEmpty(cmbAmount.getText()))
+			model.setAmount(Integer.parseInt(cmbAmount.getText()));
 		model.setRunList(txtRunList.getText());
 		model.setCatalogId(cmbCatalogID.getText());
 		model.setCustomerId(cmbCustomerID.getText());
@@ -471,7 +512,11 @@ public class XJdfView {
 	private void showSettingsDialog() {
 
 		// show settings dialog and update settings
-		settingsModel = new SettingsController(shell).showView();
+		SettingsModel tmp = new SettingsController(shell).showView();
+
+		if (tmp != null) {
+			this.settingsModel = tmp;
+		}
 
 		// update suggestions
 		loadSuggenstions();
@@ -502,6 +547,21 @@ public class XJdfView {
 		// display CustomerIDs
 		String[] catalogIDs = settingsModel.getCatalogIDs().toArray(new String[settingsModel.getCatalogIDs().size()]);
 		cmbCatalogID.setItems(catalogIDs);
+	}
+
+	/**
+	 * Reset the view.
+	 */
+	private void resetView() {
+		txtJobId.setText("");
+		txtJobName.setText("");
+		txtRunList.setText("");
+		cmbAmount.setText("");
+		cmbMediaQuality.setText("");
+		cmbCatalogID.setText("");
+		cmbCustomerID.setText("");
+
+		oldJobName = "";
 	}
 
 	/**

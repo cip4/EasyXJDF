@@ -20,7 +20,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
+import org.cip4.tools.easyxjdf.model.XJdfModel;
 
 /**
  * Service class which handles all User Settings.
@@ -33,7 +35,9 @@ public class SettingsService {
 
 	private static final String KEY_URL = "Settings.Connector.Url";
 
-	private static final String KEY_IS_DEFAULT = "Settings.Connector.IsDefault";
+	private static final String KEY_IS_DEFAULT = "Settings.Connector.IsDefaultUrl";
+
+	private static final String KEY_AUTO_EXTEND = "Settings.Suggestions.AutoExtend";
 
 	private static final String KEY_MEDIA_QUALITIES = "Settings.Suggestions.MediaQualities.MediaQuality";
 
@@ -59,6 +63,53 @@ public class SettingsService {
 	}
 
 	/**
+	 * Extend suggestion values by a new XJdfModel.
+	 * @param xJdfModel XJDFModel to extend to.
+	 * @throws IOException
+	 * @throws ConfigurationException
+	 */
+	public void autoExtend(XJdfModel xJdfModel) throws ConfigurationException, IOException {
+
+		// load settings
+		SettingsModel settings = loadSettings();
+
+		if (!settings.isAutoExtend()) {
+			return;
+		}
+
+		// update amount
+		int amount = xJdfModel.getAmount();
+
+		if (amount != 0 && !settings.getAmounts().contains(amount)) {
+			settings.getAmounts().add(amount);
+		}
+
+		// update MediaQuality
+		String mediaQuality = xJdfModel.getMediaQuality();
+
+		if (!StringUtils.isEmpty(mediaQuality) && !settings.getMediaQualities().contains(mediaQuality)) {
+			settings.getMediaQualities().add(mediaQuality);
+		}
+
+		// update CatalogID
+		String catalogID = xJdfModel.getCatalogId();
+
+		if (!StringUtils.isEmpty(catalogID) && !settings.getCatalogIDs().contains(catalogID)) {
+			settings.getCatalogIDs().add(catalogID);
+		}
+
+		// update CustomerID
+		String customerID = xJdfModel.getCustomerId();
+
+		if (!StringUtils.isEmpty(customerID) && !settings.getCustomerIDs().contains(customerID)) {
+			settings.getCustomerIDs().add(customerID);
+		}
+
+		// save settings
+		saveSettings(settings);
+	}
+
+	/**
 	 * Save all setting in user profile.
 	 * @throws ConfigurationException
 	 * @throws IOException In case DefaultSettings file cannot be copyied.
@@ -72,7 +123,8 @@ public class SettingsService {
 		xmlConfig.setRootElementName("EasyXJDF");
 		xmlConfig.setProperty(KEY_SYSTEM_TYPE, settings.getSystemType());
 		xmlConfig.setProperty(KEY_URL, settings.getUrl());
-		xmlConfig.setProperty(KEY_IS_DEFAULT, Boolean.toString(settings.isDefault()));
+		xmlConfig.setProperty(KEY_IS_DEFAULT, Boolean.toString(settings.isDefaultUrl()));
+		xmlConfig.setProperty(KEY_AUTO_EXTEND, Boolean.toString(settings.isAutoExtend()));
 
 		for (String mediaQuality : settings.getMediaQualities()) {
 			xmlConfig.addProperty(KEY_MEDIA_QUALITIES, mediaQuality);
@@ -92,7 +144,6 @@ public class SettingsService {
 
 		// save config files
 		xmlConfig.save(settingsFile);
-
 	}
 
 	/**
@@ -130,16 +181,17 @@ public class SettingsService {
 			// load and fill
 			settings.setSystemType(xmlConfig.getString(KEY_SYSTEM_TYPE, "Other"));
 			settings.setUrl(xmlConfig.getString(KEY_URL, ""));
-			settings.setDefault(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
+			settings.setDefaultUrl(xmlConfig.getBoolean(KEY_IS_DEFAULT, false));
+			settings.setAutoExtend(xmlConfig.getBoolean(KEY_AUTO_EXTEND, true));
 
 			String[] lstMediaQualities = xmlConfig.getStringArray(KEY_MEDIA_QUALITIES);
-			settings.setMediaQualities(Arrays.asList(lstMediaQualities));
+			settings.setMediaQualities(new ArrayList<String>(Arrays.asList(lstMediaQualities)));
 
 			String[] lstCustomerIDs = xmlConfig.getStringArray(KEY_CUSTOMER_ID);
-			settings.setCustomerIDs(Arrays.asList(lstCustomerIDs));
+			settings.setCustomerIDs(new ArrayList<String>(Arrays.asList(lstCustomerIDs)));
 
 			String[] lstCatalogIDs = xmlConfig.getStringArray(KEY_CATALOG_ID);
-			settings.setCatalogIDs(Arrays.asList(lstCatalogIDs));
+			settings.setCatalogIDs(new ArrayList<String>(Arrays.asList(lstCatalogIDs)));
 
 			List<Object> lstAmountObj = xmlConfig.getList(KEY_AMOUNTS, new ArrayList<Object>());
 			settings.setAmounts(new ArrayList<Integer>(lstAmountObj.size()));
@@ -164,7 +216,8 @@ public class SettingsService {
 		// fill
 		settingsModel.setSystemType("Other");
 		settingsModel.setUrl("");
-		settingsModel.setDefault(false);
+		settingsModel.setDefaultUrl(false);
+		settingsModel.setAutoExtend(true);
 
 		settingsModel.setMediaQualities(new ArrayList<String>());
 		settingsModel.setCustomerIDs(new ArrayList<String>());

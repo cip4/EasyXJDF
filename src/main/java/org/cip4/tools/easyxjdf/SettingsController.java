@@ -55,11 +55,6 @@ public class SettingsController {
 		// show view
 		SettingsModel result = settingsView.open();
 
-		// analyze result
-		if (result == null) {
-			result = settingsService.loadSettings();
-		}
-
 		// return result
 		return result;
 

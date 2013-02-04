@@ -93,7 +93,7 @@ public class SettingsServiceTest {
 		// assert
 		Assert.assertEquals("SystemType is wrong.", "Heidelberg Prinect", settingsModel.getSystemType());
 		Assert.assertEquals("Url is wrong.", "http://localhost:8011", settingsModel.getUrl());
-		Assert.assertEquals("IsDefault is wrong.", true, settingsModel.isDefault());
+		Assert.assertEquals("IsDefault is wrong.", true, settingsModel.isDefaultUrl());
 
 		Assert.assertEquals("Number MediaQuantities is wrong.", 3, settingsModel.getMediaQualities().size());
 		Assert.assertEquals("MediaQuantity is wrong.", "IPG_250", settingsModel.getMediaQualities().get(2));
@@ -126,7 +126,7 @@ public class SettingsServiceTest {
 		// assert
 		Assert.assertEquals("SystemType is wrong.", "Other", settingsModel.getSystemType());
 		Assert.assertEquals("Url is wrong.", "", settingsModel.getUrl());
-		Assert.assertEquals("IsDefault is wrong.", false, settingsModel.isDefault());
+		Assert.assertEquals("IsDefault is wrong.", false, settingsModel.isDefaultUrl());
 	}
 
 }

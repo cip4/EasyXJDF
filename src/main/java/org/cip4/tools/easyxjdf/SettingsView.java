@@ -11,6 +11,8 @@
 package org.cip4.tools.easyxjdf;
 
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -87,6 +89,8 @@ public class SettingsView extends Dialog {
 
 	private Button chkDefault;
 
+	private Button chkAutoExtend;
+
 	private Combo cmbFields;
 
 	/**
@@ -115,6 +119,18 @@ public class SettingsView extends Dialog {
 		this.settingsModel = settingsModel;
 		this.parent = parent;
 		this.result = null;
+	}
+
+	/**
+	 * Show an info message in a MessageBox.
+	 * @param message Message to show in a MessageBox.
+	 */
+	public void showInfo(String message) {
+
+		// show message
+		MessageBox mb = new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
+		mb.setMessage(message);
+		mb.open();
 	}
 
 	/**
@@ -236,10 +252,10 @@ public class SettingsView extends Dialog {
 		tabFields.setControl(compFields);
 
 		Label lblFieldTitle = new Label(compFields, SWT.NONE);
-		lblFieldTitle.setText("Field Values");
+		lblFieldTitle.setText("Field Suggestion Settings");
 		lblFieldTitle.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD | SWT.ITALIC));
 		lblFieldTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblFieldTitle.setBounds(10, 21, 156, 23);
+		lblFieldTitle.setBounds(10, 21, 223, 23);
 
 		cmbFields = new Combo(compFields, SWT.READ_ONLY);
 		cmbFields.addSelectionListener(new SelectionAdapter() {
@@ -258,7 +274,12 @@ public class SettingsView extends Dialog {
 		txtValues.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				view2Model();
+
+				try {
+					view2Model();
+				} catch (Exception ex) {
+					ErrorController.processException(shell, ex);
+				}
 			}
 		});
 		txtValues.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
@@ -268,6 +289,12 @@ public class SettingsView extends Dialog {
 		lblInfo.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		lblInfo.setText("Each line in \r\ntextfield \r\nrepresents a \r\nsingle element.");
 		lblInfo.setBounds(325, 123, 106, 86);
+
+		chkAutoExtend = new Button(compFields, SWT.CHECK);
+		chkAutoExtend.setToolTipText("Extend suggestion values automatically.");
+		chkAutoExtend.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		chkAutoExtend.setBounds(10, 189, 160, 20);
+		chkAutoExtend.setText("Auto-Extend");
 
 		Button btnSave = new Button(shell, SWT.NONE);
 		btnSave.addKeyListener(new KeyAdapter() {
@@ -326,6 +353,30 @@ public class SettingsView extends Dialog {
 	}
 
 	/**
+	 * Validates the URL.
+	 */
+	private boolean validateUrl() {
+
+		boolean result = false;
+
+		// read url
+		String url = txtUrl.getText();
+
+		// validate
+		try {
+			new URL(url);
+
+			result = true;
+
+		} catch (MalformedURLException mex) {
+
+		}
+
+		// return result
+		return result;
+	}
+
+	/**
 	 * Show model in view.
 	 */
 	private void model2View() {
@@ -333,7 +384,8 @@ public class SettingsView extends Dialog {
 		// connection settings
 		cmbSystemType.setText(settingsModel.getSystemType());
 		txtUrl.setText(settingsModel.getUrl());
-		chkDefault.setSelection(settingsModel.isDefault());
+		chkDefault.setSelection(settingsModel.isDefaultUrl());
+		chkAutoExtend.setSelection(settingsModel.isAutoExtend());
 
 		// field settings
 		updateField();
@@ -345,7 +397,8 @@ public class SettingsView extends Dialog {
 		// connection settings
 		settingsModel.setSystemType(cmbSystemType.getText());
 		settingsModel.setUrl(txtUrl.getText());
-		settingsModel.setDefault(chkDefault.getSelection());
+		settingsModel.setDefaultUrl(chkDefault.getSelection());
+		settingsModel.setAutoExtend(chkAutoExtend.getSelection());
 
 		// field settings
 		if (FIELD_AMOUNT.equals(cmbFields.getText())) {
@@ -354,11 +407,21 @@ public class SettingsView extends Dialog {
 				String[] values = txtValues.getText().split(NEW_LINE);
 				List<Integer> lst = new ArrayList<Integer>(values.length);
 
-				for (String val : values) {
-					lst.add(Integer.parseInt(val));
+				try {
+					for (String val : values) {
+						lst.add(Integer.parseInt(val));
+					}
+
+					settingsModel.setAmounts(lst);
+				} catch (NumberFormatException ne) {
+
+					// show message
+					showInfo("At least one Amount is not numeric.");
+
+					// set focus
+					txtValues.setFocus();
 				}
 
-				settingsModel.setAmounts(lst);
 			} else {
 				settingsModel.setAmounts(new ArrayList<Integer>());
 			}
@@ -414,6 +477,19 @@ public class SettingsView extends Dialog {
 	 * Save all settings.
 	 */
 	private void processSave() {
+
+		// validate
+		if (!validateUrl()) {
+
+			// show info
+			showInfo("URL is not valid.");
+
+			// set focus
+			txtUrl.setFocus();
+
+			// return
+			return;
+		}
 
 		try {
 
