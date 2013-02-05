@@ -69,7 +69,7 @@ public class XJdfService {
 		// parse print talk
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintTalkParser parser = new PrintTalkParser();
-		parser.parsePrintTalk(ptk, bos);
+		parser.parsePrintTalk(ptk, bos, true); // No validation: BUG in JAXB Framework
 		bos.close();
 
 		byte[] bytes = bos.toByteArray();
@@ -110,7 +110,7 @@ public class XJdfService {
 		// parse print talk
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintTalkParser parser = new PrintTalkParser();
-		parser.parsePrintTalk(ptk, bos);
+		parser.parsePrintTalk(ptk, bos, true); // No validation: BUG in JAXB Framework
 		bos.close();
 
 		byte[] bytes = bos.toByteArray();
