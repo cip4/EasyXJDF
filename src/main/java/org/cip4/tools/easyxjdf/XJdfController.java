@@ -134,6 +134,8 @@ public class XJdfController {
 					settings = settingsController.showView();
 				}
 
+				boolean isAutoExtend = settings.isAutoExtend();
+
 				// send
 				if (settings != null) {
 
@@ -149,7 +151,7 @@ public class XJdfController {
 				}
 
 				// auto extend
-				if (settings.isAutoExtend()) {
+				if (isAutoExtend) {
 
 					// auto extend
 					settingsService.autoExtend(sendEvent.getxJdfModel());

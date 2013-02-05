@@ -77,7 +77,7 @@ public class XJdfService {
 		// transfer to target url
 		URL u = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) u.openConnection();
-		connection.setRequestMethod("PUT");
+		connection.setRequestMethod("POST");
 		connection.setRequestProperty("CONTENT-TYPE", "application/zip");
 		connection.setUseCaches(false);
 		connection.setDoInput(true);
