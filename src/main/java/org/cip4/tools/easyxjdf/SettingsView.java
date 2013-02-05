@@ -69,7 +69,7 @@ public class SettingsView extends Dialog {
 
 	private final Shell parent;
 
-	private SettingsModel settingsModel;
+	private final SettingsModel settingsModel;
 
 	private SettingsModel result;
 
@@ -311,7 +311,7 @@ public class SettingsView extends Dialog {
 		});
 		btnSave.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		btnSave.setBounds(375, 330, 84, 31);
-		btnSave.setText("Save");
+		btnSave.setText("Ok");
 
 		Button btnCancel = new Button(shell, SWT.NONE);
 		btnCancel.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
