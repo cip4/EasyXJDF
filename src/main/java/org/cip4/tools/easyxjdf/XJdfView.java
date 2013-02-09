@@ -164,6 +164,52 @@ public class XJdfView {
 
 		shell.setImage(imgXJdf);
 
+		cmbCustomerID = new Combo(shell, SWT.NONE);
+		cmbCustomerID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbCustomerID.setBounds(364, 164, 134, 29);
+
+		txtJobName = new Text(shell, SWT.BORDER);
+		txtJobName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		txtJobName.setBounds(112, 292, 388, 27);
+
+		txtRunList = new Text(shell, SWT.BORDER);
+		txtRunList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+
+				if (e.keyCode == 8 || e.keyCode == 127) {
+					txtRunList.setText("");
+					txtRunList.setToolTipText("");
+					updateJobName();
+				}
+			}
+		});
+		txtRunList.setEditable(false);
+		txtRunList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		txtRunList.setBounds(112, 257, 361, 27);
+
+		cmbAmount = new Combo(shell, SWT.NONE);
+		cmbAmount.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+		});
+		cmbAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbAmount.setBounds(112, 164, 134, 29);
+		shell.setTabList(new Control[] { txtJobId, txtRunList, btnContentData, txtJobName, btnSaveAs, btnSend });
+
+		txtJobId = new Text(shell, SWT.BORDER);
+		txtJobId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		txtJobId.setBounds(112, 131, 134, 27);
+
+		cmbMediaQuality = new Combo(shell, SWT.NONE);
+		cmbMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbMediaQuality.setBounds(112, 200, 134, 29);
+
+		cmbCatalogID = new Combo(shell, SWT.NONE);
+		cmbCatalogID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbCatalogID.setBounds(364, 200, 134, 29);
+
 		Label lblSettings = new Label(shell, SWT.NONE);
 		lblSettings.addMouseListener(new MouseAdapter() {
 			@Override
@@ -178,7 +224,7 @@ public class XJdfView {
 		Label lblAmount = new Label(shell, SWT.NONE);
 		lblAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblAmount.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblAmount.setBounds(12, 167, 56, 21);
+		lblAmount.setBounds(12, 167, 103, 21);
 		lblAmount.setText("Amount");
 
 		Button btnSend = new Button(shell, SWT.NONE);
@@ -224,23 +270,7 @@ public class XJdfView {
 		lblRunList.setText("ContentData");
 		lblRunList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblRunList.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblRunList.setBounds(12, 260, 87, 21);
-
-		txtRunList = new Text(shell, SWT.BORDER);
-		txtRunList.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-
-				if (e.keyCode == 8 || e.keyCode == 127) {
-					txtRunList.setText("");
-					txtRunList.setToolTipText("");
-					updateJobName();
-				}
-			}
-		});
-		txtRunList.setEditable(false);
-		txtRunList.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtRunList.setBounds(112, 257, 361, 27);
+		lblRunList.setBounds(12, 260, 103, 21);
 
 		Button btnContentData = new Button(shell, SWT.NONE);
 		btnContentData.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -273,45 +303,37 @@ public class XJdfView {
 		lblJobId.setText("JobID");
 		lblJobId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblJobId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblJobId.setBounds(12, 134, 39, 21);
-
-		txtJobId = new Text(shell, SWT.BORDER);
-		txtJobId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtJobId.setBounds(112, 131, 134, 27);
+		lblJobId.setBounds(12, 134, 103, 21);
 
 		Label lblTitle = new Label(shell, SWT.NONE);
 		lblTitle.setText("EasyXJDF");
 		lblTitle.setFont(SWTResourceManager.getFont("Segoe UI", 21, SWT.BOLD | SWT.ITALIC));
 		lblTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblTitle.setBounds(144, 32, 125, 38);
-
-		txtJobName = new Text(shell, SWT.BORDER);
-		txtJobName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtJobName.setBounds(112, 292, 388, 27);
+		lblTitle.setBounds(144, 32, 246, 38);
 
 		Label lblJobName = new Label(shell, SWT.NONE);
 		lblJobName.setText("JobName");
 		lblJobName.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblJobName.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblJobName.setBounds(14, 295, 66, 21);
+		lblJobName.setBounds(14, 295, 101, 21);
 
 		Label lblCatalogId = new Label(shell, SWT.NONE);
 		lblCatalogId.setText("CatalogID");
 		lblCatalogId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblCatalogId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblCatalogId.setBounds(270, 203, 68, 21);
+		lblCatalogId.setBounds(270, 203, 103, 21);
 
 		Label lblMediaQuality = new Label(shell, SWT.NONE);
 		lblMediaQuality.setText("MediaQuality");
 		lblMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblMediaQuality.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblMediaQuality.setBounds(12, 203, 93, 21);
+		lblMediaQuality.setBounds(12, 203, 103, 21);
 
 		Label lblCustomerId = new Label(shell, SWT.NONE);
 		lblCustomerId.setText("CustomerID");
 		lblCustomerId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblCustomerId.setBackground(new Color(shell.getDisplay(), 238, 238, 238));
-		lblCustomerId.setBounds(270, 167, 88, 21);
+		lblCustomerId.setBounds(270, 167, 103, 21);
 
 		Label lblInfo = new Label(shell, SWT.NONE);
 		lblInfo.addMouseListener(new MouseAdapter() {
@@ -334,28 +356,6 @@ public class XJdfView {
 		Label lblTitleBg = new Label(shell, SWT.NONE);
 		lblTitleBg.setBounds(0, 0, shell.getSize().x, 100);
 		lblTitleBg.setImage(new Image(shell.getDisplay(), imgTitleBg.getImageData().scaledTo(shell.getSize().x, 100)));
-
-		cmbAmount = new Combo(shell, SWT.NONE);
-		cmbAmount.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
-		});
-		cmbAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		cmbAmount.setBounds(112, 164, 134, 29);
-
-		cmbMediaQuality = new Combo(shell, SWT.NONE);
-		cmbMediaQuality.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		cmbMediaQuality.setBounds(112, 200, 134, 29);
-
-		cmbCustomerID = new Combo(shell, SWT.NONE);
-		cmbCustomerID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		cmbCustomerID.setBounds(364, 164, 134, 29);
-
-		cmbCatalogID = new Combo(shell, SWT.NONE);
-		cmbCatalogID.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		cmbCatalogID.setBounds(364, 200, 134, 29);
-		shell.setTabList(new Control[] { txtJobId, txtRunList, btnContentData, txtJobName, btnSaveAs, btnSend });
 
 	}
 

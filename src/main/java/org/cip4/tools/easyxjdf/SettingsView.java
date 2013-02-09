@@ -223,7 +223,7 @@ public class SettingsView extends Dialog {
 		lblUrl.setText("URL:");
 		lblUrl.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblUrl.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblUrl.setBounds(10, 123, 32, 21);
+		lblUrl.setBounds(10, 123, 74, 21);
 
 		txtUrl = new Text(compConnection, SWT.BORDER);
 		txtUrl.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -288,7 +288,7 @@ public class SettingsView extends Dialog {
 		Label lblInfo = new Label(compFields, SWT.NONE);
 		lblInfo.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
 		lblInfo.setText("Each line in \r\ntextfield \r\nrepresents a \r\nsingle element.");
-		lblInfo.setBounds(325, 123, 106, 86);
+		lblInfo.setBounds(325, 123, 116, 86);
 
 		chkAutoExtend = new Button(compFields, SWT.CHECK);
 		chkAutoExtend.setToolTipText("Extend suggestion values automatically.");

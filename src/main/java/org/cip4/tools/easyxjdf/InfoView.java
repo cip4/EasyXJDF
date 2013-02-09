@@ -129,7 +129,7 @@ public class InfoView extends Dialog {
 		Label lblTitle = new Label(shell, SWT.NONE);
 		lblTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblTitle.setFont(SWTResourceManager.getFont("Segoe UI", 21, SWT.BOLD | SWT.ITALIC));
-		lblTitle.setBounds(142, 40, 125, 38);
+		lblTitle.setBounds(142, 40, 186, 38);
 		lblTitle.setText("EasyXJDF");
 
 		Label lblVersion = new Label(shell, SWT.NONE);
@@ -163,7 +163,7 @@ public class InfoView extends Dialog {
 		lblXJdfLibBuildDate.setBounds(214, 179, 220, 15);
 
 		Label lblFlyeralarm = new Label(shell, SWT.NONE);
-		lblFlyeralarm.setBounds(10, 274, 167, 30);
+		lblFlyeralarm.setBounds(10, 274, 186, 30);
 		lblFlyeralarm.setImage(imgFALogo);
 
 		Label lblFlyeralarmGmbh = new Label(shell, SWT.NONE);

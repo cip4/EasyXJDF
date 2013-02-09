@@ -97,6 +97,11 @@ public class ErrorView extends Dialog {
 
 		shell.setImage(imgError);
 
+		Label lblXJDF = new Label(shell, SWT.NONE);
+		lblXJDF.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblXJDF.setBounds(440, 10, 52, 30);
+		lblXJDF.setImage(imgXJdf);
+
 		txtStackTrace = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		txtStackTrace.setEditable(false);
 		txtStackTrace.setBounds(10, 202, 482, 154);
@@ -107,14 +112,14 @@ public class ErrorView extends Dialog {
 		Label lblStackTrace = new Label(shell, SWT.NONE);
 		lblStackTrace.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblStackTrace.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblStackTrace.setBounds(10, 175, 81, 21);
+		lblStackTrace.setBounds(10, 175, 120, 21);
 		lblStackTrace.setText("Stack Trace:");
 
 		Label lblMessage = new Label(shell, SWT.NONE);
 		lblMessage.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblMessage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblMessage.setText("Message:");
-		lblMessage.setBounds(10, 74, 64, 21);
+		lblMessage.setBounds(10, 74, 105, 21);
 
 		txtMessage = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
 		txtMessage.setEditable(false);
@@ -142,17 +147,12 @@ public class ErrorView extends Dialog {
 		Label lblSorryAnError = new Label(shell, SWT.NONE);
 		lblSorryAnError.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblSorryAnError.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.BOLD | SWT.ITALIC));
-		lblSorryAnError.setBounds(89, 30, 300, 25);
+		lblSorryAnError.setBounds(89, 30, 386, 25);
 		lblSorryAnError.setText("Sorry, an error has been occured...");
 
 		Label lblCIP4 = new Label(shell, SWT.NONE);
 		lblCIP4.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblCIP4.setBounds(10, 377, 50, 32);
 		lblCIP4.setImage(imgCIP4);
-
-		Label lblXJDF = new Label(shell, SWT.NONE);
-		lblXJDF.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblXJDF.setBounds(440, 10, 52, 30);
-		lblXJDF.setImage(imgXJdf);
 	}
 }
