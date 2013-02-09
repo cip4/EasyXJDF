@@ -196,7 +196,6 @@ public class XJdfView {
 		});
 		cmbAmount.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		cmbAmount.setBounds(112, 164, 134, 29);
-		shell.setTabList(new Control[] { txtJobId, txtRunList, btnContentData, txtJobName, btnSaveAs, btnSend });
 
 		txtJobId = new Text(shell, SWT.BORDER);
 		txtJobId.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
@@ -356,6 +355,8 @@ public class XJdfView {
 		Label lblTitleBg = new Label(shell, SWT.NONE);
 		lblTitleBg.setBounds(0, 0, shell.getSize().x, 100);
 		lblTitleBg.setImage(new Image(shell.getDisplay(), imgTitleBg.getImageData().scaledTo(shell.getSize().x, 100)));
+
+		shell.setTabList(new Control[] { txtJobId, txtRunList, btnContentData, txtJobName, btnSaveAs, btnSend });
 
 	}
 
