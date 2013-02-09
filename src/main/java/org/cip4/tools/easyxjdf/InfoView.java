@@ -163,6 +163,7 @@ public class InfoView extends Dialog {
 		lblXJdfLibBuildDate.setBounds(214, 179, 220, 15);
 
 		Label lblFlyeralarm = new Label(shell, SWT.NONE);
+		lblFlyeralarm.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblFlyeralarm.setBounds(10, 274, 186, 30);
 		lblFlyeralarm.setImage(imgFALogo);
 
