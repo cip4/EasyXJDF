@@ -162,7 +162,7 @@
 				</os>
 			</activation>
 			<build>
-				<finalName>EasyXJDF-32bit</finalName>
+				<finalName>EasyXJDF-Win32</finalName>
 			</build>
 			<dependencies>
 				<dependency>
@@ -181,7 +181,7 @@
 				</os>
 			</activation>
 			<build>
-				<finalName>EasyXJDF-64bit</finalName>
+				<finalName>EasyXJDF-Win64</finalName>
 			</build>
 			<dependencies>
 				<dependency>
