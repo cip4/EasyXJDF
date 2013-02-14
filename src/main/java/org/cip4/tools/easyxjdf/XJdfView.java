@@ -425,8 +425,8 @@ public class XJdfView {
 		}
 
 		// save dialog
-		String[] filterNames = { "XJDF Package (*.xjdf.zip) (recommended)", "XJDF Document (*.xjdf)" };
-		String[] filterExts = { "*.xjdf.zip", "*.xjdf" };
+		String[] filterNames = { "XJDF Package (*.zip) (recommended)", "XJDF Document (*.xjdf)" };
+		String[] filterExts = { "*.zip", "*.xjdf" };
 
 		FileDialog dialog = new FileDialog(shell, SWT.SAVE);
 		dialog.setFilterExtensions(filterExts);

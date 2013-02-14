@@ -11,7 +11,6 @@
 package org.cip4.tools.easyxjdf.service;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -67,12 +66,8 @@ public class XJdfService {
 		PrintTalk ptk = createPrintTalk(xJdfModel);
 
 		// parse print talk
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintTalkParser parser = new PrintTalkParser();
-		parser.parsePrintTalk(ptk, bos, true); // No validation: BUG in JAXB Framework
-		bos.close();
-
-		byte[] bytes = bos.toByteArray();
+		byte[] bytes = parser.parsePrintTalk(ptk, true); // No validation: BUG in JAXB Framework
 
 		// transfer to target url
 		URL u = new URL(url);
@@ -108,12 +103,8 @@ public class XJdfService {
 		PrintTalk ptk = createPrintTalk(xJdfModel);
 
 		// parse print talk
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintTalkParser parser = new PrintTalkParser();
-		parser.parsePrintTalk(ptk, bos, true); // No validation: BUG in JAXB Framework
-		bos.close();
-
-		byte[] bytes = bos.toByteArray();
+		byte[] bytes = parser.parsePrintTalk(ptk, true); // No validation: BUG in JAXB Framework
 
 		// save to target location
 		File file = new File(targetLocation);
