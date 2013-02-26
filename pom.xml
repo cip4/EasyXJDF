@@ -20,6 +20,11 @@
 			<email>s.meissner@flyeralarm.de</email>
 		</developer>
 	</developers>
+	<scm>
+		<url>http://svn.cip4.org/svnroot/trunk/EasyXJDF</url>
+		<developerConnection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</developerConnection>
+		<connection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</connection>
+	</scm>
 	<repositories>
 		<repository>
 			<id>swt repo</id>
