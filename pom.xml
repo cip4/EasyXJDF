@@ -130,7 +130,7 @@
 		<dependency>
 			<groupId>org.cip4.lib.xprinttalk</groupId>
 			<artifactId>xPrintTalkLib</artifactId>
-			<version>0.4-SNAPSHOT</version>
+			<version>0.4</version>
 		</dependency>
 		<!-- Apache Commons -->
 		<dependency>
