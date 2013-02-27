@@ -2,8 +2,8 @@
  * All rights reserved by
  * 
  * flyeralarm GmbH
- * Alfred-Nobel-Straße 18
- * 97080 Würzburg
+ * Alfred-Nobel-Straï¿½e 18
+ * 97080 WÃ¼rzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
