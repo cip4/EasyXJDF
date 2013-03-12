@@ -134,7 +134,7 @@ public class XJdfController {
 					settings = settingsController.showView();
 				}
 
-				boolean isAutoExtend = settings.isAutoExtend();
+				boolean isAutoExtend = false;
 
 				// send
 				if (settings != null) {
@@ -148,6 +148,8 @@ public class XJdfController {
 
 					// show info
 					xJdfView.showMessage(String.format("XJDF successfully has been sent to \"%s\"", url), SWT.ICON_INFORMATION | SWT.OK);
+					
+					isAutoExtend = settings.isAutoExtend();
 				}
 
 				// auto extend
