@@ -2,8 +2,8 @@
  * All rights reserved by
  * 
  * flyeralarm GmbH
- * Alfred-Nobel-Stra�e 18
- * 97080 W�rzburg
+ * Alfred-Nobel-Straße 18
+ * 97080 Würzburg
  *
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
@@ -32,6 +32,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -182,6 +184,12 @@ public class SettingsView extends Dialog {
 		shell.setSize(475, 399);
 		shell.setText("EasyXJDF Settings");
 
+		// init font
+		Label label = new Label(shell, SWT.NONE);
+		FontData[] fd = label.getFont().getFontData();
+		fd[0].setHeight(12);
+		Font font = new Font(shell.getDisplay(), fd[0]);
+
 		Image imgTitleBg = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/title-bg.png"));
 		Image imgXJdf = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/xjdf-logo-small.png"));
 		Image imgCIP4 = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/cip4-logo-small.png"));
@@ -190,14 +198,14 @@ public class SettingsView extends Dialog {
 		shell.setImage(imgSettings);
 
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
-		tabFolder.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		tabFolder.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		tabFolder.setFont(font);
 		tabFolder.setBounds(10, 65, 449, 252);
 
 		TabItem tabConnection = new TabItem(tabFolder, SWT.NONE);
 		tabConnection.setText("Connection");
 
 		Composite compConnection = new Composite(tabFolder, SWT.NONE);
+		compConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		tabConnection.setControl(compConnection);
 
 		cmbSystemType = new Combo(compConnection, SWT.READ_ONLY);
@@ -209,40 +217,35 @@ public class SettingsView extends Dialog {
 		});
 
 		cmbSystemType.setItems(mapUrls.keySet().toArray(new String[mapUrls.size()]));
-		cmbSystemType.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		cmbSystemType.setFont(font);
 		cmbSystemType.setBounds(90, 66, 166, 29);
 		cmbSystemType.select(0);
 
 		Label lblSystemType = new Label(compConnection, SWT.NONE);
 		lblSystemType.setText("Sytem:");
-		lblSystemType.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblSystemType.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblSystemType.setFont(font);
 		lblSystemType.setBounds(10, 69, 84, 21);
 
 		Label lblUrl = new Label(compConnection, SWT.NONE);
 		lblUrl.setText("URL:");
-		lblUrl.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		lblUrl.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		lblUrl.setFont(font);
 		lblUrl.setBounds(10, 123, 74, 21);
 
 		txtUrl = new Text(compConnection, SWT.BORDER);
-		txtUrl.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		txtUrl.setBounds(90, 120, 345, 27);
+		txtUrl.setFont(font);
+		txtUrl.setBounds(90, 120, 329, 21);
 
 		lblLogo = new Label(compConnection, SWT.NONE);
-		lblLogo.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblLogo.setBounds(262, 66, 166, 29);
+		lblLogo.setBounds(262, 66, 157, 29);
 
 		Label lblTitleConnection = new Label(compConnection, SWT.NONE);
 		lblTitleConnection.setText("Connection Settings");
 		lblTitleConnection.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD | SWT.ITALIC));
-		lblTitleConnection.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblTitleConnection.setBounds(10, 21, 156, 23);
 
 		chkDefault = new Button(compConnection, SWT.CHECK);
 		chkDefault.setText("Always use this URL");
-		chkDefault.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
-		chkDefault.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+		chkDefault.setFont(font);
 		chkDefault.setBounds(90, 168, 283, 21);
 
 		TabItem tabFields = new TabItem(tabFolder, SWT.NONE);
@@ -254,7 +257,6 @@ public class SettingsView extends Dialog {
 		Label lblFieldTitle = new Label(compFields, SWT.NONE);
 		lblFieldTitle.setText("Field Suggestion Settings");
 		lblFieldTitle.setFont(SWTResourceManager.getFont("Segoe UI", 13, SWT.BOLD | SWT.ITALIC));
-		lblFieldTitle.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblFieldTitle.setBounds(10, 21, 223, 23);
 
 		cmbFields = new Combo(compFields, SWT.READ_ONLY);
@@ -264,9 +266,9 @@ public class SettingsView extends Dialog {
 				updateField();
 			}
 		});
-		cmbFields.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		cmbFields.setFont(font);
 		cmbFields.setItems(new String[] { "Amount", "MediaQuality", "CustomerID", "CatalogID" });
-		cmbFields.setBounds(10, 60, 131, 23);
+		cmbFields.setBounds(10, 60, 174, 23);
 		cmbFields.select(0);
 		cmbFields.setText("Amount\r\nMediaQuality\r\nCustomerID\r\nCatalogID\r\n");
 
@@ -282,18 +284,18 @@ public class SettingsView extends Dialog {
 				}
 			}
 		});
-		txtValues.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		txtValues.setBounds(156, 60, 156, 149);
+		txtValues.setFont(font);
+		txtValues.setBounds(229, 60, 190, 144);
 
 		Label lblInfo = new Label(compFields, SWT.NONE);
-		lblInfo.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
+		lblInfo.setFont(font);
 		lblInfo.setText("Each line in \r\ntextfield \r\nrepresents a \r\nsingle element.");
-		lblInfo.setBounds(325, 123, 116, 86);
+		lblInfo.setBounds(10, 92, 160, 86);
 
 		chkAutoExtend = new Button(compFields, SWT.CHECK);
 		chkAutoExtend.setToolTipText("Extend suggestion values automatically.");
-		chkAutoExtend.setFont(SWTResourceManager.getFont("Segoe UI", 11, SWT.NORMAL));
-		chkAutoExtend.setBounds(10, 189, 160, 20);
+		chkAutoExtend.setFont(font);
+		chkAutoExtend.setBounds(10, 184, 160, 20);
 		chkAutoExtend.setText("Auto-Extend");
 
 		Button btnSave = new Button(shell, SWT.NONE);
@@ -309,12 +311,12 @@ public class SettingsView extends Dialog {
 				processSave();
 			}
 		});
-		btnSave.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		btnSave.setFont(font);
 		btnSave.setBounds(375, 330, 84, 31);
 		btnSave.setText("Ok");
 
 		Button btnCancel = new Button(shell, SWT.NONE);
-		btnCancel.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		btnCancel.setFont(font);
 		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
@@ -331,7 +333,6 @@ public class SettingsView extends Dialog {
 		btnCancel.setBounds(271, 330, 84, 31);
 
 		Label lblXJDF = new Label(shell, SWT.NONE);
-		lblXJDF.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblXJDF.setBounds(404, 10, 55, 31);
 		lblXJDF.setImage(imgXJdf);
 
@@ -340,7 +341,7 @@ public class SettingsView extends Dialog {
 		lblCIP4.setImage(imgCIP4);
 
 		Label lblTitleBg = new Label(shell, SWT.NONE);
-		lblTitleBg.setBounds(0, -33, 629, 104);
+		lblTitleBg.setBounds(0, -33, 475, 104);
 		lblTitleBg.setImage(new Image(shell.getDisplay(), imgTitleBg.getImageData().scaledTo(shell.getSize().x, 100)));
 	}
 

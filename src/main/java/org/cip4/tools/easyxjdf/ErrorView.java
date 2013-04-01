@@ -15,6 +15,8 @@ import org.cip4.tools.easyxjdf.model.ErrorModel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -91,6 +93,16 @@ public class ErrorView extends Dialog {
 		shell.setSize(508, 447);
 		shell.setText("Sorry, an error has been occured...");
 
+		// init font
+		Label label = new Label(shell, SWT.NONE);
+		FontData[] fd = label.getFont().getFontData();
+		fd[0].setHeight(12);
+		Font font = new Font(shell.getDisplay(), fd[0]);
+
+		fd[0].setHeight(14);
+		fd[0].setStyle(SWT.ITALIC | SWT.BOLD);
+		Font fontTitle = new Font(shell.getDisplay(), fd[0]);
+
 		Image imgXJdf = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/xjdf-logo-small.png"));
 		Image imgCIP4 = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/cip4-logo-small.png"));
 		Image imgError = new Image(shell.getDisplay(), XJdfView.class.getResourceAsStream("/org/cip4/tools/easyxjdf/gui/error.png"));
@@ -110,13 +122,13 @@ public class ErrorView extends Dialog {
 			txtStackTrace.setText(errorModel.getStackTrace());
 
 		Label lblStackTrace = new Label(shell, SWT.NONE);
-		lblStackTrace.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		lblStackTrace.setFont(font);
 		lblStackTrace.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblStackTrace.setBounds(10, 175, 120, 21);
 		lblStackTrace.setText("Stack Trace:");
 
 		Label lblMessage = new Label(shell, SWT.NONE);
-		lblMessage.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		lblMessage.setFont(font);
 		lblMessage.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblMessage.setText("Message:");
 		lblMessage.setBounds(10, 74, 105, 21);
@@ -135,7 +147,7 @@ public class ErrorView extends Dialog {
 				shell.close();
 			}
 		});
-		btnClose.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
+		btnClose.setFont(font);
 		btnClose.setBounds(411, 378, 81, 31);
 		btnClose.setText("Close");
 
@@ -146,8 +158,8 @@ public class ErrorView extends Dialog {
 
 		Label lblSorryAnError = new Label(shell, SWT.NONE);
 		lblSorryAnError.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		lblSorryAnError.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.BOLD | SWT.ITALIC));
-		lblSorryAnError.setBounds(89, 30, 386, 25);
+		lblSorryAnError.setFont(fontTitle);
+		lblSorryAnError.setBounds(89, 30, 386, 30);
 		lblSorryAnError.setText("Sorry, an error has been occured...");
 
 		Label lblCIP4 = new Label(shell, SWT.NONE);

@@ -56,7 +56,8 @@ public class SettingsService {
 	public SettingsService() {
 
 		// init settings file
-		String pathDir = FilenameUtils.concat(FileUtils.getUserDirectoryPath(), "EasyXJDF");
+		String pathDir = FilenameUtils.concat(FileUtils.getUserDirectoryPath(), "CIP4Tools");
+		pathDir = FilenameUtils.concat(pathDir, "EasyXJDF");
 		new File(pathDir).mkdirs();
 
 		String pathFile = FilenameUtils.concat(pathDir, "settings.xml");
