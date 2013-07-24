@@ -8,11 +8,13 @@
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
  */
-package org.cip4.tools.easyxjdf;
+package org.cip4.tools.easyxjdf.controller;
+
+import java.awt.Component;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.cip4.tools.easyxjdf.model.ErrorModel;
-import org.eclipse.swt.widgets.Shell;
+import org.cip4.tools.easyxjdf.view.ErrorView;
 
 /**
  * The Error Controller Class (MVC Pattern).
@@ -26,7 +28,7 @@ public class ErrorController {
 	/**
 	 * Default constructor.
 	 */
-	public ErrorController(Shell parent, ErrorModel errorModel) {
+	public ErrorController(Component parent, ErrorModel errorModel) {
 
 		// initialize instance variables
 		this.errorView = new ErrorView(parent, errorModel);
@@ -37,7 +39,7 @@ public class ErrorController {
 	 * Processes an Exception.
 	 * @param e Exception to process.
 	 */
-	public static void processException(Shell shell, Exception e) {
+	public static void processException(Component parent, Exception e) {
 
 		// analyze excpetion
 		String stackTace = ExceptionUtils.getFullStackTrace(e);
@@ -50,7 +52,7 @@ public class ErrorController {
 		errorModel.setLocalizedMessage(e.getLocalizedMessage());
 
 		// show error dialog
-		ErrorController errorController = new ErrorController(shell, errorModel);
+		ErrorController errorController = new ErrorController(parent, errorModel);
 		errorController.showView();
 	}
 

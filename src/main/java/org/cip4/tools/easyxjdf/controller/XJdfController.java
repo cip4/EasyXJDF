@@ -8,7 +8,7 @@
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
  */
-package org.cip4.tools.easyxjdf;
+package org.cip4.tools.easyxjdf.controller;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
@@ -25,7 +25,7 @@ import org.cip4.tools.easyxjdf.exception.ConnectionException;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.service.SettingsService;
 import org.cip4.tools.easyxjdf.service.XJdfService;
-import org.eclipse.swt.SWT;
+import org.cip4.tools.easyxjdf.view.XJdfView;
 
 /**
  * The XJDF Controller Class (MVC Pattern).
@@ -85,7 +85,7 @@ public class XJdfController {
 				service.saveAs(saveAsEvent.getxJdfModel(), saveAsEvent.getTargetLocation());
 
 				// show info
-				xJdfView.showMessage("XJDF successfully was saved.", SWT.ICON_INFORMATION | SWT.OK);
+				xJdfView.showMessage("XJDF successfully was saved.");
 
 				// auto extend
 				SettingsModel settings = settingsService.loadSettings();
@@ -102,7 +102,7 @@ public class XJdfController {
 			} catch (Exception e) {
 
 				// process exception
-				ErrorController.processException(xJdfView.shell, e);
+				ErrorController.processException(xJdfView.getFrame(), e);
 			}
 		}
 
@@ -130,7 +130,7 @@ public class XJdfController {
 				if (!settings.isDefaultUrl() || StringUtils.isEmpty(settings.getUrl())) {
 
 					// open send dialog
-					SettingsController settingsController = new SettingsController(xJdfView.shell);
+					SettingsController settingsController = new SettingsController(xJdfView.getFrame());
 					settings = settingsController.showView();
 				}
 
@@ -147,8 +147,8 @@ public class XJdfController {
 					xJdfService.send(sendEvent.getxJdfModel(), url);
 
 					// show info
-					xJdfView.showMessage(String.format("XJDF successfully has been sent to \"%s\"", url), SWT.ICON_INFORMATION | SWT.OK);
-					
+					xJdfView.showMessage(String.format("XJDF successfully has been sent to \"%s\"", url));
+
 					isAutoExtend = settings.isAutoExtend();
 				}
 
@@ -173,7 +173,7 @@ public class XJdfController {
 			} catch (Exception e) {
 
 				// process exception
-				ErrorController.processException(xJdfView.shell, e);
+				ErrorController.processException(xJdfView.getFrame(), e);
 			}
 
 		}
@@ -189,13 +189,13 @@ public class XJdfController {
 			String url = settings.getUrl();
 
 			// show message
-			xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url), SWT.ICON_ERROR | SWT.OK);
+			xJdfView.showMessage(String.format("Error sending XJDF to \"%s\". \r\nPlease check the Connection Settings.", url));
 
 			// disable url as default
 			try {
 				settingsService.disableDefaultUrl();
 			} catch (Exception ex) {
-				ErrorController.processException(xJdfView.shell, ex);
+				ErrorController.processException(xJdfView.getFrame(), ex);
 			}
 
 			xJdfView.updateSettings(settingsService.loadSettings());

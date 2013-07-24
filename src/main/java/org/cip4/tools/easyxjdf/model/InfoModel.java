@@ -29,9 +29,9 @@ public class InfoModel {
 
 	private String ptkVersion;
 
-	private String easyJdfVersion;
+	private String easyXJdfVersion;
 
-	private String easyJdfBuildDate;
+	private String easyXJdfBuildDate;
 
 	/**
 	 * Getter for xJdfLibVersion attribute.
@@ -130,35 +130,35 @@ public class InfoModel {
 	}
 
 	/**
-	 * Getter for easyJdfVersion attribute.
-	 * @return the easyJdfVersion
+	 * Getter for easyXJdfVersion attribute.
+	 * @return the easyXJdfVersion
 	 */
-	public String getEasyJdfVersion() {
-		return easyJdfVersion;
+	public String getEasyXJdfVersion() {
+		return easyXJdfVersion;
 	}
 
 	/**
-	 * Setter for easyJdfVersion attribute.
-	 * @param easyJdfVersion the easyJdfVersion to set
+	 * Setter for easyXJdfVersion attribute.
+	 * @param easyXJdfVersion the easyJdfVersion to set
 	 */
-	public void setEasyJdfVersion(String easyJdfVersion) {
-		this.easyJdfVersion = easyJdfVersion;
+	public void setEasyXJdfVersion(String easyXJdfVersion) {
+		this.easyXJdfVersion = easyXJdfVersion;
 	}
 
 	/**
-	 * Getter for easyJdfBuildDate attribute.
-	 * @return the easyJdfBuildDate
+	 * Getter for easyXJdfBuildDate attribute.
+	 * @return the easyXJdfBuildDate
 	 */
-	public String getEasyJdfBuildDate() {
-		return easyJdfBuildDate;
+	public String getEasyXJdfBuildDate() {
+		return easyXJdfBuildDate;
 	}
 
 	/**
-	 * Setter for easyJdfBuildDate attribute.
-	 * @param easyJdfBuildDate the easyJdfBuildDate to set
+	 * Setter for easyXJdfBuildDate attribute.
+	 * @param easyXJdfBuildDate the easyXJdfBuildDate to set
 	 */
-	public void setEasyJdfBuildDate(String easyJdfBuildDate) {
-		this.easyJdfBuildDate = easyJdfBuildDate;
+	public void setEasyXJdfBuildDate(String easyXJdfBuildDate) {
+		this.easyXJdfBuildDate = easyXJdfBuildDate;
 	}
 
 }

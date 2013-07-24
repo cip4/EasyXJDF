@@ -8,13 +8,14 @@
  * Email: info@flyeralarm.com
  * Website: http://www.flyeralarm.com
  */
-package org.cip4.tools.easyxjdf;
+package org.cip4.tools.easyxjdf.controller;
 
+import javax.swing.JFrame;
 import javax.xml.bind.JAXBException;
 
 import org.cip4.tools.easyxjdf.model.InfoModel;
 import org.cip4.tools.easyxjdf.service.InfoService;
-import org.eclipse.swt.widgets.Shell;
+import org.cip4.tools.easyxjdf.view.InfoView;
 
 /**
  * The Info Controller Class (MVC Pattern).
@@ -29,7 +30,7 @@ public class InfoController {
 	 * Default constructor.
 	 * @throws JAXBException
 	 */
-	public InfoController(Shell parent) {
+	public InfoController(JFrame parent) {
 
 		// load infos
 		InfoModel infoModel = new InfoService().getInfos();

@@ -10,6 +10,8 @@
  */
 package org.cip4.tools.easyxjdf;
 
+import org.cip4.tools.easyxjdf.controller.XJdfController;
+
 
 /**
  * Application start class.
