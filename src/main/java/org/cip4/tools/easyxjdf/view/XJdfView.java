@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.FilenameUtils;
@@ -29,11 +30,6 @@ import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
 import org.cip4.tools.easyxjdf.exception.ConnectionException;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
-
-import com.jgoodies.forms.factories.FormFactory;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * XJDF View class.
@@ -50,7 +46,7 @@ public class XJdfView {
 
 	private String oldJobName = "";
 
-	private JFrame frame;
+	private JFrame frmCipEasyxjdf;
 
 	private JTextField txtJobId;
 
@@ -87,9 +83,10 @@ public class XJdfView {
 		// create content
 		initialize();
 		loadSuggenstions();
+		resetView();
 
 		// show frame
-		frame.setVisible(true);
+		frmCipEasyxjdf.setVisible(true);
 	}
 
 	/**
@@ -97,7 +94,7 @@ public class XJdfView {
 	 * @return the frame
 	 */
 	public JFrame getFrame() {
-		return frame;
+		return frmCipEasyxjdf;
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class XJdfView {
 	public void showMessage(String message) {
 
 		// show message
-		JOptionPane.showMessageDialog(frame, message);
+		JOptionPane.showMessageDialog(frmCipEasyxjdf, message);
 	}
 
 	/**
@@ -128,23 +125,17 @@ public class XJdfView {
 	 * @wbp.parser.entryPoint
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.requestFocus();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 560, 388);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(
-				new FormLayout(new ColumnSpec[] { ColumnSpec.decode("1px"), ColumnSpec.decode("20px"), ColumnSpec.decode("86px"), FormFactory.UNRELATED_GAP_COLSPEC, ColumnSpec.decode("161px"),
-						ColumnSpec.decode("24px"), ColumnSpec.decode("79px"), FormFactory.LABEL_COMPONENT_GAP_COLSPEC, ColumnSpec.decode("108px"), FormFactory.LABEL_COMPONENT_GAP_COLSPEC,
-						ColumnSpec.decode("51px"), }, new RowSpec[] { RowSpec.decode("1px"), RowSpec.decode("100px"), RowSpec.decode("24px"), FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("28px"),
-						FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("27px"), FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("27px"), RowSpec.decode("17px"), RowSpec.decode("29px"),
-						FormFactory.RELATED_GAP_ROWSPEC, RowSpec.decode("28px"), RowSpec.decode("17px"), RowSpec.decode("29px"), }));
-
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/title.png")));
-		frame.getContentPane().add(label, "2, 2, 10, 1, right, default");
+		frmCipEasyxjdf = new JFrame();
+		frmCipEasyxjdf.setTitle("CIP4 EasyXJDF");
+		frmCipEasyxjdf.requestFocus();
+		frmCipEasyxjdf.setResizable(false);
+		frmCipEasyxjdf.setBounds(100, 100, 560, 388);
+		frmCipEasyxjdf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		SpringLayout springLayout = new SpringLayout();
+		frmCipEasyxjdf.getContentPane().setLayout(springLayout);
 
 		JLabel lblSettings = new JLabel("");
+		springLayout.putConstraint(SpringLayout.EAST, lblSettings, -10, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		lblSettings.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -152,58 +143,91 @@ public class XJdfView {
 			}
 		});
 		lblSettings.setIcon(new ImageIcon(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/settings.png")));
-		frame.getContentPane().add(lblSettings, "11, 3, right, center");
+		frmCipEasyxjdf.getContentPane().add(lblSettings);
 
 		JLabel lblJobId = new JLabel("Job ID");
-		frame.getContentPane().add(lblJobId, "3, 5, left, center");
+		frmCipEasyxjdf.getContentPane().add(lblJobId);
 
 		txtJobId = new JTextField();
-		frame.getContentPane().add(txtJobId, "5, 5, fill, center");
+		springLayout.putConstraint(SpringLayout.NORTH, txtJobId, -6, SpringLayout.NORTH, lblJobId);
+		springLayout.putConstraint(SpringLayout.WEST, txtJobId, 63, SpringLayout.EAST, lblJobId);
+		frmCipEasyxjdf.getContentPane().add(txtJobId);
 		txtJobId.setColumns(10);
 
 		JLabel lblAmount = new JLabel("Amount");
-		frame.getContentPane().add(lblAmount, "3, 7, left, center");
+		springLayout.putConstraint(SpringLayout.NORTH, lblAmount, 17, SpringLayout.SOUTH, lblJobId);
+		springLayout.putConstraint(SpringLayout.WEST, lblJobId, 0, SpringLayout.WEST, lblAmount);
+		springLayout.putConstraint(SpringLayout.WEST, lblAmount, 10, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		frmCipEasyxjdf.getContentPane().add(lblAmount);
 
 		cmbAmount = new JComboBox();
+		springLayout.putConstraint(SpringLayout.WEST, cmbAmount, 51, SpringLayout.EAST, lblAmount);
+		springLayout.putConstraint(SpringLayout.EAST, cmbAmount, -284, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, txtJobId, 0, SpringLayout.EAST, cmbAmount);
+		springLayout.putConstraint(SpringLayout.NORTH, cmbAmount, -6, SpringLayout.NORTH, lblAmount);
 		cmbAmount.setEditable(true);
-		frame.getContentPane().add(cmbAmount, "5, 7, fill, center");
+		frmCipEasyxjdf.getContentPane().add(cmbAmount);
 
 		JLabel lblCustomerId = new JLabel("Customer ID");
-		frame.getContentPane().add(lblCustomerId, "7, 7, left, center");
+		springLayout.putConstraint(SpringLayout.NORTH, lblCustomerId, 0, SpringLayout.NORTH, lblAmount);
+		springLayout.putConstraint(SpringLayout.EAST, lblCustomerId, -181, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
+		frmCipEasyxjdf.getContentPane().add(lblCustomerId);
 
 		cmbCustomerId = new JComboBox();
+		springLayout.putConstraint(SpringLayout.NORTH, cmbCustomerId, -6, SpringLayout.NORTH, lblAmount);
+		springLayout.putConstraint(SpringLayout.WEST, cmbCustomerId, 385, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, cmbCustomerId, 0, SpringLayout.EAST, lblSettings);
 		cmbCustomerId.setEditable(true);
-		frame.getContentPane().add(cmbCustomerId, "9, 7, 3, 1, fill, center");
+		frmCipEasyxjdf.getContentPane().add(cmbCustomerId);
 
 		JLabel lblMediaQuality = new JLabel("Media Quality");
-		frame.getContentPane().add(lblMediaQuality, "3, 9, left, center");
+		springLayout.putConstraint(SpringLayout.NORTH, lblMediaQuality, 16, SpringLayout.SOUTH, lblAmount);
+		springLayout.putConstraint(SpringLayout.WEST, lblMediaQuality, 0, SpringLayout.WEST, lblJobId);
+		frmCipEasyxjdf.getContentPane().add(lblMediaQuality);
 
 		cmbMediaQuality = new JComboBox();
+		springLayout.putConstraint(SpringLayout.NORTH, cmbMediaQuality, -6, SpringLayout.NORTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, cmbMediaQuality, 15, SpringLayout.EAST, lblMediaQuality);
 		cmbMediaQuality.setEditable(true);
-		frame.getContentPane().add(cmbMediaQuality, "5, 9, fill, center");
+		frmCipEasyxjdf.getContentPane().add(cmbMediaQuality);
 
 		JLabel lblCatalogId = new JLabel("Catalog ID");
-		frame.getContentPane().add(lblCatalogId, "7, 9, left, center");
+		springLayout.putConstraint(SpringLayout.EAST, cmbMediaQuality, -24, SpringLayout.WEST, lblCatalogId);
+		springLayout.putConstraint(SpringLayout.NORTH, lblCatalogId, 0, SpringLayout.NORTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, lblCatalogId, 0, SpringLayout.WEST, lblCustomerId);
+		frmCipEasyxjdf.getContentPane().add(lblCatalogId);
 
 		cmbCatalogId = new JComboBox();
+		springLayout.putConstraint(SpringLayout.NORTH, cmbCatalogId, -6, SpringLayout.NORTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, cmbCatalogId, 0, SpringLayout.WEST, cmbCustomerId);
+		springLayout.putConstraint(SpringLayout.EAST, cmbCatalogId, -10, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		cmbCatalogId.setEditable(true);
-		frame.getContentPane().add(cmbCatalogId, "9, 9, 3, 1, fill, center");
+		frmCipEasyxjdf.getContentPane().add(cmbCatalogId);
 
 		JLabel lblContentData = new JLabel("Content Data");
-		frame.getContentPane().add(lblContentData, "3, 11, left, fill");
+		springLayout.putConstraint(SpringLayout.NORTH, lblContentData, 33, SpringLayout.SOUTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, lblContentData, 0, SpringLayout.WEST, lblJobId);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblContentData, 279, SpringLayout.NORTH, frmCipEasyxjdf.getContentPane());
+		frmCipEasyxjdf.getContentPane().add(lblContentData);
 
 		txtContentData = new JTextField();
+		springLayout.putConstraint(SpringLayout.NORTH, txtContentData, 0, SpringLayout.NORTH, lblContentData);
+		springLayout.putConstraint(SpringLayout.WEST, txtContentData, 0, SpringLayout.WEST, txtJobId);
 		txtContentData.setEditable(false);
-		frame.getContentPane().add(txtContentData, "5, 11, 5, 1, fill, center");
+		frmCipEasyxjdf.getContentPane().add(txtContentData);
 		txtContentData.setColumns(10);
 
 		JButton btnContentData = new JButton("...");
+		springLayout.putConstraint(SpringLayout.EAST, txtContentData, -6, SpringLayout.WEST, btnContentData);
+		springLayout.putConstraint(SpringLayout.NORTH, btnContentData, 1, SpringLayout.NORTH, lblContentData);
+		springLayout.putConstraint(SpringLayout.WEST, btnContentData, 506, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, btnContentData, 0, SpringLayout.EAST, lblSettings);
 		btnContentData.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent mouseEvent) {
 				JFileChooser c = new JFileChooser();
 				// Demonstrate "Open" dialog:
-				int rVal = c.showOpenDialog(frame);
+				int rVal = c.showOpenDialog(frmCipEasyxjdf);
 				if (rVal == JFileChooser.APPROVE_OPTION) {
 					txtContentData.setText(c.getSelectedFile().getAbsolutePath());
 					txtContentData.setToolTipText(txtContentData.getText());
@@ -214,42 +238,63 @@ public class XJdfView {
 				}
 			}
 		});
-		frame.getContentPane().add(btnContentData, "11, 11, center, center");
+		frmCipEasyxjdf.getContentPane().add(btnContentData);
 
 		JLabel lblJobName = new JLabel("Job Name");
-		frame.getContentPane().add(lblJobName, "3, 13, left, center");
+		springLayout.putConstraint(SpringLayout.NORTH, lblJobName, 10, SpringLayout.SOUTH, lblContentData);
+		springLayout.putConstraint(SpringLayout.WEST, lblJobName, 0, SpringLayout.WEST, lblJobId);
+		frmCipEasyxjdf.getContentPane().add(lblJobName);
 
 		txtJobName = new JTextField();
-		frame.getContentPane().add(txtJobName, "5, 13, 7, 1, fill, center");
+		springLayout.putConstraint(SpringLayout.NORTH, txtJobName, -6, SpringLayout.NORTH, lblJobName);
+		springLayout.putConstraint(SpringLayout.WEST, txtJobName, 0, SpringLayout.WEST, txtJobId);
+		springLayout.putConstraint(SpringLayout.EAST, txtJobName, 50, SpringLayout.EAST, txtContentData);
+		frmCipEasyxjdf.getContentPane().add(txtJobName);
 		txtJobName.setColumns(10);
 
 		JLabel lblInfo = new JLabel("");
+		springLayout.putConstraint(SpringLayout.WEST, lblInfo, 0, SpringLayout.WEST, lblJobId);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblInfo, -10, SpringLayout.SOUTH, frmCipEasyxjdf.getContentPane());
 		lblInfo.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				new InfoController(frame).showView();
+			public void mouseClicked(MouseEvent arg0) {
+				new InfoController(frmCipEasyxjdf).showView();
 			}
 		});
 		lblInfo.setIcon(new ImageIcon(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/info.png")));
-		frame.getContentPane().add(lblInfo, "3, 15, left, center");
+		frmCipEasyxjdf.getContentPane().add(lblInfo);
 
 		JButton btnSaveAs = new JButton("Save As");
+		springLayout.putConstraint(SpringLayout.WEST, btnSaveAs, 44, SpringLayout.WEST, lblCustomerId);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnSaveAs, 0, SpringLayout.SOUTH, lblInfo);
 		btnSaveAs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				processSaveAs();
 			}
 		});
-		frame.getContentPane().add(btnSaveAs, "9, 15, left, center");
+		frmCipEasyxjdf.getContentPane().add(btnSaveAs);
 
 		JButton btnSend = new JButton("Send");
+		springLayout.putConstraint(SpringLayout.WEST, btnSend, 450, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, btnSend, -10, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, btnSaveAs, -6, SpringLayout.WEST, btnSend);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnSend, 0, SpringLayout.SOUTH, lblInfo);
 		btnSend.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				processSend();
 			}
 		});
-		frame.getContentPane().add(btnSend, "10, 15, 2, 1, right, center");
+		frmCipEasyxjdf.getContentPane().add(btnSend);
+
+		JLabel lblNewLabel = new JLabel("");
+		springLayout.putConstraint(SpringLayout.NORTH, lblJobId, 36, SpringLayout.SOUTH, lblNewLabel);
+		springLayout.putConstraint(SpringLayout.NORTH, lblSettings, 1, SpringLayout.SOUTH, lblNewLabel);
+		springLayout.putConstraint(SpringLayout.NORTH, lblNewLabel, 0, SpringLayout.NORTH, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		lblNewLabel.setIcon(new ImageIcon(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/title.png")));
+		frmCipEasyxjdf.getContentPane().add(lblNewLabel);
 	}
 
 	/**
@@ -258,7 +303,7 @@ public class XJdfView {
 	private void showSettingsDialog() {
 
 		// show settings dialog and update settings
-		SettingsModel tmp = new SettingsController(frame).showView();
+		SettingsModel tmp = new SettingsController(frmCipEasyxjdf).showView();
 
 		if (tmp != null) {
 			this.settingsModel = tmp;
@@ -292,7 +337,7 @@ public class XJdfView {
 		c.addChoosableFileFilter(new FileNameExtensionFilter("XJDF Document (*.xjdf)", "xjdf"));
 		c.addChoosableFileFilter(new FileNameExtensionFilter("XJDF Package (*.zip) (recommended)", "zip"));
 
-		int rVal = c.showSaveDialog(frame);
+		int rVal = c.showSaveDialog(frmCipEasyxjdf);
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 
 			// get selected path
@@ -301,7 +346,7 @@ public class XJdfView {
 			if (new File(path).exists()) {
 
 				String msg = String.format("The file '%s' already exists. Do you want to replace it?", path);
-				int resultCode = JOptionPane.showConfirmDialog(frame, "File already exists...", msg, JOptionPane.YES_NO_OPTION);
+				int resultCode = JOptionPane.showConfirmDialog(frmCipEasyxjdf, "File already exists...", msg, JOptionPane.YES_NO_OPTION);
 
 				if (resultCode == JOptionPane.NO_OPTION) {
 					return;
@@ -324,7 +369,7 @@ public class XJdfView {
 			} catch (Exception ex) {
 
 				// process exception
-				ErrorController.processException(frame, ex);
+				ErrorController.processException(frmCipEasyxjdf, ex);
 			}
 
 		}
@@ -358,7 +403,7 @@ public class XJdfView {
 		} catch (Exception ex) {
 
 			// process exception
-			ErrorController.processException(frame, ex);
+			ErrorController.processException(frmCipEasyxjdf, ex);
 		}
 	}
 
@@ -371,8 +416,8 @@ public class XJdfView {
 
 		try {
 			// validate
-			if (!StringUtils.isEmpty(cmbAmount.getEditor().getItem().toString())) {
-				Integer.parseInt(cmbAmount.getEditor().getItem().toString());
+			if (!StringUtils.isEmpty(cmbAmount.getSelectedItem().toString())) {
+				Integer.parseInt(cmbAmount.getSelectedItem().toString());
 			}
 
 			result = true;
@@ -419,12 +464,23 @@ public class XJdfView {
 
 		// fill attributes
 		model.setJobId(txtJobId.getText());
-		if (!StringUtils.isEmpty(cmbAmount.getEditor().getItem().toString()))
-			model.setAmount(Integer.parseInt(cmbAmount.getEditor().getItem().toString()));
+		if (cmbAmount.getSelectedItem() != null) {
+			model.setAmount(Integer.parseInt(cmbAmount.getSelectedItem().toString()));
+		}
+
 		model.setRunList(txtContentData.getText());
-		model.setCatalogId(cmbCatalogId.getEditor().getItem().toString());
-		model.setCustomerId(cmbCustomerId.getEditor().getItem().toString());
-		model.setMediaQuality(cmbMediaQuality.getEditor().getItem().toString());
+		if (cmbCatalogId.getSelectedItem() != null) {
+			model.setCatalogId(cmbCatalogId.getSelectedItem().toString());
+		}
+
+		if (cmbCustomerId.getSelectedItem() != null) {
+			model.setCustomerId(cmbCustomerId.getSelectedItem().toString());
+		}
+
+		if (cmbMediaQuality.getSelectedItem() != null) {
+			model.setMediaQuality(cmbMediaQuality.getSelectedItem().toString());
+		}
+
 		model.setJobName(txtJobName.getText());
 
 		// return result
@@ -462,10 +518,10 @@ public class XJdfView {
 
 		// set old values
 		if (xJdfModelOld.getAmount() != 0)
-			cmbAmount.getEditor().setItem(Integer.toString(xJdfModelOld.getAmount()));
-		cmbMediaQuality.getEditor().setItem(xJdfModelOld.getMediaQuality());
-		cmbCustomerId.getEditor().setItem(xJdfModelOld.getCustomerId());
-		cmbCatalogId.getEditor().setItem(xJdfModelOld.getCatalogId());
+			cmbAmount.setSelectedItem(Integer.toString(xJdfModelOld.getAmount()));
+		cmbMediaQuality.setSelectedItem(xJdfModelOld.getMediaQuality());
+		cmbCustomerId.setSelectedItem(xJdfModelOld.getCustomerId());
+		cmbCatalogId.setSelectedItem(xJdfModelOld.getCatalogId());
 	}
 
 	/**
@@ -475,10 +531,10 @@ public class XJdfView {
 		txtJobId.setText("");
 		txtJobName.setText("");
 		txtContentData.setText("");
-		cmbAmount.getEditor().setItem("");
-		cmbMediaQuality.getEditor().setItem("");
-		cmbCatalogId.getEditor().setItem("");
-		cmbCustomerId.getEditor().setItem("");
+		cmbAmount.setSelectedItem("");
+		cmbMediaQuality.setSelectedItem("");
+		cmbCatalogId.setSelectedItem("");
+		cmbCustomerId.setSelectedItem("");
 
 		oldJobName = "";
 	}

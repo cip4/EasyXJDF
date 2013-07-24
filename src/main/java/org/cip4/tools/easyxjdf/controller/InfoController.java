@@ -15,7 +15,7 @@ import javax.xml.bind.JAXBException;
 
 import org.cip4.tools.easyxjdf.model.InfoModel;
 import org.cip4.tools.easyxjdf.service.InfoService;
-import org.cip4.tools.easyxjdf.view.InfoView;
+import org.cip4.tools.easyxjdf.view.InfoDialog;
 
 /**
  * The Info Controller Class (MVC Pattern).
@@ -24,7 +24,7 @@ import org.cip4.tools.easyxjdf.view.InfoView;
  */
 public class InfoController {
 
-	private final InfoView infoView;
+	private final JFrame parent;
 
 	/**
 	 * Default constructor.
@@ -32,11 +32,7 @@ public class InfoController {
 	 */
 	public InfoController(JFrame parent) {
 
-		// load infos
-		InfoModel infoModel = new InfoService().getInfos();
-
-		// initialize instance variables
-		this.infoView = new InfoView(parent, infoModel);
+		this.parent = parent;
 
 	}
 
@@ -45,8 +41,13 @@ public class InfoController {
 	 */
 	public void showView() {
 
-		// show view
-		infoView.open();
+		// load infos
+		InfoModel infoModel = new InfoService().getInfos();
+
+		// initialize instance variables
+		InfoDialog dialog = new InfoDialog(parent, infoModel);
+		dialog.showDialog();
+
 	}
 
 }

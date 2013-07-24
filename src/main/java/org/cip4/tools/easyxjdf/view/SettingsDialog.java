@@ -93,6 +93,7 @@ public class SettingsDialog extends JDialog {
 	public SettingsDialog(JFrame parent, SettingsModel settingsModel) {
 
 		super(parent, true);
+		setResizable(false);
 
 		getContentPane().setBackground(Color.WHITE);
 
