@@ -59,9 +59,9 @@ public class SettingsDialog extends JDialog {
 
 	private final static String FIELD_CATALOG_ID = "CatalogID";
 
-	private final static String NEW_LINE = System.getProperty("line.separator");
+	private final static String NEW_LINE = "\n";
 
-	private final List<SettingsSaveEventListener> settingsSaveEventListener;
+	final List<SettingsSaveEventListener> settingsSaveEventListener;
 
 	private final JPanel contentPanel;
 

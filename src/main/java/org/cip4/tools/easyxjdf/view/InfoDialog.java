@@ -130,7 +130,7 @@ public class InfoDialog extends JDialog {
 		lblEasyxjdf.setFont(new Font("Lucida Grande", Font.ITALIC, 26));
 		contentPanel.add(lblEasyxjdf);
 
-		lblVersion = new JLabel("Version: " + infoModel.getEasyXJdfBuildDate());
+		lblVersion = new JLabel("Version: " + infoModel.getEasyXJdfVersion());
 		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblVersion, 45, SpringLayout.SOUTH, lblEasyxjdf);
 		sl_contentPanel.putConstraint(SpringLayout.WEST, lblVersion, 209, SpringLayout.WEST, contentPanel);
 		sl_contentPanel.putConstraint(SpringLayout.EAST, lblVersion, -15, SpringLayout.EAST, contentPanel);
@@ -161,15 +161,15 @@ public class InfoDialog extends JDialog {
 		contentPanel.add(lblXJdfLibDate);
 
 		lblXPrintTalk = new JLabel("CIP4 xPrintTalkLib " + infoModel.getPtkLibVersion());
-		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblXPrintTalk, 23, SpringLayout.SOUTH, lblXJdfLibDate);
-		sl_contentPanel.putConstraint(SpringLayout.WEST, lblXPrintTalk, 109, SpringLayout.EAST, lblFlyeralarmGmbh);
+		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblXPrintTalk, 13, SpringLayout.SOUTH, lblXJdfLibDate);
+		sl_contentPanel.putConstraint(SpringLayout.WEST, lblXPrintTalk, 0, SpringLayout.WEST, lblVersion);
 		sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblXPrintTalk, -92, SpringLayout.SOUTH, contentPanel);
 		sl_contentPanel.putConstraint(SpringLayout.EAST, lblXPrintTalk, 0, SpringLayout.EAST, lblXJdfLogo);
 		lblXPrintTalk.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
 		contentPanel.add(lblXPrintTalk);
 
 		lblXPrintTalkDate = new JLabel("Release Date: " + infoModel.getPtkLibBuildDate());
-		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblXPrintTalkDate, 6, SpringLayout.SOUTH, lblXPrintTalk);
+		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblXPrintTalkDate, 29, SpringLayout.SOUTH, lblXJdfLibDate);
 		sl_contentPanel.putConstraint(SpringLayout.WEST, lblXPrintTalkDate, 0, SpringLayout.WEST, lblVersion);
 		sl_contentPanel.putConstraint(SpringLayout.EAST, lblXPrintTalkDate, -10, SpringLayout.EAST, contentPanel);
 		lblXPrintTalkDate.setFont(new Font("Lucida Grande", Font.PLAIN, 9));

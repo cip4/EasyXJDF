@@ -1,5 +1,6 @@
 package org.cip4.tools.easyxjdf.view;
 
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -126,6 +127,7 @@ public class XJdfView {
 	 */
 	private void initialize() {
 		frmCipEasyxjdf = new JFrame();
+		frmCipEasyxjdf.setIconImage(Toolkit.getDefaultToolkit().getImage(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/xjdf-logo-small.png")));
 		frmCipEasyxjdf.setTitle("CIP4 EasyXJDF");
 		frmCipEasyxjdf.requestFocus();
 		frmCipEasyxjdf.setResizable(false);
@@ -149,8 +151,8 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblJobId);
 
 		txtJobId = new JTextField();
-		springLayout.putConstraint(SpringLayout.NORTH, txtJobId, -6, SpringLayout.NORTH, lblJobId);
-		springLayout.putConstraint(SpringLayout.WEST, txtJobId, 63, SpringLayout.EAST, lblJobId);
+		springLayout.putConstraint(SpringLayout.NORTH, txtJobId, -2, SpringLayout.NORTH, lblJobId);
+		springLayout.putConstraint(SpringLayout.WEST, txtJobId, 70, SpringLayout.EAST, lblJobId);
 		frmCipEasyxjdf.getContentPane().add(txtJobId);
 		txtJobId.setColumns(10);
 
@@ -161,14 +163,14 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblAmount);
 
 		cmbAmount = new JComboBox();
-		springLayout.putConstraint(SpringLayout.WEST, cmbAmount, 51, SpringLayout.EAST, lblAmount);
-		springLayout.putConstraint(SpringLayout.EAST, cmbAmount, -284, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, cmbAmount, 61, SpringLayout.EAST, lblAmount);
 		springLayout.putConstraint(SpringLayout.EAST, txtJobId, 0, SpringLayout.EAST, cmbAmount);
-		springLayout.putConstraint(SpringLayout.NORTH, cmbAmount, -6, SpringLayout.NORTH, lblAmount);
+		springLayout.putConstraint(SpringLayout.NORTH, cmbAmount, -4, SpringLayout.NORTH, lblAmount);
 		cmbAmount.setEditable(true);
 		frmCipEasyxjdf.getContentPane().add(cmbAmount);
 
 		JLabel lblCustomerId = new JLabel("Customer ID");
+		springLayout.putConstraint(SpringLayout.EAST, cmbAmount, -29, SpringLayout.WEST, lblCustomerId);
 		springLayout.putConstraint(SpringLayout.NORTH, lblCustomerId, 0, SpringLayout.NORTH, lblAmount);
 		springLayout.putConstraint(SpringLayout.EAST, lblCustomerId, -181, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		frmCipEasyxjdf.getContentPane().add(lblCustomerId);
@@ -186,13 +188,13 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblMediaQuality);
 
 		cmbMediaQuality = new JComboBox();
-		springLayout.putConstraint(SpringLayout.NORTH, cmbMediaQuality, -6, SpringLayout.NORTH, lblMediaQuality);
-		springLayout.putConstraint(SpringLayout.WEST, cmbMediaQuality, 15, SpringLayout.EAST, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.NORTH, cmbMediaQuality, -4, SpringLayout.NORTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, cmbMediaQuality, 29, SpringLayout.EAST, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.EAST, cmbMediaQuality, 0, SpringLayout.EAST, cmbAmount);
 		cmbMediaQuality.setEditable(true);
 		frmCipEasyxjdf.getContentPane().add(cmbMediaQuality);
 
 		JLabel lblCatalogId = new JLabel("Catalog ID");
-		springLayout.putConstraint(SpringLayout.EAST, cmbMediaQuality, -24, SpringLayout.WEST, lblCatalogId);
 		springLayout.putConstraint(SpringLayout.NORTH, lblCatalogId, 0, SpringLayout.NORTH, lblMediaQuality);
 		springLayout.putConstraint(SpringLayout.WEST, lblCatalogId, 0, SpringLayout.WEST, lblCustomerId);
 		frmCipEasyxjdf.getContentPane().add(lblCatalogId);
@@ -212,7 +214,7 @@ public class XJdfView {
 
 		txtContentData = new JTextField();
 		springLayout.putConstraint(SpringLayout.NORTH, txtContentData, 0, SpringLayout.NORTH, lblContentData);
-		springLayout.putConstraint(SpringLayout.WEST, txtContentData, 0, SpringLayout.WEST, txtJobId);
+		springLayout.putConstraint(SpringLayout.WEST, txtContentData, 29, SpringLayout.EAST, lblContentData);
 		txtContentData.setEditable(false);
 		frmCipEasyxjdf.getContentPane().add(txtContentData);
 		txtContentData.setColumns(10);
@@ -247,8 +249,8 @@ public class XJdfView {
 
 		txtJobName = new JTextField();
 		springLayout.putConstraint(SpringLayout.NORTH, txtJobName, -6, SpringLayout.NORTH, lblJobName);
-		springLayout.putConstraint(SpringLayout.WEST, txtJobName, 0, SpringLayout.WEST, txtJobId);
-		springLayout.putConstraint(SpringLayout.EAST, txtJobName, 50, SpringLayout.EAST, txtContentData);
+		springLayout.putConstraint(SpringLayout.WEST, txtJobName, 47, SpringLayout.EAST, lblJobName);
+		springLayout.putConstraint(SpringLayout.EAST, txtJobName, -4, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		frmCipEasyxjdf.getContentPane().add(txtJobName);
 		txtJobName.setColumns(10);
 
@@ -464,20 +466,20 @@ public class XJdfView {
 
 		// fill attributes
 		model.setJobId(txtJobId.getText());
-		if (cmbAmount.getSelectedItem() != null) {
+		if (cmbAmount.getSelectedItem() != null && !StringUtils.isEmpty(cmbAmount.getSelectedItem().toString())) {
 			model.setAmount(Integer.parseInt(cmbAmount.getSelectedItem().toString()));
 		}
 
 		model.setRunList(txtContentData.getText());
-		if (cmbCatalogId.getSelectedItem() != null) {
+		if (cmbCatalogId.getSelectedItem() != null && !StringUtils.isEmpty(cmbCatalogId.getSelectedItem().toString())) {
 			model.setCatalogId(cmbCatalogId.getSelectedItem().toString());
 		}
 
-		if (cmbCustomerId.getSelectedItem() != null) {
+		if (cmbCustomerId.getSelectedItem() != null && !StringUtils.isEmpty(cmbCustomerId.getSelectedItem().toString())) {
 			model.setCustomerId(cmbCustomerId.getSelectedItem().toString());
 		}
 
-		if (cmbMediaQuality.getSelectedItem() != null) {
+		if (cmbMediaQuality.getSelectedItem() != null && !StringUtils.isEmpty(cmbMediaQuality.getSelectedItem().toString())) {
 			model.setMediaQuality(cmbMediaQuality.getSelectedItem().toString());
 		}
 
