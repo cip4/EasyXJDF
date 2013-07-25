@@ -52,6 +52,7 @@ public class InfoDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		sl_contentPanel = new SpringLayout();
 		contentPanel.setLayout(sl_contentPanel);
+		setLocationRelativeTo(parent);
 		{
 			initialize(sl_contentPanel);
 		}

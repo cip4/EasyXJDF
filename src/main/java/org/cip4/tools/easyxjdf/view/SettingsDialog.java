@@ -90,7 +90,7 @@ public class SettingsDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public SettingsDialog(JFrame parent, SettingsModel settingsModel) {
+	public SettingsDialog(final JFrame parent, SettingsModel settingsModel) {
 
 		super(parent, true);
 		setResizable(false);
@@ -124,6 +124,7 @@ public class SettingsDialog extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		SpringLayout sl_contentPanel = new SpringLayout();
 		contentPanel.setLayout(sl_contentPanel);
+		setLocationRelativeTo(parent);
 		{
 			Border border = BorderFactory.createLineBorder(Color.BLACK);
 
@@ -220,7 +221,7 @@ public class SettingsDialog extends JDialog {
 					try {
 						view2Model();
 					} catch (Exception ex) {
-						ErrorController.processException(contentPanel, ex);
+						ErrorController.processException(parent, ex);
 					}
 				}
 			});
