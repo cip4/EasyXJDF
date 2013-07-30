@@ -21,6 +21,12 @@
 			<email>s.meissner@flyeralarm.de</email>
 		</developer>
 	</developers>
+	<distributionManagement>
+		<repository>
+			<id>cip4-community</id>
+			<url>scpexe://community.cip4.org/var/www/community/uploads/EasyXJDF/stable/</url>
+		</repository>
+	</distributionManagement>
 	<scm>
 		<url>http://svn.cip4.org/svnroot/trunk/EasyXJDF</url>
 		<developerConnection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</developerConnection>
