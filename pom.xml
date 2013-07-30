@@ -22,8 +22,8 @@
 	</developers>
 	<distributionManagement>
 		<repository>
-			<id>cip4-community</id>
-			<url>scp://community.cip4.org/var/www/community/uploads/EasyXJDF/stable/</url>
+			<id>cip4-community-new</id>
+			<url>scp://root@community.cip4.org/var/www/community/uploads/EasyXJDF/stable/</url>
 		</repository>
 	</distributionManagement>
 	<scm>
