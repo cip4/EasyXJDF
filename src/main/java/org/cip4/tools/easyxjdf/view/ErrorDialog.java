@@ -40,6 +40,7 @@ public class ErrorDialog extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @wbp.parser.constructor
 	 */
 	public ErrorDialog(JFrame parent, ErrorModel errorModel) {
 

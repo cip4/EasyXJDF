@@ -89,6 +89,7 @@ public class SettingsDialog extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @wbp.parser.constructor
 	 */
 	public SettingsDialog(final JFrame parent, SettingsModel settingsModel) {
 

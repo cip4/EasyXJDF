@@ -35,6 +35,7 @@ public class InfoDialog extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @wbp.parser.constructor
 	 */
 	public InfoDialog(JFrame parent, InfoModel infoModel) {
 
