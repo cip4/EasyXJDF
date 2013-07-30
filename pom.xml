@@ -24,7 +24,7 @@
 	<distributionManagement>
 		<repository>
 			<id>cip4-community</id>
-			<url>scpexe://community.cip4.org/var/www/community/uploads/EasyXJDF/stable/</url>
+			<url>scp://community.cip4.org/var/www/community/uploads/EasyXJDF/stable/</url>
 		</repository>
 	</distributionManagement>
 	<scm>
@@ -103,13 +103,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh-external</artifactId>
-				<version>2.4</version>
-			</extension>
-		</extensions>
 	</build>
 	<dependencies>
 		<!-- SwingX -->
