@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cip4.tools.easyxjdf</groupId>
 	<artifactId>EasyXJDF</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>EasyXJDF</name>
 	<url>http://maven.apache.org</url>
@@ -21,9 +21,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>http://svn.cip4.org/svnroot/tags/EasyXJDF-1.0</url>
-		<developerConnection>scm:svn:http://svn.cip4.org/svnroot/tags/EasyXJDF-1.0</developerConnection>
-		<connection>scm:svn:http://svn.cip4.org/svnroot/tags/EasyXJDF-1.0</connection>
+		<url>http://svn.cip4.org/svnroot/trunk/EasyXJDF</url>
+		<developerConnection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</developerConnection>
+		<connection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</connection>
 	</scm>
 	<build>
 		<resources>
