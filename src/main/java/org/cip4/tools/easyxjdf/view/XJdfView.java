@@ -31,6 +31,8 @@ import org.cip4.tools.easyxjdf.event.XJdfSendEventListener;
 import org.cip4.tools.easyxjdf.exception.ConnectionException;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
 
 /**
  * XJDF View class.
@@ -62,6 +64,8 @@ public class XJdfView {
 	private JComboBox cmbMediaQuality;
 
 	private JComboBox cmbCatalogId;
+	
+	private JComboBox cmbNumColors;
 
 	/**
 	 * Custom constructor. Accepting a SettingsModel for initializing.
@@ -132,7 +136,7 @@ public class XJdfView {
 		frmCipEasyxjdf.setTitle("CIP4 EasyXJDF");
 		frmCipEasyxjdf.requestFocus();
 		frmCipEasyxjdf.setResizable(false);
-		frmCipEasyxjdf.setBounds(100, 100, 560, 388);
+		frmCipEasyxjdf.setBounds(100, 100, 560, 413);
 		frmCipEasyxjdf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		SpringLayout springLayout = new SpringLayout();
 		frmCipEasyxjdf.getContentPane().setLayout(springLayout);
@@ -154,7 +158,7 @@ public class XJdfView {
 		txtJobId = new JTextField();
 		springLayout.putConstraint(SpringLayout.NORTH, txtJobId, -2, SpringLayout.NORTH, lblJobId);
 		springLayout.putConstraint(SpringLayout.WEST, txtJobId, 70, SpringLayout.EAST, lblJobId);
-		springLayout.putConstraint(SpringLayout.EAST, txtJobId, -289, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, txtJobId, -280, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		frmCipEasyxjdf.getContentPane().add(txtJobId);
 		txtJobId.setColumns(10);
 
@@ -189,41 +193,39 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblMediaQuality);
 
 		cmbMediaQuality = new JComboBox();
-		springLayout.putConstraint(SpringLayout.NORTH, cmbMediaQuality, -4, SpringLayout.NORTH, lblMediaQuality);
-		springLayout.putConstraint(SpringLayout.WEST, cmbMediaQuality, 23, SpringLayout.EAST, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.NORTH, cmbMediaQuality, 6, SpringLayout.SOUTH, cmbAmount);
+		springLayout.putConstraint(SpringLayout.WEST, cmbMediaQuality, 0, SpringLayout.WEST, txtJobId);
+		springLayout.putConstraint(SpringLayout.EAST, cmbMediaQuality, -280, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		cmbMediaQuality.setEditable(true);
 		frmCipEasyxjdf.getContentPane().add(cmbMediaQuality);
 
 		JLabel lblCatalogId = new JLabel("Catalog ID");
-		springLayout.putConstraint(SpringLayout.EAST, cmbMediaQuality, -29, SpringLayout.WEST, lblCatalogId);
-		springLayout.putConstraint(SpringLayout.NORTH, lblCatalogId, 0, SpringLayout.NORTH, lblMediaQuality);
-		springLayout.putConstraint(SpringLayout.WEST, lblCatalogId, 0, SpringLayout.WEST, lblCustomerId);
+		springLayout.putConstraint(SpringLayout.WEST, lblCatalogId, 0, SpringLayout.WEST, lblJobId);
 		frmCipEasyxjdf.getContentPane().add(lblCatalogId);
 
 		cmbCatalogId = new JComboBox();
-		springLayout.putConstraint(SpringLayout.NORTH, cmbCatalogId, -6, SpringLayout.NORTH, lblMediaQuality);
-		springLayout.putConstraint(SpringLayout.WEST, cmbCatalogId, 0, SpringLayout.WEST, cmbCustomerId);
-		springLayout.putConstraint(SpringLayout.EAST, cmbCatalogId, -10, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, lblCatalogId, 5, SpringLayout.NORTH, cmbCatalogId);
+		springLayout.putConstraint(SpringLayout.NORTH, cmbCatalogId, 6, SpringLayout.SOUTH, cmbMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, cmbCatalogId, -270, SpringLayout.WEST, cmbCustomerId);
+		springLayout.putConstraint(SpringLayout.EAST, cmbCatalogId, 0, SpringLayout.EAST, txtJobId);
 		cmbCatalogId.setEditable(true);
 		frmCipEasyxjdf.getContentPane().add(cmbCatalogId);
 
 		JLabel lblContentData = new JLabel("Content Data");
-		springLayout.putConstraint(SpringLayout.NORTH, lblContentData, 33, SpringLayout.SOUTH, lblMediaQuality);
 		springLayout.putConstraint(SpringLayout.WEST, lblContentData, 0, SpringLayout.WEST, lblJobId);
-		springLayout.putConstraint(SpringLayout.SOUTH, lblContentData, 279, SpringLayout.NORTH, frmCipEasyxjdf.getContentPane());
 		frmCipEasyxjdf.getContentPane().add(lblContentData);
 
 		txtContentData = new JTextField();
-		springLayout.putConstraint(SpringLayout.NORTH, txtContentData, 0, SpringLayout.NORTH, lblContentData);
-		springLayout.putConstraint(SpringLayout.WEST, txtContentData, 0, SpringLayout.WEST, txtJobId);
+		springLayout.putConstraint(SpringLayout.NORTH, lblContentData, 6, SpringLayout.NORTH, txtContentData);
+		springLayout.putConstraint(SpringLayout.WEST, txtContentData, 115, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, txtContentData, -54, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		txtContentData.setEditable(false);
 		frmCipEasyxjdf.getContentPane().add(txtContentData);
 		txtContentData.setColumns(10);
 
 		JButton btnContentData = new JButton("...");
-		springLayout.putConstraint(SpringLayout.EAST, txtContentData, -6, SpringLayout.WEST, btnContentData);
-		springLayout.putConstraint(SpringLayout.NORTH, btnContentData, 1, SpringLayout.NORTH, lblContentData);
-		springLayout.putConstraint(SpringLayout.WEST, btnContentData, 506, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, btnContentData, 0, SpringLayout.NORTH, txtContentData);
+		springLayout.putConstraint(SpringLayout.WEST, btnContentData, 6, SpringLayout.EAST, txtContentData);
 		springLayout.putConstraint(SpringLayout.EAST, btnContentData, 0, SpringLayout.EAST, lblSettings);
 		btnContentData.addMouseListener(new MouseAdapter() {
 			@Override
@@ -244,12 +246,12 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(btnContentData);
 
 		JLabel lblJobName = new JLabel("Job Name");
-		springLayout.putConstraint(SpringLayout.NORTH, lblJobName, 10, SpringLayout.SOUTH, lblContentData);
 		springLayout.putConstraint(SpringLayout.WEST, lblJobName, 0, SpringLayout.WEST, lblJobId);
 		frmCipEasyxjdf.getContentPane().add(lblJobName);
 
 		txtJobName = new JTextField();
-		springLayout.putConstraint(SpringLayout.NORTH, txtJobName, -6, SpringLayout.NORTH, lblJobName);
+		springLayout.putConstraint(SpringLayout.NORTH, lblJobName, 6, SpringLayout.NORTH, txtJobName);
+		springLayout.putConstraint(SpringLayout.SOUTH, txtContentData, -6, SpringLayout.NORTH, txtJobName);
 		springLayout.putConstraint(SpringLayout.WEST, txtJobName, 0, SpringLayout.WEST, txtJobId);
 		springLayout.putConstraint(SpringLayout.EAST, txtJobName, -4, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		frmCipEasyxjdf.getContentPane().add(txtJobName);
@@ -268,6 +270,7 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblInfo);
 
 		JButton btnSaveAs = new JButton("Save As");
+		springLayout.putConstraint(SpringLayout.SOUTH, txtJobName, -6, SpringLayout.NORTH, btnSaveAs);
 		springLayout.putConstraint(SpringLayout.WEST, btnSaveAs, 44, SpringLayout.WEST, lblCustomerId);
 		springLayout.putConstraint(SpringLayout.SOUTH, btnSaveAs, 0, SpringLayout.SOUTH, lblInfo);
 		btnSaveAs.addMouseListener(new MouseAdapter() {
@@ -298,6 +301,19 @@ public class XJdfView {
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
 		lblNewLabel.setIcon(new ImageIcon(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/title.png")));
 		frmCipEasyxjdf.getContentPane().add(lblNewLabel);
+		
+		cmbNumColors = new JComboBox();
+		springLayout.putConstraint(SpringLayout.NORTH, cmbNumColors, -5, SpringLayout.NORTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, cmbNumColors, 0, SpringLayout.WEST, cmbCustomerId);
+		springLayout.putConstraint(SpringLayout.EAST, cmbNumColors, 0, SpringLayout.EAST, lblSettings);
+		cmbNumColors.setModel(new DefaultComboBoxModel(new String[] {"", "1 0", "1 1", "4 0", "4 1", "4 4"}));
+		frmCipEasyxjdf.getContentPane().add(cmbNumColors);
+		
+		JLabel lblNumColors = new JLabel("NumColors");
+		springLayout.putConstraint(SpringLayout.NORTH, lblNumColors, 0, SpringLayout.NORTH, lblMediaQuality);
+		springLayout.putConstraint(SpringLayout.WEST, lblNumColors, 0, SpringLayout.WEST, lblCustomerId);
+		frmCipEasyxjdf.getContentPane().add(lblNumColors);
+		frmCipEasyxjdf.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtJobId, cmbAmount, cmbCustomerId, cmbMediaQuality, cmbNumColors, cmbCatalogId, txtContentData, btnContentData, txtJobName, btnSaveAs, btnSend, lblSettings, lblJobId, lblAmount, lblCustomerId, lblMediaQuality, lblCatalogId, lblContentData, lblJobName, lblInfo, lblNewLabel, lblNumColors}));
 	}
 
 	/**
@@ -483,6 +499,10 @@ public class XJdfView {
 		if (cmbMediaQuality.getSelectedItem() != null && !StringUtils.isEmpty(cmbMediaQuality.getSelectedItem().toString())) {
 			model.setMediaQuality(cmbMediaQuality.getSelectedItem().toString());
 		}
+		
+		if (cmbNumColors.getSelectedItem() != null && !StringUtils.isEmpty(cmbNumColors.getSelectedItem().toString())) {
+			model.setNumColors(cmbNumColors.getSelectedItem().toString());
+		}
 
 		model.setJobName(txtJobName.getText());
 
@@ -525,6 +545,7 @@ public class XJdfView {
 		cmbMediaQuality.setSelectedItem(xJdfModelOld.getMediaQuality());
 		cmbCustomerId.setSelectedItem(xJdfModelOld.getCustomerId());
 		cmbCatalogId.setSelectedItem(xJdfModelOld.getCatalogId());
+		cmbNumColors.setSelectedItem(xJdfModelOld.getNumColors());
 	}
 
 	/**
@@ -538,6 +559,7 @@ public class XJdfView {
 		cmbMediaQuality.setSelectedItem("");
 		cmbCatalogId.setSelectedItem("");
 		cmbCustomerId.setSelectedItem("");
+		cmbNumColors.setSelectedItem("");
 
 		oldJobName = "";
 	}

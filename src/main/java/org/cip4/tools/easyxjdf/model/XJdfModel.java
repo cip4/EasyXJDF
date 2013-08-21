@@ -30,6 +30,8 @@ public class XJdfModel {
 	private String mediaQuality;
 
 	private int amount;
+	
+	private String numColors;
 
 	/**
 	 * Default constructor.
@@ -148,5 +150,21 @@ public class XJdfModel {
 	public void setAmount(int amount) {
 		this.amount = amount;
 	}
+
+	/**
+	 * @return the numColors
+	 */
+	public String getNumColors() {
+		return numColors;
+	}
+
+	/**
+	 * @param numColors the numColors to set
+	 */
+	public void setNumColors(String numColors) {
+		this.numColors = numColors;
+	}
+	
+	
 
 }

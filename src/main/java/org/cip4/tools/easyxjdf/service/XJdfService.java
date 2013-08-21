@@ -26,6 +26,7 @@ import org.cip4.lib.xjdf.builder.ProductBuilder;
 import org.cip4.lib.xjdf.builder.XJdfBuilder;
 import org.cip4.lib.xjdf.schema.Product;
 import org.cip4.lib.xjdf.schema.XJDF;
+import org.cip4.lib.xjdf.type.IntegerList;
 import org.cip4.lib.xjdf.util.IDGeneratorUtil;
 import org.cip4.lib.xprinttalk.PrintTalkNodeFactory;
 import org.cip4.lib.xprinttalk.builder.PrintTalkBuilder;
@@ -143,12 +144,18 @@ public class XJdfService {
 
 		if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
 			productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
+		
+		if(!StringUtils.isEmpty(xJdfModel.getNumColors())) {
+			productBuilder.addIntent(nf.createColorIntent(new IntegerList(xJdfModel.getNumColors())));
+		}
 
 		Product product = productBuilder.build();
 
 		XJdfBuilder xJdfBuilder = new XJdfBuilder(xJdfModel.getJobId(), "Web2Print", xJdfModel.getJobName());
 		xJdfBuilder.addProduct(product);
 		xJdfBuilder.addParameter(nf.createRunList(xJdfModel.getRunList()));
+		
+		
 
 		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // CatalogID
 			xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
