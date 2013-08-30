@@ -34,6 +34,8 @@ public class SettingsModel {
 
 	private List<String> catalogIDs;
 
+	private List<String> finishedDimensions;
+
 	private List<Integer> amounts;
 
 	/**
@@ -158,6 +160,24 @@ public class SettingsModel {
 	 */
 	public void setCatalogIDs(List<String> catalogIDs) {
 		this.catalogIDs = catalogIDs;
+	}
+
+	/**
+	 * @return the finishedDimensions
+	 */
+	public List<String> getFinishedDimensions() {
+		if (finishedDimensions == null) {
+			finishedDimensions = new ArrayList<String>();
+		}
+
+		return finishedDimensions;
+	}
+
+	/**
+	 * @param finishedDimensions the finishedDimensions to set
+	 */
+	public void setFinishedDimensions(List<String> finishedDimensions) {
+		this.finishedDimensions = finishedDimensions;
 	}
 
 	/**

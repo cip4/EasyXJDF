@@ -48,6 +48,8 @@ public class SettingsService {
 
 	private static final String KEY_AMOUNTS = "Settings.Suggestions.Amounts.Amount";
 
+	private static final String KEY_FINISHED_DIMENSIONS = "Settings.Suggestions.FinishedDimensions.FinishedDimensions";
+
 	private final File settingsFile;
 
 	/**
@@ -124,6 +126,13 @@ public class SettingsService {
 			settings.getCustomerIDs().add(customerID);
 		}
 
+		// update FinishedDimensions
+		String finishedDimensions = xJdfModel.getFinishedDimensions().toString();
+
+		if (finishedDimensions != null) {
+			settings.getFinishedDimensions().add(finishedDimensions);
+		}
+
 		// save settings
 		saveSettings(settings);
 	}
@@ -163,6 +172,11 @@ public class SettingsService {
 		Collections.sort(settings.getAmounts());
 		for (Integer amount : settings.getAmounts()) {
 			xmlConfig.addProperty(KEY_AMOUNTS, amount);
+		}
+
+		Collections.sort(settings.getFinishedDimensions());
+		for (String finishedDimensions : settings.getFinishedDimensions()) {
+			xmlConfig.addProperty(KEY_FINISHED_DIMENSIONS, finishedDimensions);
 		}
 
 		// save config files
@@ -219,6 +233,9 @@ public class SettingsService {
 			List<Object> lstAmountObj = xmlConfig.getList(KEY_AMOUNTS, new ArrayList<Object>());
 			settings.setAmounts(new ArrayList<Integer>(lstAmountObj.size()));
 
+			String[] lstFinishedDimensions = xmlConfig.getStringArray(KEY_FINISHED_DIMENSIONS);
+			settings.setFinishedDimensions(new ArrayList<String>(Arrays.asList(lstFinishedDimensions)));
+
 			for (Object obj : lstAmountObj)
 				settings.getAmounts().add(Integer.parseInt(obj.toString()));
 		}
@@ -246,6 +263,7 @@ public class SettingsService {
 		settingsModel.setCustomerIDs(new ArrayList<String>());
 		settingsModel.setCatalogIDs(new ArrayList<String>());
 		settingsModel.setAmounts(new ArrayList<Integer>());
+		settingsModel.setFinishedDimensions(new ArrayList<String>());
 
 		// return model
 		return settingsModel;

@@ -144,9 +144,13 @@ public class XJdfService {
 
 		if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
 			productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
-		
-		if(!StringUtils.isEmpty(xJdfModel.getNumColors())) {
+
+		if (!StringUtils.isEmpty(xJdfModel.getNumColors())) {
 			productBuilder.addIntent(nf.createColorIntent(new IntegerList(xJdfModel.getNumColors())));
+		}
+
+		if (xJdfModel.getFinishedDimensions() != null) {
+			productBuilder.addIntent(nf.createLayoutIntent(2, "TwoSidedHeadToHead", xJdfModel.getFinishedDimensions()));
 		}
 
 		Product product = productBuilder.build();
@@ -154,8 +158,6 @@ public class XJdfService {
 		XJdfBuilder xJdfBuilder = new XJdfBuilder(xJdfModel.getJobId(), "Web2Print", xJdfModel.getJobName());
 		xJdfBuilder.addProduct(product);
 		xJdfBuilder.addParameter(nf.createRunList(xJdfModel.getRunList()));
-		
-		
 
 		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // CatalogID
 			xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));

@@ -10,6 +10,8 @@
  */
 package org.cip4.tools.easyxjdf.model;
 
+import org.cip4.lib.xjdf.type.Shape;
+
 /**
  * Simple XJdf model object.
  * @author stefan.meissner
@@ -30,8 +32,10 @@ public class XJdfModel {
 	private String mediaQuality;
 
 	private int amount;
-	
+
 	private String numColors;
+
+	private Shape finishedDimensions;
 
 	/**
 	 * Default constructor.
@@ -164,7 +168,19 @@ public class XJdfModel {
 	public void setNumColors(String numColors) {
 		this.numColors = numColors;
 	}
-	
-	
+
+	/**
+	 * @return the finishedDimensions
+	 */
+	public Shape getFinishedDimensions() {
+		return finishedDimensions;
+	}
+
+	/**
+	 * @param finishedDimensions the finishedDimensions to set
+	 */
+	public void setFinishedDimensions(Shape finishedDimensions) {
+		this.finishedDimensions = finishedDimensions;
+	}
 
 }

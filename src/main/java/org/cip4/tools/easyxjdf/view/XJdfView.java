@@ -1,5 +1,6 @@
 package org.cip4.tools.easyxjdf.view;
 
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,6 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.cip4.lib.xjdf.type.Shape;
 import org.cip4.tools.easyxjdf.controller.ErrorController;
 import org.cip4.tools.easyxjdf.controller.InfoController;
 import org.cip4.tools.easyxjdf.controller.SettingsController;
@@ -32,7 +34,6 @@ import org.cip4.tools.easyxjdf.exception.ConnectionException;
 import org.cip4.tools.easyxjdf.model.SettingsModel;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
-import java.awt.Component;
 
 /**
  * XJDF View class.
@@ -64,8 +65,10 @@ public class XJdfView {
 	private JComboBox cmbMediaQuality;
 
 	private JComboBox cmbCatalogId;
-	
+
 	private JComboBox cmbNumColors;
+
+	private JComboBox cmbFinishedDim;
 
 	/**
 	 * Custom constructor. Accepting a SettingsModel for initializing.
@@ -301,19 +304,34 @@ public class XJdfView {
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 0, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
 		lblNewLabel.setIcon(new ImageIcon(XJdfView.class.getResource("/org/cip4/tools/easyxjdf/gui/title.png")));
 		frmCipEasyxjdf.getContentPane().add(lblNewLabel);
-		
+
 		cmbNumColors = new JComboBox();
 		springLayout.putConstraint(SpringLayout.NORTH, cmbNumColors, -5, SpringLayout.NORTH, lblMediaQuality);
 		springLayout.putConstraint(SpringLayout.WEST, cmbNumColors, 0, SpringLayout.WEST, cmbCustomerId);
 		springLayout.putConstraint(SpringLayout.EAST, cmbNumColors, 0, SpringLayout.EAST, lblSettings);
-		cmbNumColors.setModel(new DefaultComboBoxModel(new String[] {"", "1 0", "1 1", "4 0", "4 1", "4 4"}));
+		cmbNumColors.setModel(new DefaultComboBoxModel(new String[] { "", "1 0", "1 1", "4 0", "4 1", "4 4" }));
 		frmCipEasyxjdf.getContentPane().add(cmbNumColors);
-		
+
 		JLabel lblNumColors = new JLabel("NumColors");
 		springLayout.putConstraint(SpringLayout.NORTH, lblNumColors, 0, SpringLayout.NORTH, lblMediaQuality);
 		springLayout.putConstraint(SpringLayout.WEST, lblNumColors, 0, SpringLayout.WEST, lblCustomerId);
 		frmCipEasyxjdf.getContentPane().add(lblNumColors);
-		frmCipEasyxjdf.getContentPane().setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtJobId, cmbAmount, cmbCustomerId, cmbMediaQuality, cmbNumColors, cmbCatalogId, txtContentData, btnContentData, txtJobName, btnSaveAs, btnSend, lblSettings, lblJobId, lblAmount, lblCustomerId, lblMediaQuality, lblCatalogId, lblContentData, lblJobName, lblInfo, lblNewLabel, lblNumColors}));
+
+		JLabel lblFinishedDimensions = new JLabel("FinishedDim.");
+		springLayout.putConstraint(SpringLayout.WEST, lblFinishedDimensions, 0, SpringLayout.WEST, lblCustomerId);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblFinishedDimensions, 0, SpringLayout.SOUTH, lblCatalogId);
+		frmCipEasyxjdf.getContentPane().add(lblFinishedDimensions);
+
+		cmbFinishedDim = new JComboBox();
+		cmbFinishedDim.setToolTipText(" in points");
+		springLayout.putConstraint(SpringLayout.NORTH, cmbFinishedDim, 0, SpringLayout.NORTH, cmbCatalogId);
+		springLayout.putConstraint(SpringLayout.WEST, cmbFinishedDim, 0, SpringLayout.WEST, cmbCustomerId);
+		springLayout.putConstraint(SpringLayout.EAST, cmbFinishedDim, 0, SpringLayout.EAST, lblSettings);
+		cmbFinishedDim.setEditable(true);
+		frmCipEasyxjdf.getContentPane().add(cmbFinishedDim);
+		frmCipEasyxjdf.getContentPane().setFocusTraversalPolicy(
+				new FocusTraversalOnArray(new Component[] { txtJobId, cmbAmount, cmbCustomerId, cmbMediaQuality, cmbNumColors, cmbCatalogId, cmbFinishedDim, btnContentData, txtJobName, btnSaveAs,
+						btnSend, txtContentData, lblSettings, lblJobId, lblAmount, lblCustomerId, lblMediaQuality, lblCatalogId, lblContentData, lblJobName, lblInfo, lblNewLabel, lblNumColors }));
 	}
 
 	/**
@@ -345,6 +363,19 @@ public class XJdfView {
 
 			// set focus
 			cmbAmount.requestFocus();
+
+			// return
+			return;
+		}
+
+		// validate finished dimensions
+		if (!validateAmount()) {
+
+			// show info
+			showMessage("FinishedDimensions has the wrong format..");
+
+			// set focus
+			cmbFinishedDim.requestFocus();
 
 			// return
 			return;
@@ -450,6 +481,26 @@ public class XJdfView {
 	}
 
 	/**
+	 * Validate amount.
+	 */
+	private boolean validateFiishedDimensions() {
+
+		boolean result = false;
+
+		try {
+			// validate
+			Shape s = new Shape(cmbFinishedDim.getSelectedItem().toString());
+			result = true;
+
+		} catch (Exception nex) {
+
+		}
+
+		// return result
+		return result;
+	}
+
+	/**
 	 * Updates the JobNames value base on ContentData file path.
 	 */
 	private void updateJobName() {
@@ -496,10 +547,14 @@ public class XJdfView {
 			model.setCustomerId(cmbCustomerId.getSelectedItem().toString());
 		}
 
+		if (cmbFinishedDim.getSelectedItem() != null && !StringUtils.isEmpty(cmbFinishedDim.getSelectedItem().toString())) {
+			model.setFinishedDimensions(new Shape(cmbFinishedDim.getSelectedItem().toString()));
+		}
+
 		if (cmbMediaQuality.getSelectedItem() != null && !StringUtils.isEmpty(cmbMediaQuality.getSelectedItem().toString())) {
 			model.setMediaQuality(cmbMediaQuality.getSelectedItem().toString());
 		}
-		
+
 		if (cmbNumColors.getSelectedItem() != null && !StringUtils.isEmpty(cmbNumColors.getSelectedItem().toString())) {
 			model.setNumColors(cmbNumColors.getSelectedItem().toString());
 		}
@@ -535,9 +590,13 @@ public class XJdfView {
 		String[] customerIDs = settingsModel.getCustomerIDs().toArray(new String[settingsModel.getCustomerIDs().size()]);
 		cmbCustomerId.setModel(new DefaultComboBoxModel(customerIDs));
 
-		// display CustomerIDs
+		// display CatalogIDs
 		String[] catalogIDs = settingsModel.getCatalogIDs().toArray(new String[settingsModel.getCatalogIDs().size()]);
 		cmbCatalogId.setModel(new DefaultComboBoxModel(catalogIDs));
+
+		// display FinishedDims
+		String[] finishedDimensions = settingsModel.getFinishedDimensions().toArray(new String[settingsModel.getFinishedDimensions().size()]);
+		cmbFinishedDim.setModel(new DefaultComboBoxModel(finishedDimensions));
 
 		// set old values
 		if (xJdfModelOld.getAmount() != 0)
@@ -545,6 +604,8 @@ public class XJdfView {
 		cmbMediaQuality.setSelectedItem(xJdfModelOld.getMediaQuality());
 		cmbCustomerId.setSelectedItem(xJdfModelOld.getCustomerId());
 		cmbCatalogId.setSelectedItem(xJdfModelOld.getCatalogId());
+		if (xJdfModelOld.getFinishedDimensions() != null)
+			cmbFinishedDim.setSelectedItem(xJdfModelOld.getFinishedDimensions().toString());
 		cmbNumColors.setSelectedItem(xJdfModelOld.getNumColors());
 	}
 
@@ -560,6 +621,7 @@ public class XJdfView {
 		cmbCatalogId.setSelectedItem("");
 		cmbCustomerId.setSelectedItem("");
 		cmbNumColors.setSelectedItem("");
+		cmbFinishedDim.setSelectedItem("");
 
 		oldJobName = "";
 	}
