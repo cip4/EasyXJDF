@@ -172,15 +172,14 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblAmount);
 
 		cmbAmount = new JComboBox();
-		springLayout.putConstraint(SpringLayout.WEST, cmbAmount, 0, SpringLayout.WEST, txtJobId);
 		springLayout.putConstraint(SpringLayout.NORTH, cmbAmount, -4, SpringLayout.NORTH, lblAmount);
+		springLayout.putConstraint(SpringLayout.WEST, cmbAmount, 63, SpringLayout.EAST, lblAmount);
 		cmbAmount.setEditable(true);
 		frmCipEasyxjdf.getContentPane().add(cmbAmount);
 
 		JLabel lblCustomerId = new JLabel("Customer ID");
-		springLayout.putConstraint(SpringLayout.EAST, cmbAmount, -29, SpringLayout.WEST, lblCustomerId);
+		springLayout.putConstraint(SpringLayout.EAST, cmbAmount, -15, SpringLayout.WEST, lblCustomerId);
 		springLayout.putConstraint(SpringLayout.NORTH, lblCustomerId, 0, SpringLayout.NORTH, lblAmount);
-		springLayout.putConstraint(SpringLayout.EAST, lblCustomerId, -181, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
 		frmCipEasyxjdf.getContentPane().add(lblCustomerId);
 
 		cmbCustomerId = new JComboBox();
@@ -273,8 +272,8 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(lblInfo);
 
 		JButton btnSaveAs = new JButton("Save As");
+		springLayout.putConstraint(SpringLayout.WEST, btnSaveAs, 313, SpringLayout.EAST, lblInfo);
 		springLayout.putConstraint(SpringLayout.SOUTH, txtJobName, -6, SpringLayout.NORTH, btnSaveAs);
-		springLayout.putConstraint(SpringLayout.WEST, btnSaveAs, 44, SpringLayout.WEST, lblCustomerId);
 		springLayout.putConstraint(SpringLayout.SOUTH, btnSaveAs, 0, SpringLayout.SOUTH, lblInfo);
 		btnSaveAs.addMouseListener(new MouseAdapter() {
 			@Override
@@ -285,9 +284,9 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(btnSaveAs);
 
 		JButton btnSend = new JButton("Send");
+		springLayout.putConstraint(SpringLayout.EAST, btnSaveAs, -6, SpringLayout.WEST, btnSend);
 		springLayout.putConstraint(SpringLayout.WEST, btnSend, 450, SpringLayout.WEST, frmCipEasyxjdf.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, btnSend, -10, SpringLayout.EAST, frmCipEasyxjdf.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, btnSaveAs, -6, SpringLayout.WEST, btnSend);
 		springLayout.putConstraint(SpringLayout.SOUTH, btnSend, 0, SpringLayout.SOUTH, lblInfo);
 		btnSend.addMouseListener(new MouseAdapter() {
 			@Override
@@ -313,17 +312,18 @@ public class XJdfView {
 		frmCipEasyxjdf.getContentPane().add(cmbNumColors);
 
 		JLabel lblNumColors = new JLabel("NumColors");
+		springLayout.putConstraint(SpringLayout.WEST, lblCustomerId, 0, SpringLayout.WEST, lblNumColors);
 		springLayout.putConstraint(SpringLayout.NORTH, lblNumColors, 0, SpringLayout.NORTH, lblMediaQuality);
-		springLayout.putConstraint(SpringLayout.WEST, lblNumColors, 0, SpringLayout.WEST, lblCustomerId);
 		frmCipEasyxjdf.getContentPane().add(lblNumColors);
 
-		JLabel lblFinishedDimensions = new JLabel("FinishedDim.");
-		springLayout.putConstraint(SpringLayout.WEST, lblFinishedDimensions, 0, SpringLayout.WEST, lblCustomerId);
-		springLayout.putConstraint(SpringLayout.SOUTH, lblFinishedDimensions, 0, SpringLayout.SOUTH, lblCatalogId);
+		JLabel lblFinishedDimensions = new JLabel("FinishedD (mm)");
+		springLayout.putConstraint(SpringLayout.WEST, lblNumColors, 0, SpringLayout.WEST, lblFinishedDimensions);
+		springLayout.putConstraint(SpringLayout.NORTH, lblFinishedDimensions, 0, SpringLayout.NORTH, lblCatalogId);
 		frmCipEasyxjdf.getContentPane().add(lblFinishedDimensions);
 
 		cmbFinishedDim = new JComboBox();
-		cmbFinishedDim.setToolTipText(" in points");
+		springLayout.putConstraint(SpringLayout.EAST, lblFinishedDimensions, -6, SpringLayout.WEST, cmbFinishedDim);
+		cmbFinishedDim.setToolTipText(" in millimeter");
 		springLayout.putConstraint(SpringLayout.NORTH, cmbFinishedDim, 0, SpringLayout.NORTH, cmbCatalogId);
 		springLayout.putConstraint(SpringLayout.WEST, cmbFinishedDim, 0, SpringLayout.WEST, cmbCustomerId);
 		springLayout.putConstraint(SpringLayout.EAST, cmbFinishedDim, 0, SpringLayout.EAST, lblSettings);

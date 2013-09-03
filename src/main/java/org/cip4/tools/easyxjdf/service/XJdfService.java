@@ -27,6 +27,8 @@ import org.cip4.lib.xjdf.builder.XJdfBuilder;
 import org.cip4.lib.xjdf.schema.Product;
 import org.cip4.lib.xjdf.schema.XJDF;
 import org.cip4.lib.xjdf.type.IntegerList;
+import org.cip4.lib.xjdf.type.Shape;
+import org.cip4.lib.xjdf.util.DimensionUtil;
 import org.cip4.lib.xjdf.util.IDGeneratorUtil;
 import org.cip4.lib.xprinttalk.PrintTalkNodeFactory;
 import org.cip4.lib.xprinttalk.builder.PrintTalkBuilder;
@@ -142,15 +144,42 @@ public class XJdfService {
 		// create print talk
 		ProductBuilder productBuilder = new ProductBuilder(xJdfModel.getAmount());
 
+		String sides = "TwoSidedHeadToHead";
+		int pages = 2;
+
 		if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
 			productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
 
 		if (!StringUtils.isEmpty(xJdfModel.getNumColors())) {
+
+			// compute side
+			String[] numColors = xJdfModel.getNumColors().split(" ");
+
+			if ("0".equals(numColors[0])) {
+
+				// one sided back
+				sides = "OneSidedBack";
+				pages = 1;
+
+			} else if ("0".equals(numColors[1])) {
+
+				// one sided front
+				sides = "OneSided";
+				pages = 1;
+
+			}
+
+			// set num colors
 			productBuilder.addIntent(nf.createColorIntent(new IntegerList(xJdfModel.getNumColors())));
 		}
 
 		if (xJdfModel.getFinishedDimensions() != null) {
-			productBuilder.addIntent(nf.createLayoutIntent(2, "TwoSidedHeadToHead", xJdfModel.getFinishedDimensions()));
+
+			double x = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getX());
+			double y = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getY());
+			double z = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getZ());
+
+			productBuilder.addIntent(nf.createLayoutIntent(pages, sides, new Shape(x, y, z)));
 		}
 
 		Product product = productBuilder.build();
