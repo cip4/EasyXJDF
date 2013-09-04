@@ -12,7 +12,6 @@ package org.cip4.tools.easyxjdf;
 
 import org.cip4.tools.easyxjdf.controller.XJdfController;
 
-
 /**
  * Application start class.
  * @author stefan.meissner
@@ -25,6 +24,10 @@ public class App {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+		// set system properties
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "EasyXJDF");
 
 		// Start application.
 		XJdfController xJdfController = new XJdfController();

@@ -195,6 +195,7 @@ public class XJdfService {
 			xJdfBuilder.addParameter(nf.createCustomerInfo(xJdfModel.getCustomerId()));
 
 		XJDF xjdf = xJdfBuilder.build();
+		xjdf.setID(xJdfModel.getJobId());
 
 		PrintTalkBuilder ptkBuilder = new PrintTalkBuilder();
 		ptkBuilder.addRequest(ptkNf.createPurchaseOrder(xJdfModel.getJobId(), null, xjdf));
