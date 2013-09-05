@@ -107,7 +107,7 @@ public class XJdfService {
 
 		// parse print talk
 		PrintTalkParser parser = new PrintTalkParser();
-		byte[] bytes = parser.parsePrintTalk(ptk, true); // No validation: BUG in JAXB Framework
+		byte[] bytes = parser.parsePrintTalk(ptk);
 
 		// save to target location
 		File file = new File(targetLocation);
@@ -195,7 +195,6 @@ public class XJdfService {
 			xJdfBuilder.addParameter(nf.createCustomerInfo(xJdfModel.getCustomerId()));
 
 		XJDF xjdf = xJdfBuilder.build();
-		xjdf.setID(xJdfModel.getJobId());
 
 		PrintTalkBuilder ptkBuilder = new PrintTalkBuilder();
 		ptkBuilder.addRequest(ptkNf.createPurchaseOrder(xJdfModel.getJobId(), null, xjdf));

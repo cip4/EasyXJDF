@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -69,6 +70,8 @@ public class XJdfView {
 	private JComboBox cmbNumColors;
 
 	private JComboBox cmbFinishedDim;
+
+	private JCheckBox chkReset;
 
 	/**
 	 * Custom constructor. Accepting a SettingsModel for initializing.
@@ -329,6 +332,11 @@ public class XJdfView {
 		springLayout.putConstraint(SpringLayout.EAST, cmbFinishedDim, 0, SpringLayout.EAST, lblSettings);
 		cmbFinishedDim.setEditable(true);
 		frmCipEasyxjdf.getContentPane().add(cmbFinishedDim);
+
+		chkReset = new JCheckBox("No form reset after submit");
+		springLayout.putConstraint(SpringLayout.NORTH, chkReset, 6, SpringLayout.SOUTH, txtJobName);
+		springLayout.putConstraint(SpringLayout.WEST, chkReset, 0, SpringLayout.WEST, txtJobId);
+		frmCipEasyxjdf.getContentPane().add(chkReset);
 		frmCipEasyxjdf.getContentPane().setFocusTraversalPolicy(
 				new FocusTraversalOnArray(new Component[] { txtJobId, cmbAmount, cmbCustomerId, cmbMediaQuality, cmbNumColors, cmbCatalogId, cmbFinishedDim, btnContentData, txtJobName, btnSaveAs,
 						btnSend, txtContentData, lblSettings, lblJobId, lblAmount, lblCustomerId, lblMediaQuality, lblCatalogId, lblContentData, lblJobName, lblInfo, lblNewLabel, lblNumColors }));
@@ -414,7 +422,8 @@ public class XJdfView {
 				}
 
 				// reset view
-				resetView();
+				if (!chkReset.isSelected())
+					resetView();
 
 			} catch (Exception ex) {
 
@@ -446,7 +455,8 @@ public class XJdfView {
 			}
 
 			// reset view
-			resetView();
+			if (!chkReset.isSelected())
+				resetView();
 
 		} catch (ConnectionException cnEx) {
 
