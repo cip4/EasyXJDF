@@ -145,7 +145,6 @@ public class XJdfService {
 		ProductBuilder productBuilder = new ProductBuilder(xJdfModel.getAmount());
 
 		String sides = "TwoSidedHeadToHead";
-		int pages = 2;
 
 		if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
 			productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
@@ -156,17 +155,12 @@ public class XJdfService {
 			String[] numColors = xJdfModel.getNumColors().split(" ");
 
 			if ("0".equals(numColors[0])) {
-
 				// one sided back
 				sides = "OneSidedBack";
-				pages = 1;
 
 			} else if ("0".equals(numColors[1])) {
-
 				// one sided front
 				sides = "OneSided";
-				pages = 1;
-
 			}
 
 			// set num colors
@@ -179,7 +173,7 @@ public class XJdfService {
 			double y = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getY());
 			double z = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getZ());
 
-			productBuilder.addIntent(nf.createLayoutIntent(pages, sides, new Shape(x, y, z)));
+			productBuilder.addIntent(nf.createLayoutIntent(xJdfModel.getPages(), sides, new Shape(x, y, z)));
 		}
 
 		Product product = productBuilder.build();

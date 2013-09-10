@@ -31,6 +31,8 @@ public class XJdfModel {
 
 	private String mediaQuality;
 
+	private int pages;
+
 	private int amount;
 
 	private String numColors;
@@ -137,6 +139,22 @@ public class XJdfModel {
 	 */
 	public void setMediaQuality(String mediaQuality) {
 		this.mediaQuality = mediaQuality;
+	}
+
+	/**
+	 * Getter for pages attribute.
+	 * @return the pages
+	 */
+	public int getPages() {
+		return pages;
+	}
+
+	/**
+	 * Setter for pages attribute.
+	 * @param pages the pages to set
+	 */
+	public void setPages(int pages) {
+		this.pages = pages;
 	}
 
 	/**
