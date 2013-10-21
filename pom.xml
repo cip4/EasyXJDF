@@ -20,13 +20,6 @@
 			<email>s.meissner@flyeralarm.de</email>
 		</developer>
 	</developers>
-	<distributionManagement>
-		<repository>
-			<id>cip4-community</id>
-			<name>cip4-community</name>
-			<url>scp://community.cip4.org/var/www/community/uploads/EasyXJDF/stable/</url>
-		</repository>
-	</distributionManagement>
 	<scm>
 		<url>http://svn.cip4.org/svnroot/trunk/EasyXJDF</url>
 		<developerConnection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</developerConnection>
@@ -142,9 +135,9 @@
 		<profile>
 			<id>windows</id>
 			<activation>
-				<os>
-					<family>windows</family>
-				</os>
+				<property>
+			        <name>!alwaysActive</name>
+			      </property>
 			</activation>
 			<build>
 				<plugins>
@@ -228,19 +221,45 @@
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>osxappbundle-maven-plugin</artifactId>
-						<version>1.0-alpha-2</version>
-						<configuration>
-							<mainClass>org.cip4.tools.easyxjdf.App</mainClass>
-							<iconFile>${basedir}/src/main/assemble/macosx/xjdf.icns</iconFile>
-						</configuration>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
 						<executions>
 							<execution>
-								<phase>package</phase>
 								<goals>
-									<goal>bundle</goal>
-								</goals>
+					            	<goal>run</goal>
+					            </goals>
+					            <phase>package</phase>
+								<configuration>
+									<target>
+										<!-- create app folder -->
+										<mkdir dir="${project.build.directory}/dmg"/>
+										
+										<!-- create app file-->
+										<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${basedir}/src/main/assemble/macosx/lib/appbundler-1.0.jar" />
+										<bundleapp 
+									        outputdirectory="${project.build.directory}/dmg" 
+									        name="${project.build.finalName}" 
+									        displayname="My Java Mac OS X App" 
+									        identifier="org.cip4.tools.easyxjdf.App" 
+									        icon="${basedir}/src/main/assemble/macosx/xjdf.icns"
+									        shortversion="1.0"
+									        applicationCategory="public.app-category.developer-tools"
+									        mainclassname="org.cip4.tools.easyxjdf.App">
+									        <classpath file="${project.build.directory}/${project.build.finalName}-app.jar" />
+									    </bundleapp>
+									    
+									    <!-- create dmg using hdiutil-->
+									    <!-- cmd: hdiutil create test.dmg -srcfolder /path/to/folder/ -->
+									    <exec executable="hdiutil">
+											<arg value="create"/>
+										    <arg value="${project.build.directory}/${project.build.finalName}.dmg"/>
+										    <arg value="-srcfolder"/>
+										    <arg value="${project.build.directory}/dmg"/>
+										    <arg value="-volname"/>
+										    <arg value="${project.build.finalName}"/>
+										</exec>
+									</target>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
