@@ -175,8 +175,8 @@
 								</goals>
 								<configuration>
 									<headerType>gui</headerType>
-									<outfile>target/${project.build.finalName}.exe</outfile>
-									<jar>target/${project.build.finalName}-app.jar</jar>
+									<outfile>${buildDirectory}/${project.build.finalName}.exe</outfile>
+									<jar>${buildDirectory}/${project.build.finalName}-app.jar</jar>
 									<errTitle>encc</errTitle>
 									<icon>src/main/assemble/windows/xjdf.ico</icon>
 									<classPath>
