@@ -48,6 +48,13 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <goals>install</goals>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>appassembler-maven-plugin</artifactId>
@@ -220,53 +227,45 @@
 					<family>mac</family>
 				</os>
 			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.7</version>
-						<executions>
-							<execution>
-								<goals>
-					            	<goal>run</goal>
-					            </goals>
-					            <phase>package</phase>
-								<configuration>
-									<target>
-										<!-- create app folder -->
-										<mkdir dir="${project.build.directory}/dmg"/>
-										
-										<!-- create app file-->
-										<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${basedir}/src/main/assemble/macosx/lib/appbundler-1.0.jar" />
-										<bundleapp 
-									        outputdirectory="${project.build.directory}/dmg" 
-									        name="${project.build.finalName}" 
-									        displayname="My Java Mac OS X App" 
-									        identifier="org.cip4.tools.easyxjdf.App" 
-									        icon="${basedir}/src/main/assemble/macosx/xjdf.icns"
-									        shortversion="1.0"
-									        applicationCategory="public.app-category.developer-tools"
-									        mainclassname="org.cip4.tools.easyxjdf.App">
-									        <classpath file="${project.build.directory}/${project.build.finalName}-app.jar" />
-									    </bundleapp>
-									    
-									    <!-- create dmg using hdiutil-->
-									    <!-- cmd: hdiutil create test.dmg -srcfolder /path/to/folder/ -->
-									    <exec executable="hdiutil">
-											<arg value="create"/>
-										    <arg value="${project.build.directory}/${project.build.finalName}.dmg"/>
-										    <arg value="-srcfolder"/>
-										    <arg value="${project.build.directory}/dmg"/>
-										    <arg value="-volname"/>
-										    <arg value="${project.build.finalName}"/>
-										</exec>
-									</target>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>1.7</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <target>
+                                        <!-- create app folder -->
+                                        <mkdir dir="${project.build.directory}/dmg" />
+
+                                        <!-- create app file-->
+                                        <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${basedir}/src/main/assemble/macosx/lib/appbundler-1.0.jar" />
+                                        <bundleapp outputdirectory="${project.build.directory}/dmg" name="${project.build.finalName}" displayname="CIP4 EasyXJDF" identifier="org.cip4.tools.easyxjdf.App" icon="${basedir}/src/main/assemble/macosx/xjdf.icns" shortversion="1.0" applicationCategory="public.app-category.developer-tools" mainclassname="org.cip4.tools.easyxjdf.App">
+                                            <classpath file="${project.build.directory}/${project.build.finalName}-app.jar" />
+                                        </bundleapp>
+
+                                        <!-- create dmg using hdiutil-->
+                                        <!-- cmd: hdiutil create test.dmg -srcfolder /path/to/folder/ -->
+                                        <exec executable="hdiutil">
+                                            <arg value="create" />
+                                            <arg value="${project.build.directory}/${project.build.finalName}.dmg" />
+                                            <arg value="-srcfolder" />
+                                            <arg value="${project.build.directory}/dmg" />
+                                            <arg value="-volname" />
+                                            <arg value="${project.build.finalName}" />
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
 		</profile>
 	</profiles>
 </project>
