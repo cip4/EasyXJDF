@@ -10,14 +10,6 @@
  */
 package org.cip4.tools.easyxjdf.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +28,14 @@ import org.cip4.lib.xprinttalk.schema.PrintTalk;
 import org.cip4.lib.xprinttalk.xml.PrintTalkPackager;
 import org.cip4.lib.xprinttalk.xml.PrintTalkParser;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.net.ConnectException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Service class which provides all XJDF functionality.
@@ -108,6 +108,13 @@ public class XJdfService {
 		// parse print talk
 		PrintTalkParser parser = new PrintTalkParser();
 		byte[] bytes = parser.parsePrintTalk(ptk);
+
+        // target location has to be a zip file
+        String ext = FilenameUtils.getExtension(targetLocation);
+
+        if(!FilenameUtils.isExtension(targetLocation, "zip")) {
+            targetLocation += ".zip";
+        }
 
 		// save to target location
 		File file = new File(targetLocation);
