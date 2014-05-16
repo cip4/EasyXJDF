@@ -113,13 +113,27 @@
 			</extension>
 		</extensions>
 	</build>
-	<dependencies>
 
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+	<dependencies>
 		<!-- CIP4 -->
 		<dependency>
 			<groupId>org.cip4.lib.xprinttalk</groupId>
 			<artifactId>xPrintTalkLib</artifactId>
-			<version>0.5</version>
+			<version>0.6-SNAPSHOT</version>
 		</dependency>
 		<!-- Apache Commons -->
 		<dependency>
