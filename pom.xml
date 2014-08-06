@@ -10,7 +10,6 @@
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    	<buildDirectory>${project.basedir}/target</buildDirectory>
 	</properties>
 	<developers>
 		<developer>
@@ -27,7 +26,6 @@
 		<connection>scm:svn:http://svn.cip4.org/svnroot/trunk/EasyXJDF</connection>
 	</scm>
 	<build>
-		<directory>${buildDirectory}</directory>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
