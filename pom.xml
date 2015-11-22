@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
     <groupId>org.cip4.tools.easyxjdf</groupId>
 	<artifactId>EasyXJDF</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>Paris-15.10</version>
 	<name>EasyXJDF</name>
     <description>A simple XJDF Generator</description>
     <properties>
@@ -14,7 +14,8 @@
         <url>https://stash.cip4.org/scm/tool/easyxjdf.git</url>
         <developerConnection>scm:git:https://stash.cip4.org/scm/tool/easyxjdf.git</developerConnection>
         <connection>scm:svn:https://stash.cip4.org/scm/tool/easyxjdf.git</connection>
-    </scm>
+      <tag>EasyXJDF-Paris-15.10</tag>
+  </scm>
     <issueManagement>
         <system>JIRA</system>
         <url>https://jira.cip4.org/browse/EASYXJDF</url>
