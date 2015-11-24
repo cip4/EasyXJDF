@@ -3,7 +3,7 @@
     <groupId>org.cip4.tools.easyxjdf</groupId>
 	<artifactId>EasyXJDF</artifactId>
 	<version>Paris-15.10.1-SNAPSHOT</version>
-	<name>EasyXJDF</name>
+	<name>CIP4 EasyXJDF</name>
     <description>A simple XJDF Generator</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,6 +40,7 @@
 		</developer>
 	</developers>
 	<build>
+		<finalName>${pom.name} ${pom.version}</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -266,7 +267,7 @@
 
                                         <!-- create app file-->
                                         <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${basedir}/src/main/assemble/macosx/lib/appbundler-1.0.jar" />
-                                        <bundleapp outputdirectory="${project.build.directory}/dmg" name="${project.build.finalName}" displayname="CIP4 EasyXJDF" identifier="org.cip4.tools.easyxjdf.App" icon="${basedir}/src/main/assemble/macosx/xjdf.icns" shortversion="1.0" applicationCategory="public.app-category.developer-tools" mainclassname="org.cip4.tools.easyxjdf.App">
+                                        <bundleapp outputdirectory="${project.build.directory}/dmg" name="${pom.name}" displayname="${pom.name}" identifier="org.cip4.tools.easyxjdf.App" icon="${basedir}/src/main/assemble/macosx/xjdf.icns" shortversion="${pom.version}" applicationCategory="public.app-category.developer-tools" mainclassname="org.cip4.tools.easyxjdf.App">
                                             <classpath file="${project.build.directory}/${project.build.finalName}-app.jar" />
                                         </bundleapp>
 
