@@ -195,7 +195,7 @@ public class XJdfService {
 		xJdfBuilder.addProduct(product);
 		xJdfBuilder.addParameter(nf.createRunList(Paths.get(xJdfModel.getRunList()).toUri().toString()));
 
-		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // CatalogID
+		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // Catalog ID
 			xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
 
 		if (!StringUtils.isEmpty(xJdfModel.getCustomerId())) // CustomerID
