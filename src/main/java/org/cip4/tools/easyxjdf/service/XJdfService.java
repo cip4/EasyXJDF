@@ -25,6 +25,7 @@ import org.cip4.lib.xjdf.util.IDGeneratorUtil;
 import org.cip4.lib.xprinttalk.PrintTalkNodeFactory;
 import org.cip4.lib.xprinttalk.builder.PrintTalkBuilder;
 import org.cip4.lib.xprinttalk.schema.PrintTalk;
+import org.cip4.lib.xprinttalk.xml.PrintTalkNavigator;
 import org.cip4.lib.xprinttalk.xml.PrintTalkPackager;
 import org.cip4.lib.xprinttalk.xml.PrintTalkParser;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
@@ -35,7 +36,10 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Service class which provides all XJDF functionality.
@@ -83,8 +87,9 @@ public class XJdfService {
 
 		// write ZIP package to output stream
 		String docName = xJdfModel.getJobId() + ".xjdf";
-		PrintTalkPackager packager = new PrintTalkPackager(bytes);
-		packager.packageXJdf(connection.getOutputStream(), docName);
+
+		PrintTalkPackager packager = new PrintTalkPackager(connection.getOutputStream());
+		packager.packagePrintTalk(new PrintTalkNavigator(bytes), docName, null);
 
 		// get response code
 		int responseCode = connection.getResponseCode();
@@ -124,8 +129,9 @@ public class XJdfService {
 
 			// save as ZIP
 			String docName = xJdfModel.getJobId() + ".xjdf";
-			PrintTalkPackager packager = new PrintTalkPackager(bytes);
-			packager.packageXJdf(os, docName);
+
+			PrintTalkPackager packager = new PrintTalkPackager(os);
+			packager.packagePrintTalk(new PrintTalkNavigator(bytes), docName, null);
 
 		} else {
 
@@ -187,7 +193,7 @@ public class XJdfService {
 
 		XJdfBuilder xJdfBuilder = new XJdfBuilder(xJdfModel.getJobId(), "Web2Print", xJdfModel.getJobName());
 		xJdfBuilder.addProduct(product);
-		xJdfBuilder.addParameter(nf.createRunList(xJdfModel.getRunList()));
+		xJdfBuilder.addParameter(nf.createRunList(Paths.get(xJdfModel.getRunList()).toUri().toString()));
 
 		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // CatalogID
 			xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
