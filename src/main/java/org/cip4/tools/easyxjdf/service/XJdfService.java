@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.cip4.lib.xjdf.XJdfNodeFactory;
 import org.cip4.lib.xjdf.builder.ProductBuilder;
 import org.cip4.lib.xjdf.builder.XJdfBuilder;
+import org.cip4.lib.xjdf.schema.EnumSides;
 import org.cip4.lib.xjdf.schema.Product;
 import org.cip4.lib.xjdf.schema.XJDF;
 import org.cip4.lib.xjdf.type.IntegerList;
@@ -157,7 +158,7 @@ public class XJdfService {
 		// create print talk
 		ProductBuilder productBuilder = new ProductBuilder(xJdfModel.getAmount());
 
-		String sides = "TwoSidedHeadToHead";
+		EnumSides sides = EnumSides.TWO_SIDED_HEAD_TO_HEAD;
 
 		if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
 			productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
@@ -169,11 +170,11 @@ public class XJdfService {
 
 			if ("0".equals(numColors[0])) {
 				// one sided back
-				sides = "OneSidedBack";
+				sides = EnumSides.ONE_SIDED_BACK;
 
 			} else if ("0".equals(numColors[1])) {
 				// one sided front
-				sides = "OneSided";
+				sides = EnumSides.ONE_SIDED;
 			}
 
 			// set num colors
