@@ -73,10 +73,6 @@ public class XJdfService {
 		// create PrintTalk Document
 		PrintTalk ptk = createPrintTalk(xJdfModel);
 
-		// parse print talk
-		PrintTalkParser parser = new PrintTalkParser();
-		byte[] bytes = parser.parsePrintTalk(ptk, true); // No validation: BUG in JAXB Framework
-
 		// transfer to target url
 		URL u = new URL(url);
 		HttpURLConnection connection = (HttpURLConnection) u.openConnection();
@@ -89,8 +85,9 @@ public class XJdfService {
 		// write ZIP package to output stream
 		String docName = xJdfModel.getJobId() + ".xjdf";
 
+
 		PrintTalkPackager packager = new PrintTalkPackager(connection.getOutputStream());
-		packager.packagePrintTalk(new PrintTalkNavigator(bytes), docName, null);
+		packager.packagePrintTalk(ptk, docName);
 
 		// get response code
 		int responseCode = connection.getResponseCode();
@@ -111,10 +108,6 @@ public class XJdfService {
 		// create PrintTalk Document
 		PrintTalk ptk = createPrintTalk(xJdfModel);
 
-		// parse print talk
-		PrintTalkParser parser = new PrintTalkParser();
-		byte[] bytes = parser.parsePrintTalk(ptk);
-
         // target location has to be a zip file
         String ext = FilenameUtils.getExtension(targetLocation);
 
@@ -132,9 +125,12 @@ public class XJdfService {
 			String docName = xJdfModel.getJobId() + ".xjdf";
 
 			PrintTalkPackager packager = new PrintTalkPackager(os);
-			packager.packagePrintTalk(new PrintTalkNavigator(bytes), docName, null);
+			packager.packagePrintTalk(ptk, docName);
 
 		} else {
+            // parse print talk
+            PrintTalkParser parser = new PrintTalkParser();
+            byte[] bytes = parser.parsePrintTalk(ptk);
 
 			// save as XJDF
 			IOUtils.copy(new ByteArrayInputStream(bytes), os);
@@ -194,7 +190,9 @@ public class XJdfService {
 
 		XJdfBuilder xJdfBuilder = new XJdfBuilder(xJdfModel.getJobId(), "Web2Print", xJdfModel.getJobName());
 		xJdfBuilder.addProduct(product);
-		xJdfBuilder.addParameter(nf.createRunList(Paths.get(xJdfModel.getRunList()).toUri().toString()));
+
+        URI uri = Paths.get(xJdfModel.getRunList()).toUri();
+		xJdfBuilder.addParameter(nf.createRunList(new org.cip4.lib.xjdf.type.URI(uri)));
 
 		if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // Catalog ID
 			xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
