@@ -48,7 +48,7 @@ public class InfoService {
 		infoModel.setEasyXJdfVersion(props.getProperty("version", "UNKNOWN"));
 		infoModel.setEasyXJdfBuildDate(props.getProperty("build.date", "UNKNOWN"));
 
-		infoModel.setxJdfVersion(XJdfConstants.XJDF_CURRENT_VERSION);
+		infoModel.setxJdfVersion(XJdfConstants.XJDF_CURRENT_VERSION.value());
 		infoModel.setxJdfLibVersion(XJdfConstants.XJDF_LIB_VERSION);
 		infoModel.setxJdfLibBuildDate(XJdfConstants.XJDF_LIB_BUILD_DATE);
 

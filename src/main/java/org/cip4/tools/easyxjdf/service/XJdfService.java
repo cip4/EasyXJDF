@@ -215,7 +215,11 @@ public class XJdfService {
             double y = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getY());
             double z = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getZ());
 
-            productBuilder.addIntent(nf.createLayoutIntent(xJdfModel.getPages(), sides, new Shape(x, y, z)));
+            LayoutIntent layoutIntent = nf.createLayoutIntent();
+            layoutIntent.setPages(xJdfModel.getPages());
+            layoutIntent.setSides(sides);
+            layoutIntent.setFinishedDimensions(new Shape(x,y,z));
+            productBuilder.addIntent(layoutIntent);
         }
 
         Product product = productBuilder.build();
