@@ -28,14 +28,12 @@ import org.cip4.lib.xprinttalk.xml.PrintTalkPackager;
 import org.cip4.lib.xprinttalk.xml.PrintTalkParser;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 
+import javax.xml.bind.JAXBElement;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
+import java.net.*;
 import java.nio.file.Paths;
 
 /**
@@ -141,7 +139,7 @@ public class XJdfService {
      * @param xJdfModel The XJDF Model object.
      * @return XJDF Document.
      */
-    private PrintTalk createPrintTalk(XJdfModel xJdfModel) {
+    private PrintTalk createPrintTalk(XJdfModel xJdfModel) throws URISyntaxException {
 
         // prepare model
         if (StringUtils.isEmpty(xJdfModel.getJobId())) {
@@ -153,8 +151,12 @@ public class XJdfService {
 
         Sides sides = Sides.TWO_SIDED_HEAD_TO_HEAD;
 
-        if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) // Media Quality
-            productBuilder.addIntent(nf.createMediaIntent(xJdfModel.getMediaQuality()));
+        if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) { // Media Quality
+            MediaIntent mediaIntent = nf.createMediaIntent(xJdfModel.getMediaQuality());
+            mediaIntent.setMediaType(MediaType.PAPER);
+            productBuilder.addIntent(mediaIntent);
+        }
+
 
         if (!StringUtils.isEmpty(xJdfModel.getNumColors())) {
 
@@ -176,7 +178,7 @@ public class XJdfService {
 
             if (!"0".equals(numColors[0])) {
                 SurfaceColor surfaceColorFront = nf.createSurfaceColor();
-                surfaceColorFront.setSurface(EnumSide.FRONT);
+                surfaceColorFront.setSurface(Side.FRONT);
 
                 if ("1".equals(numColors[0])) {
                     surfaceColorFront.getColorsUsed().add("Black");
@@ -193,7 +195,7 @@ public class XJdfService {
 
             if (!"0".equals(numColors[1])) {
                 SurfaceColor surfaceColorBack = nf.createSurfaceColor();
-                surfaceColorBack.setSurface(EnumSide.BACK);
+                surfaceColorBack.setSurface(Side.BACK);
 
                 if ("1".equals(numColors[1])) {
                     surfaceColorBack.getColorsUsed().add("Black");
@@ -228,7 +230,8 @@ public class XJdfService {
         xJdfBuilder.addProduct(product);
 
         URI uri = Paths.get(xJdfModel.getRunList()).toUri();
-        xJdfBuilder.addResource(nf.createRunList(new org.cip4.lib.xjdf.type.URI(uri)));
+        String filename = FilenameUtils.getName(xJdfModel.getRunList());
+        xJdfBuilder.addResource(nf.createRunList(new org.cip4.lib.xjdf.type.URI(uri, "asset/" + filename)));
 
         if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // Catalog ID
             xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
@@ -237,6 +240,7 @@ public class XJdfService {
             xJdfBuilder.addResource(nf.createCustomerInfo(xJdfModel.getCustomerId()));
 
         XJDF xjdf = xJdfBuilder.build();
+        xjdf.getTypes().add("Product");
 
         PrintTalkBuilder ptkBuilder = new PrintTalkBuilder();
         ptkBuilder.addRequest(ptkNf.createPurchaseOrder(xJdfModel.getJobId(), null, xjdf));

@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>org.cip4.lib.xprinttalk</groupId>
 			<artifactId>xPrintTalkLib</artifactId>
-			<version>0.11-SNAPSHOT</version>
+			<version>0.13</version>
 		</dependency>
 		<!-- Apache Commons -->
 		<dependency>
