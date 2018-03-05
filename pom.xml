@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
     <groupId>org.cip4.tools.easyxjdf</groupId>
 	<artifactId>EasyXJDF</artifactId>
-	<version>Strasbourg-16.10-SNAPSHOT</version>
+	<version>Bologna-18.03</version>
 	<name>CIP4 EasyXJDF</name>
     <description>A simple XJDF Generator</description>
     <properties>
@@ -15,7 +15,7 @@
         <url>https://bitbucket.cip4.org/scm/tool/easyxjdf.git</url>
         <developerConnection>scm:git:https://bitbucket.cip4.org/scm/tool/easyxjdf.git</developerConnection>
         <connection>scm:svn:https://bitbucket.cip4.org/scm/tool/easyxjdf.git</connection>
-      <tag>HEAD</tag>
+      <tag>EasyXJDF-Bologna-18.03</tag>
   </scm>
     <issueManagement>
         <system>JIRA</system>
