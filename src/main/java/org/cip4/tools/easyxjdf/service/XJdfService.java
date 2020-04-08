@@ -13,22 +13,22 @@ package org.cip4.tools.easyxjdf.service;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.cip4.lib.xjdf.XJdfNodeFactory;
 import org.cip4.lib.xjdf.builder.ProductBuilder;
 import org.cip4.lib.xjdf.builder.XJdfBuilder;
 import org.cip4.lib.xjdf.schema.*;
-import org.cip4.lib.xjdf.type.IntegerList;
+import org.cip4.lib.xjdf.type.DateTime;
 import org.cip4.lib.xjdf.type.Shape;
 import org.cip4.lib.xjdf.util.DimensionUtil;
 import org.cip4.lib.xjdf.util.IDGeneratorUtil;
-import org.cip4.lib.xprinttalk.PrintTalkNodeFactory;
-import org.cip4.lib.xprinttalk.builder.PrintTalkBuilder;
-import org.cip4.lib.xprinttalk.schema.PrintTalk;
+import org.cip4.lib.xprinttalk.schema.*;
+import org.cip4.lib.xprinttalk.schema.Header;
+import org.cip4.lib.xprinttalk.xml.PrintTalkConstants;
 import org.cip4.lib.xprinttalk.xml.PrintTalkPackager;
 import org.cip4.lib.xprinttalk.xml.PrintTalkParser;
 import org.cip4.tools.easyxjdf.model.XJdfModel;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,18 +44,11 @@ import java.nio.file.Paths;
  */
 public class XJdfService {
 
-    private final XJdfNodeFactory nf;
-
-    private final PrintTalkNodeFactory ptkNf;
-
     /**
      * Default constructor.
      */
     public XJdfService() {
 
-        // init instance variables
-        nf = new XJdfNodeFactory();
-        ptkNf = new PrintTalkNodeFactory();
     }
 
     /**
@@ -152,7 +145,8 @@ public class XJdfService {
         Sides sides = Sides.TWO_SIDED_HEAD_TO_HEAD;
 
         if (!StringUtils.isEmpty(xJdfModel.getMediaQuality())) { // Media Quality
-            MediaIntent mediaIntent = nf.createMediaIntent(xJdfModel.getMediaQuality());
+            MediaIntent mediaIntent = new MediaIntent();
+            mediaIntent.setMediaQuality(xJdfModel.getMediaQuality());
             mediaIntent.setMediaType(MediaType.PAPER);
             productBuilder.addIntent(mediaIntent);
         }
@@ -173,11 +167,11 @@ public class XJdfService {
             }
 
             // set color intent
-            ColorIntent colorIntent = nf.createColorIntent();
+            ColorIntent colorIntent = new ColorIntent();
             productBuilder.addIntent(colorIntent);
 
             if (!"0".equals(numColors[0])) {
-                SurfaceColor surfaceColorFront = nf.createSurfaceColor();
+                SurfaceColor surfaceColorFront = new SurfaceColor();
                 surfaceColorFront.setSurface(Side.FRONT);
 
                 if ("1".equals(numColors[0])) {
@@ -194,7 +188,7 @@ public class XJdfService {
             }
 
             if (!"0".equals(numColors[1])) {
-                SurfaceColor surfaceColorBack = nf.createSurfaceColor();
+                SurfaceColor surfaceColorBack = new SurfaceColor();
                 surfaceColorBack.setSurface(Side.BACK);
 
                 if ("1".equals(numColors[1])) {
@@ -217,7 +211,7 @@ public class XJdfService {
             double y = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getY());
             double z = DimensionUtil.mm2Dtp(xJdfModel.getFinishedDimensions().getZ());
 
-            LayoutIntent layoutIntent = nf.createLayoutIntent();
+            LayoutIntent layoutIntent = new LayoutIntent();
             layoutIntent.setPages(xJdfModel.getPages());
             layoutIntent.setSides(sides);
             layoutIntent.setFinishedDimensions(new Shape(x,y,z));
@@ -231,19 +225,67 @@ public class XJdfService {
 
         URI uri = Paths.get(xJdfModel.getRunList()).toUri();
         String filename = FilenameUtils.getName(xJdfModel.getRunList());
-        xJdfBuilder.addResource(nf.createRunList(new org.cip4.lib.xjdf.type.URI(uri, "asset/" + filename)));
+        FileSpec fileSpec = new FileSpec();
+        fileSpec.setURL(new org.cip4.lib.xjdf.type.URI(uri, "asset/" + filename));
+        RunList runList = new RunList();
+        runList.setFileSpec(fileSpec);
+        xJdfBuilder.addResource(runList);
 
-        if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) // Catalog ID
-            xJdfBuilder.addGeneralID(nf.createGeneralID("CatalogID", xJdfModel.getCatalogId()));
 
-        if (!StringUtils.isEmpty(xJdfModel.getCustomerId())) // CustomerID
-            xJdfBuilder.addResource(nf.createCustomerInfo(xJdfModel.getCustomerId()));
+        if (!StringUtils.isEmpty(xJdfModel.getCatalogId())) {// Catalog ID
+            GeneralID generalID = new GeneralID();
+            generalID.setIDUsage("CatalogID");
+            generalID.setIDValue(xJdfModel.getCatalogId());
+        }
+
+        if (!StringUtils.isEmpty(xJdfModel.getCustomerId())) { // CustomerID
+            CustomerInfo customerInfo = new CustomerInfo();
+            customerInfo.setCustomerID(xJdfModel.getCustomerId());
+            xJdfBuilder.addResource(customerInfo);
+
+        }
 
         XJDF xjdf = xJdfBuilder.build();
         xjdf.getTypes().add("Product");
 
-        PrintTalkBuilder ptkBuilder = new PrintTalkBuilder();
-        ptkBuilder.addRequest(ptkNf.createPurchaseOrder(xJdfModel.getJobId(), null, xjdf));
-        return ptkBuilder.build();
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.getXJDF().add(xjdf);
+        purchaseOrder.setExpires(new DateTime());
+
+        Request request = new Request();
+        request.setBusinessID("MY_BUSINESS_ID");
+        QName qname = new QName(PrintTalkConstants.NAMESPACE_PTK20, "PurchaseOrder");
+        JAXBElement<PurchaseOrder> obj = new JAXBElement(qname, purchaseOrder.getClass(), purchaseOrder);
+        request.setBusinessObject(obj);
+
+        Credential credential;
+        Identity identity;
+
+        identity = new Identity();
+        identity.setValue("FromIdentity");
+        credential = new Credential();
+        credential.setIdentity(identity);
+        credential.setDomain("EasyXJDF");
+        From from = new From();
+        from.getCredential().add(credential);
+
+        identity = new Identity();
+        identity.setValue("ToIdentity");
+        credential = new Credential();
+        credential.setIdentity(identity);
+        credential.setDomain("TargetSystem");
+        To to = new To();
+        to.getCredential().add(credential);
+
+        Header header = new Header();
+        header.setFrom(from);
+        header.setTo(to);
+
+        PrintTalk printTalk = new PrintTalk();
+        printTalk.setHeader(header);
+        printTalk.setRequest(request);
+        printTalk.setTimestamp(new DateTime());
+
+        return printTalk;
     }
 }

@@ -26,7 +26,6 @@ public class InfoDialog extends JDialog {
 	private final InfoModel infoModel;
 	private SpringLayout sl_contentPanel;
 	private JLabel lblXJdfLogo;
-	private JLabel lblFlyeralarmLogo;
 	private JLabel lblVersion;
 	private JLabel lblXJdfLib;
 	private JLabel lblXJdfLibDate;
@@ -61,7 +60,6 @@ public class InfoDialog extends JDialog {
 			JButton closeButton = new JButton("Close");
 			sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblXPrintTalkDate, -36, SpringLayout.NORTH, closeButton);
 			sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblXJdfLibDate, -87, SpringLayout.NORTH, closeButton);
-			sl_contentPanel.putConstraint(SpringLayout.SOUTH, closeButton, 0, SpringLayout.SOUTH, lblFlyeralarmLogo);
 			sl_contentPanel.putConstraint(SpringLayout.EAST, closeButton, 0, SpringLayout.EAST, lblXJdfLogo);
 			contentPanel.add(closeButton);
 			closeButton.addMouseListener(new MouseAdapter() {
@@ -87,31 +85,15 @@ public class InfoDialog extends JDialog {
 	private void initialize(SpringLayout springLayout) {
 		contentPanel.setLayout(springLayout);
 
-		lblFlyeralarmLogo = new JLabel("");
-		springLayout.putConstraint(SpringLayout.WEST, lblFlyeralarmLogo, 10, SpringLayout.WEST, contentPanel);
-		springLayout.putConstraint(SpringLayout.SOUTH, lblFlyeralarmLogo, -10, SpringLayout.SOUTH, contentPanel);
-		lblFlyeralarmLogo.setIcon(new ImageIcon(InfoDialog.class.getResource("/org/cip4/tools/easyxjdf/gui/fa-logo.png")));
-		contentPanel.add(lblFlyeralarmLogo);
-
 		JLabel lblAuthor = new JLabel("Author:");
-		sl_contentPanel.putConstraint(SpringLayout.WEST, lblAuthor, 0, SpringLayout.WEST, lblFlyeralarmLogo);
 		lblAuthor.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		contentPanel.add(lblAuthor);
 
 		JLabel lblStefanMeissner = new JLabel("Stefan Meissner");
 		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblStefanMeissner, 153, SpringLayout.NORTH, contentPanel);
 		sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblAuthor, -6, SpringLayout.NORTH, lblStefanMeissner);
-		sl_contentPanel.putConstraint(SpringLayout.WEST, lblStefanMeissner, 0, SpringLayout.WEST, lblFlyeralarmLogo);
 		lblStefanMeissner.setFont(new Font("Lucida Grande", Font.PLAIN, 13));
 		contentPanel.add(lblStefanMeissner);
-
-		JLabel lblFlyeralarmGmbh = new JLabel("flyeralarm GmbH");
-		sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblStefanMeissner, -6, SpringLayout.NORTH, lblFlyeralarmGmbh);
-		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblFlyeralarmGmbh, 178, SpringLayout.NORTH, contentPanel);
-		sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblFlyeralarmGmbh, -39, SpringLayout.NORTH, lblFlyeralarmLogo);
-		sl_contentPanel.putConstraint(SpringLayout.WEST, lblFlyeralarmGmbh, 0, SpringLayout.WEST, lblFlyeralarmLogo);
-		lblFlyeralarmGmbh.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		contentPanel.add(lblFlyeralarmGmbh);
 
 		JLabel lblCip4Logo = new JLabel("");
 		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblCip4Logo, 0, SpringLayout.NORTH, contentPanel);
@@ -155,7 +137,6 @@ public class InfoDialog extends JDialog {
 
 		lblXJdfLibDate = new JLabel("Release Date: " + infoModel.getxJdfLibBuildDate());
 		sl_contentPanel.putConstraint(SpringLayout.SOUTH, lblXJdfLib, -7, SpringLayout.NORTH, lblXJdfLibDate);
-		sl_contentPanel.putConstraint(SpringLayout.NORTH, lblXJdfLibDate, 0, SpringLayout.NORTH, lblFlyeralarmGmbh);
 		sl_contentPanel.putConstraint(SpringLayout.WEST, lblXJdfLibDate, 209, SpringLayout.WEST, contentPanel);
 		sl_contentPanel.putConstraint(SpringLayout.EAST, lblXJdfLibDate, 0, SpringLayout.EAST, lblXJdfLogo);
 		lblXJdfLibDate.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
