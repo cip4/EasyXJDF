@@ -21,7 +21,13 @@ jobs:
       - name: Build with Maven
         run: mvn install
 
+      - name: Read Project Version
+        run: version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+
+      - name: Debug
+        run: echo target/CIP4 EasyXJDF $version.exe
+
       - uses: actions/upload-artifact@v1
         with:
           name: exe
-          path: target/*.exe
+          path: target/CIP4 EasyXJDF $version.exe
