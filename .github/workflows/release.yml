@@ -30,7 +30,7 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target
-          asset_name: targett
+          file: target/*.exe
+          asset_name: file
           tag: ${{ github.ref }}
           overwrite: true
