@@ -1,0 +1,33 @@
+name: EasyXJDF Release
+
+on:
+  push:
+    tags:
+      - *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Check out sources...
+        uses: actions/checkout@v2
+
+      - name: Debug
+        run: echo ${GITHUB_REF}
+
+      - name: Set Version
+        run: mvn versions:set -DnewVersion=${GITHUB_REF}
+
+      - name: Set Version
+        run: mvn install
+
+      - name: Attach files to GitHub Release
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'target/*.exe'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

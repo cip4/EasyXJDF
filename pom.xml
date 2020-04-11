@@ -211,7 +211,7 @@
 										<preCp>anything</preCp>
 									</classPath>
 									<jre>
-										<minVersion>1.5.0</minVersion>
+										<minVersion>11</minVersion>
 										<initialHeapSize>96</initialHeapSize>
 										<maxHeapSize>1024</maxHeapSize>
 									</jre>
