@@ -21,7 +21,7 @@ jobs:
         run: echo ${GITHUB_REF##*XJDF-}
 
       - name: Set Version
-        run: mvn versions:set -DnewVersion=${GITHUB_REF##*-}
+        run: mvn versions:set -DnewVersion=${GITHUB_REF##*XJDF-}
 
       - name: Build Project
         run: mvn install
@@ -31,4 +31,4 @@ jobs:
         with:
           files: 'target/*.exe'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-tag: ${GITHUB_REF}
+          release-tag: ${{ GITHUB_REF }}
