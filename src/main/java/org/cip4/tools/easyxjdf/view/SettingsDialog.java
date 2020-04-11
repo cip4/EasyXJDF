@@ -102,12 +102,10 @@ public class SettingsDialog extends JDialog {
 		mapUrls = new LinkedHashMap<String, String>(5);
 		mapUrls.put("Others", "http://");
 		mapUrls.put("Heidelberg Prinect", "http://[YOUR_SERVER]:6090/w2pc/xjdf");
-		mapUrls.put("FLYERALARM API", "http://api.flyeralarm.com/xjdf");
 
 		mapLogo = new LinkedHashMap<String, String>(5);
 		mapLogo.put("Others", "/org/cip4/tools/easyxjdf/gui/xjdf-logo-white.png");
 		mapLogo.put("Heidelberg Prinect", "/org/cip4/tools/easyxjdf/gui/heidelberg-logo.png");
-		mapLogo.put("FLYERALARM API", "/org/cip4/tools/easyxjdf/gui/fa-logo.png");
 
 		settingsSaveEventListener = new ArrayList<SettingsSaveEventListener>();
 
