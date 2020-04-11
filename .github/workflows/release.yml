@@ -26,9 +26,9 @@ jobs:
       - name: Build Project
         run: mvn install
 
-      - name: Attach files to GitHub Release
-        uses: AButler/upload-release-assets@v2.0
-        with:
-          files: 'target/*.exe'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          release-tag: ${{ github.ref }}
+      - name: Upload the artifacts
+          uses: skx/github-action-publish-binaries@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            args: 'target/*.exe'
