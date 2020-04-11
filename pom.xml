@@ -88,7 +88,7 @@
 					<programs>
 						<program>
 							<mainClass>org.cip4.tools.easyxjdf.App</mainClass>
-							<name>${project.build.finalName}</name>
+							<id>${project.build.finalName}</id>
 						</program>
 					</programs>
 					<binFolder>bin</binFolder>
