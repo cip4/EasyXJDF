@@ -6,8 +6,72 @@ on:
       - EasyXJDF-*
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Check out sources...
+        uses: actions/checkout@v2
+
+      - name: Debug
+        run: echo ${GITHUB_REF##*XJDF-}
+
+      - name: Set Version
+        run: mvn versions:set -DnewVersion=${GITHUB_REF##*XJDF-}
+
+      - name: Build Project
+        run: mvn install
+
+      - name: Debug
+        run: ls -l target
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/{*.zip,*.tar.gz}
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Check out sources...
+        uses: actions/checkout@v2
+
+      - name: Debug
+        run: echo ${GITHUB_REF##*XJDF-}
+
+      - name: Set Version
+        run: mvn versions:set -DnewVersion=${GITHUB_REF##*XJDF-}
+
+      - name: Build Project
+        run: mvn install
+
+      - name: Debug
+        run: ls -l target
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/*.dmg
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
+  build-windows:
+    runs-on: windows-latest
     steps:
       - name: Set up JDK 11
         uses: actions/setup-java@v1
