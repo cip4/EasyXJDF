@@ -28,22 +28,22 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: dmg file
-          path: target/CIP4 EasyXJDF dev-SNAPSHOT.dmg
+          path: target/EasyXJDF-latest.dmg
 
       - name: Upload exe
         uses: actions/upload-artifact@v1
         with:
           name: exe file
-          path: target/CIP4 EasyXJDF dev-SNAPSHOT.exe
+          path: target/EasyXJDF-latest.exe
 
       - name: Upload bin.zip
         uses: actions/upload-artifact@v1
         with:
           name: zip file
-          path: target/CIP4 EasyXJDF dev-SNAPSHOT-bin.zip
+          path: target/EasyXJDF-latest-bin.zip
 
       - name: Upload bin.tar.gz
         uses: actions/upload-artifact@v1
         with:
           name: tar.gz file
-          path: target/CIP4 EasyXJDF dev-SNAPSHOT-bin.zip
+          path: target/EasyXJDF-latest-bin.zip
