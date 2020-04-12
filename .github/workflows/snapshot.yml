@@ -24,12 +24,26 @@ jobs:
       - name: Debug
         run: ls -l target
 
-      - uses: actions/upload-artifact@v1
+      - name: Upload dmg
+        uses: actions/upload-artifact@v1
         with:
-          name: dmg-file
+          name: dmg file
           path: target/CIP4 EasyXJDF dev-SNAPSHOT.dmg
 
-      - uses: actions/upload-artifact@v1
+      - name: Upload exe
+        uses: actions/upload-artifact@v1
         with:
-          name: exe-file
+          name: exe file
           path: target/CIP4 EasyXJDF dev-SNAPSHOT.exe
+
+      - name: Upload bin.zip
+        uses: actions/upload-artifact@v1
+        with:
+          name: zip file
+          path: target/CIP4 EasyXJDF dev-SNAPSHOT-bin.zip
+
+      - name: Upload bin.tar.gz
+        uses: actions/upload-artifact@v1
+        with:
+          name: tar.gz file
+          path: target/CIP4 EasyXJDF dev-SNAPSHOT-bin.zip

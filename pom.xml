@@ -101,28 +101,8 @@
 					</binFileExtensions>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assemble/binaries/assembly-binaries.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
-
     <repositories>
         <repository>
             <id>sonatype-nexus-snapshots</id>
@@ -170,7 +150,7 @@
 	</dependencies>
 	<profiles>
 		<profile>
-			<id>windows</id>
+			<id>general</id>
 			<activation>
 				<property>
 					<name>!alwaysActive</name>
@@ -185,6 +165,7 @@
 						<configuration>
 							<descriptors>
 								<descriptor>src/main/assemble/windows/assembly-jar.xml</descriptor>
+								<descriptor>src/main/assemble/binaries/assembly-binaries.xml</descriptor>
 							</descriptors>
 						</configuration>
 						<executions>
