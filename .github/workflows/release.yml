@@ -82,10 +82,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Debug
-        run: echo ${GITHUB_REF##*XJDF-}
+        run: echo %GITHUB_REF:*XJDF-=%
 
       - name: Set Version
-        run: mvn versions:set -DnewVersion=${GITHUB_REF##*XJDF-}
+        run: mvn versions:set -DnewVersion=%GITHUB_REF:*XJDF-=%
 
       - name: Build Project
         run: mvn install
