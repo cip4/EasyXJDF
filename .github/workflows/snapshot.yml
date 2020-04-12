@@ -1,4 +1,4 @@
-name: SNAPSHOT Build for EasyXJDF
+name: EasyXJDF Snapshot
 
 on:
   push:
